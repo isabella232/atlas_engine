@@ -1,0 +1,73 @@
+<head>
+  <meta http-equiv="refresh" content="15">
+</head>
+<h1><%= "#{t('admin.events.country_import.title')} #{@country_import&.id}" %></h1>
+<br>
+
+<% if @country_import&.in_progress? || @country_import&.pending? %>
+  <%= link_to "Interrupt", interrupt_country_import_path(@country_import.id), class: "btn btn-danger" %>
+  <br>
+  <br>
+<% end %>
+
+<div id="country_imports">
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th><%= t('admin.events.country_import.country') %></th>
+      <td>
+        <%=@country_import&.country_code %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('admin.events.country_import.state') %></th>
+      <td>
+        <%=@country_import&.state %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('admin.events.country_import.created_at') %></th>
+      <td>
+        <% unless @country_import.nil? %>
+          <%="#{time_ago_in_words(@country_import&.created_at)} ago (#{@country_import&.created_at})"%>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('admin.events.country_import.updated_at') %></th>
+      <td>
+        <% unless @country_import.nil? %>
+          <%="#{time_ago_in_words(@country_import&.updated_at)} ago (#{@country_import&.updated_at})"%>
+        <% end %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h1><%= t('admin.events.events.title') %></h1>
+<br>
+<div id="country_imports">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th><%= t('admin.events.events.created_at') %></th>
+        <th><%= t('admin.events.events.message') %></th>
+        <th><%= t('admin.events.events.additional_params') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @events.each do |event| %>
+        <tr>
+          <td>
+            <%="#{time_ago_in_words(event.created_at)} ago (#{event.created_at})"%>
+          </td>
+          <td>
+            <%=event.message %>
+          </td>
+            <% if event.additional_params %>
+          <td><%= event.additional_params  %></td>
+        <% else %>
+          <td><p>-</p></td>
+        <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

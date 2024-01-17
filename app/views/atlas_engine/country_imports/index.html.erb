@@ -1,0 +1,49 @@
+<h1>Country Imports</h1>
+
+<div id="country_imports">
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>country</th>
+      <th>state</th>
+      <th>created_at</th>
+      <th>updated_at</th>
+      <th>actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @country_imports.each do |import| %>
+      <tr>
+        <td><%=link_to import.id, country_import_path(import.id) %></td>
+        <td><%= import.country_code %></td>
+        <td><%= import.state %></td>
+        <td><%= import.created_at%></td>
+        <td><%= import.updated_at %></td>
+        <% if import.in_progress? || import.pending? %>
+          <td><%= link_to "Interrupt", interrupt_country_import_path(import.id), class: "btn btn-danger" %></td>
+        <% else %>
+          <td><p>-</p></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+<div class="container">
+  <div class="span2">
+    <% if @page > 0 %>
+      <%= link_to "← Previous", country_imports_path(page: @page - 1), type: "button", class: "btn btn-primary btn-block" %>
+    <% else %>
+      <%= link_to "← Previous", country_imports_path(page: @page - 1), type: "button", class: "btn btn-primary btn-block disabled" %>
+    <% end %>
+
+    <% if AtlasEngine::CountryImport.count > ((@page+1)*AtlasEngine::CountryImport::PAGE_SIZE) %>
+       <%= link_to "Next →", country_imports_path(page: @page + 1),type: "button",  class:"btn btn-primary btn-block"%>
+    <% else %>
+       <%= link_to "Next →", country_imports_path(page: @page + 1),type: "button",  class:"btn btn-primary btn-block disabled"%>
+    <% end %>
+  </div>
+</div>

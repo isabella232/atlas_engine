@@ -1,0 +1,14 @@
+en:
+  admin:
+    events:
+      country_import:
+        title: "Country Import"
+        country: "country:"
+        state: "state:"
+        created_at: "created_at:"
+        updated_at: "updated_at:"
+      events:
+        title: "Events"
+        created_at: "created_at"
+        message: "message"
+        additional_params: "additional params"

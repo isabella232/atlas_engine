@@ -1,0 +1,23 @@
+id: DEFAULT
+ingestion:
+  allow_partial_zip?: false
+  correctors: {}
+  settings: {}
+  data_mapper: AtlasEngine::AddressValidation::Es::DataMappers::DefaultDataMapper
+  open_address:
+    feature_mapper: AtlasEngine::AddressImporter::OpenAddress::DefaultMapper
+validation:
+  enabled: false
+  has_provinces: true
+  index_locales: []
+  default_matching_strategy: local
+  city_fields:
+    - city_aliases
+  normalized_components: []
+  exclusions: {}
+  partial_postal_code_range_for_length: {}
+  query_builder: AtlasEngine::AddressValidation::Es::DefaultQueryBuilder
+  address_parser: AtlasEngine::ValidationTranscriber::AddressParserBase
+  restrictions: []
+decompounding_patterns:
+  street: []

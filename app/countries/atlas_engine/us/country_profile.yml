@@ -1,0 +1,12 @@
+id: US
+validation:
+  enabled: true
+  default_matching_strategy: es_street
+  city_fields:
+    - city_aliases
+  address_parser: AtlasEngine::ValidationTranscriber::AddressParserNorthAmerica
+ingestion:
+  settings:
+    number_of_shards: "7"
+    min_zip_edge_ngram: "1"
+    max_zip_edge_ngram: "10"

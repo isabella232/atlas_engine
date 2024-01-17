@@ -1,0 +1,11 @@
+id: KR
+ingestion:
+  open_address:
+    feature_mapper: AtlasEngine::Kr::AddressImporter::OpenAddress::Mapper
+validation:
+  enabled: true
+  default_matching_strategy: es
+  restrictions:
+    - class: AtlasEngine::Restrictions::UnsupportedScript
+      params:
+        supported_script: :Hangul

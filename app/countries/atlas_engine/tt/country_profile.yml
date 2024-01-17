@@ -1,0 +1,7 @@
+id: TT
+ingestion:
+  open_address:
+    feature_mapper: AtlasEngine::Tt::AddressImporter::OpenAddress::Mapper
+validation:
+  address_parser: AtlasEngine::ValidationTranscriber::AddressParserNorthAmerica
+  has_provinces: false
