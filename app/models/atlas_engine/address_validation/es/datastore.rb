@@ -21,7 +21,7 @@ module AtlasEngine
           raise ArgumentError, "address has no country_code" if address.country_code.blank?
 
           @country_code = T.must(address.country_code.to_s)
-          @profile = CountryProfile.for(country_code.to_s.upcase)
+          @profile = CountryProfile.for(country_code.to_s.upcase, @locale)
 
           if locale.nil? && @profile.validation.multi_locale?
             raise ArgumentError, "#{country_code} is a multi-locale country and requires a locale"
