@@ -3,7 +3,7 @@
 require_relative "lib/atlas_engine/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "atlas_engine"
+  spec.name        = "atlas-engine"
   spec.version     = AtlasEngine::VERSION
   spec.authors     = ["Shopify"]
   spec.email       = ["developers@shopify.com"]
