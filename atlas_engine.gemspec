@@ -5,20 +5,17 @@ require_relative "lib/atlas_engine/version"
 Gem::Specification.new do |spec|
   spec.name        = "atlas_engine"
   spec.version     = AtlasEngine::VERSION
-  spec.authors     = ["Shopify"]
-  spec.email       = ["developers@shopify.com"]
+  spec.author      = "Shopify"
+  spec.email       = "developers@shopify.com"
   spec.homepage    = "https://github.com/Shopify/atlas-engine"
-  spec.summary     = "Global Address Validation API"
-  spec.description = "The Atlas Engine is a rails engine that provides a GraphQL API for global address validation."
+  spec.summary     = "Address Validation API"
+  spec.description = "The Atlas Engine is a rails engine that provides a GraphQL API for address validation."
   spec.license     = "MIT"
-
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the "allowed_push_host"
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  # spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/Shopify/atlas-engine"
   spec.metadata["changelog_uri"] = "https://github.com/Shopify/atlas-engine/CHANGELOG.md"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org/"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
