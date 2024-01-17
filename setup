@@ -1,0 +1,8 @@
+#!/bin/bash
+
+ROOT_ENV=.env
+DUMMY_ENV=test/dummy/.env
+
+# Create .env files from template if not exists
+test -f $ROOT_ENV || cp .env.template $ROOT_ENV
+test -f $DUMMY_ENV || cp .env.template $DUMMY_ENV

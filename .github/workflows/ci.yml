@@ -1,0 +1,77 @@
+name: CI
+
+on: push
+
+jobs:
+  build:
+    name: Ruby ${{ matrix.ruby }} / ${{ matrix.gemfile }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        gemfile: [Gemfile, gemfiles/rails_6_0.gemfile, gemfiles/rails_6_1.gemfile, gemfiles/rails_7_0.gemfile, gemfiles/rails_edge.gemfile]
+        ruby: ["3.2"]
+
+    services:
+      mysql:
+        image: mysql:8.2.0
+        env:
+          MYSQL_ROOT_PASSWORD:
+          MYSQL_DATABASE: db
+          MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=3s --health-timeout=3s --health-retries=3
+
+      elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+        env:
+          xpack.security.enabled: false
+          discovery.type: single-node
+        ports:
+          - 9200:9200
+        options: --health-cmd="curl -f http://localhost:9200/_cluster/health || exit 1" --health-interval=5s --health-timeout=3s --health-retries=3
+
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+      DB: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD:
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby ${{ matrix.ruby }}
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+        cache-version: 1
+        rubygems: ${{ matrix.ruby == '3.0' && 'latest' || 'default' }}
+
+    - name: Rails version
+      if: ${{ matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}
+      run: bundle info rails | head -1
+
+    - name: Setup project
+      run: bash setup
+
+    - name: Set up database
+      run: RAILS_ENV=test bundle exec rails db:setup
+
+    - name: Ruby Tests
+      run: bundle exec rails test
+
+    - name: Lint
+      run: bundle exec rubocop
+
+    - name: Typecheck
+      run: bundle exec srb tc
+
+    - name: Archive system test artifacts
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: screenshots
+        path: test/dummy/tmp/screenshots
