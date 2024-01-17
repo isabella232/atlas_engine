@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    atlas-engine (0.1.0)
+    atlas_engine (0.1.8)
       annex_29
       elastic-transport
       elasticsearch-model
@@ -97,7 +97,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
-    annex_29 (0.2.0)
+    annex_29 (0.1.1)
     ast (2.4.2)
     base64 (0.2.0)
     bigdecimal (3.1.5)
@@ -141,10 +141,11 @@ GEM
     factory_bot_rails (6.4.3)
       factory_bot (~> 6.4)
       railties (>= 5.0.0)
-    faraday (2.9.0)
-      faraday-net_http (>= 2.0, < 3.2)
-    faraday-net_http (3.1.0)
-      net-http
+    faraday (2.8.1)
+      base64
+      faraday-net_http (>= 2.0, < 3.1)
+      ruby2_keywords (>= 0.0.4)
+    faraday-net_http (3.0.2)
     frozen_record (0.27.0)
       activemodel
     globalid (1.2.1)
@@ -201,16 +202,14 @@ GEM
     multi_json (1.15.0)
     mutex_m (0.2.0)
     mysql2 (0.5.5)
-    net-http (0.4.1)
-      uri
-    net-imap (0.4.9.1)
+    net-imap (0.4.9)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.4.0.1)
+    net-smtp (0.4.0)
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.0)
@@ -360,7 +359,6 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
-    uri (0.13.0)
     webmock (3.19.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -384,7 +382,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  atlas-engine!
+  atlas_engine!
   debug
   dotenv-rails
   factory_bot_rails
