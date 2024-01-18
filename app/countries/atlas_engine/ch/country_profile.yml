@@ -1,7 +1,6 @@
 id: CH
 validation:
   enabled: true
-  has_provinces: false
   default_matching_strategy: local
   index_locales:
     - de
