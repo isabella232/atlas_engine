@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Change the name of the active support notification to be consistent with `atlas_engine`[#18](https://github.com/Shopify/atlas_engine/pull/18)
 - Update query builder to check for null province input before adding the province clause [#15](https://github.com/Shopify/atlas_engine/pull/15)
 - Update datastore to load the country profile with locale, and update Saudi Arabia to use normalized components instead of the normalizer class [#13](https://github.com/Shopify/atlas_engine/pull/13)
 
