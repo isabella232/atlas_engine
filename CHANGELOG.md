@@ -32,7 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add corrector to fix encoding issues in Italy's OA data and updated Italy's mapper to not titleize the street names [#17](https://github.com/Shopify/atlas_engine/pull/17)
 - Add a script to fix encoding errors in the italian source file [#24](https://github.com/Shopify/atlas_engine/pull/24)
 - Update IT to use DK address parser [#25](https://github.com/Shopify/atlas_engine/pull/25)
-
+- Remove corrector to fix encoding issues in Italy's OA data [#27](https://github.com/Shopify/atlas_engine/pull/27)
 ---
 
 [0.1.2] - 2024-01-18
