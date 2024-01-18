@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+
+ENV['BUNDLE_GEMFILE'] = File.absolute_path(File.join(__dir__, '../Gemfile'))
+ENV['RAILS_ENV'] ||= 'development'
+
+require 'rubygems'
+require 'bundler/setup'
+require 'thor'
+require 'zlib'
+require 'json'
+
+module FixItalyGeojson
+  class Executable < Thor
+
+    def self.exit_on_failure?
+      true
+    end
+
+    desc "reencode", "Deflate the compressed geojson file, reencode it, and write out a new copy"
+    long_desc <<~LONGDESC
+      Example usage:
+
+        bin/fix_italy_geojson reencode it.countrywide.geojson.gz
+    LONGDESC
+    def reencode(geojson_path)
+      raise ArgumentError, "Must provide a path to a geojson.gz file" unless geojson_path.end_with?(".geojson.gz")
+
+      fixed_geojson_path = geojson_path.gsub(".geojson.gz", "-reencoded.geojson.gz")
+
+      Zlib::GzipWriter.open(fixed_geojson_path) do |gz|
+        Zlib::GzipReader.new( Pathname.new(geojson_path).open("rb"))
+          .each
+          .lazy
+          .filter_map do |line|
+            line.force_encoding("iso-8859-1").unpack('U*').pack('C*').force_encoding('utf-8')
+          rescue Encoding::UndefinedConversionError => e
+            nil
+          end
+          .each do |line|
+            gz.write line
+          end
+        end
+    end
+  end
+end
+
+FixItalyGeojson::Executable.start(ARGV)

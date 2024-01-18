@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Change the name of the active support notification to be consistent with `atlas_engine`[#18](https://github.com/Shopify/atlas_engine/pull/18)
 - Update query builder to check for null province input before adding the province clause [#15](https://github.com/Shopify/atlas_engine/pull/15)
 - Add corrector to fix encoding issues in Italy's OA data and updated Italy's mapper to not titleize the street names [#17](https://github.com/Shopify/atlas_engine/pull/17)
+- Add a script to fix encoding errors in the italian source file [#24](https://github.com/Shopify/atlas_engine/pull/24)
 
 ---
 
