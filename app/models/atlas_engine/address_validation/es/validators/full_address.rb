@@ -80,7 +80,7 @@ module AtlasEngine
               .returns(T.untyped)
           end
           def publish_notification(candidate_result: nil)
-            ActiveSupport::Notifications.instrument("atlas-engine.address_validation.validation_completed", {
+            ActiveSupport::Notifications.instrument("atlas_engine.address_validation.validation_completed", {
               candidate_result: candidate_result,
               result: result,
             }.compact)
