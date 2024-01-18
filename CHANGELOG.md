@@ -27,7 +27,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-- nil
+- Update datastore to load the country profile with locale, and update Saudi Arabia to use normalized components instead of the normalizer class [#13](https://github.com/Shopify/atlas_engine/pull/13)
+
 
 ---
 
