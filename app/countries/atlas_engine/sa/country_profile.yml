@@ -3,10 +3,6 @@ validation:
   enabled: false
   default_matching_strategy: es
   has_provinces: false
-  normalized_components:
-  - region1
-  - city_aliases.alias
-  - street
   restrictions:
     - class: AtlasEngine::Restrictions::UnsupportedScript
       params:
