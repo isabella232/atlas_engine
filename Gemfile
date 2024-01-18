@@ -25,6 +25,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "thor", require: false
   gem "pry"
   gem "pry-byebug"
 end

@@ -401,6 +401,7 @@ DEPENDENCIES
   sorbet
   sprockets-rails
   tapioca
+  thor
   webmock
 
 BUNDLED WITH
