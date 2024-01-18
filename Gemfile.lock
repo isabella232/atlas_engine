@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    atlas_engine (0.1.1)
+    atlas_engine (0.1.2)
       annex_29
       elastic-transport
       elasticsearch-model
