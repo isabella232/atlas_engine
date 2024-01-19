@@ -85,13 +85,6 @@ Connecting to Docker services
 rails db:setup
 ```
 
-#### Setting up maintenance tasks
-After locally setting up Atlas Engine:
-```
-rails app:maintenance_tasks:install:migrations
-rails db:migrate
-```
-
 ## Using the App
 
 ### Infrastructure Requirements
