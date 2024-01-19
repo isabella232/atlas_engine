@@ -15,7 +15,9 @@ services:
       - "mysql-data:/var/lib/mysql"
 
   elasticsearch:
-    build: .
+    build:
+      context: .
+      dockerfile: ./docker/elasticsearch/Dockerfile
     container_name: elasticsearch
     mem_limit: 4G
     environment:

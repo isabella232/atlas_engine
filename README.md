@@ -227,7 +227,6 @@ bundle config build.puma --with-pkg-config=$(brew --prefix openssl@3)/lib/pkgcon
 
 In a separate terminal, from the cloned atlas_engine directory run:
 ```
-bash setup
 docker-compose up
 
 # *Note* If you encounter an error getting docker credentials, remove or update the `credsStore`
@@ -247,7 +246,7 @@ rails db:setup
 ```
 
 ### Infrastructure Requirements
-The elasticsearch implementation depends on the ICU analysis plugin. Refer to the [Dockfile](./Dockfile) leveraged in local setup for plugin installation.
+The elasticsearch implementation depends on the ICU analysis plugin. Refer to the [Dockerfile](./docker/elasticsearch/Dockerfile) leveraged in local setup for plugin installation.
 
 ### Starting the App / Running Tests
   * `bin/rails server` to start the server
@@ -382,42 +381,42 @@ When input into `http://localhost:3000/graphiql`, this query should produce the 
 
 ```
 {
-	"data": {
-		"validation": {
-			"candidate": ",NSW,,,,2060,[North Sydney],,Miller Street",
-			"validationScope": [
-				"country_code",
-				"province_code",
-				"zip",
-				"city",
-				"address1"
-			],
-			"concerns": [
-				{
-					"code": "city_inconsistent",
-					"typeLevel": 3,
-					"fieldNames": [
-						"city"
-					],
-					"suggestionIds": [
-						"665ffd09-75b8-584d-8e4a-a0f471bfea01"
-					],
-					"message": "Enter a valid city for New South Wales, 2060"
-				}
-			],
-			"suggestions": [
-				{
-					"id": "665ffd09-75b8-584d-8e4a-a0f471bfea01",
-					"address1": null,
-					"address2": null,
-					"city": "North Sydney",
-					"province": null,
-					"provinceCode": null,
-					"zip": null
-				}
-			]
-		}
-	}
+  "data": {
+    "validation": {
+      "candidate": ",NSW,,,,2060,[North Sydney],,Miller Street",
+      "validationScope": [
+        "country_code",
+        "province_code",
+        "zip",
+        "city",
+        "address1"
+      ],
+      "concerns": [
+        {
+          "code": "city_inconsistent",
+          "typeLevel": 3,
+          "fieldNames": [
+            "city"
+          ],
+          "suggestionIds": [
+            "665ffd09-75b8-584d-8e4a-a0f471bfea01"
+          ],
+          "message": "Enter a valid city for New South Wales, 2060"
+        }
+      ],
+      "suggestions": [
+        {
+          "id": "665ffd09-75b8-584d-8e4a-a0f471bfea01",
+          "address1": null,
+          "address2": null,
+          "city": "North Sydney",
+          "province": null,
+          "provinceCode": null,
+          "zip": null
+        }
+      ]
+    }
+  }
 }
 ```
 
@@ -472,53 +471,53 @@ This query produces the following response:
 
 ```
 {
-	"data": {
-		"validation": {
-			"candidate": ",NSW,,,,2060,[North Sydney],,Miller Street",
-			"validationScope": [
-				"country_code",
-				"province_code",
-				"zip",
-				"city",
-				"address1"
-			],
-			"concerns": [
-				{
-					"code": "city_inconsistent",
-					"typeLevel": 3,
-					"fieldNames": [
-						"city"
-					],
-					"suggestionIds": [
-						"88779db6-2c5d-5dbb-9f77-f7b07c07206a"
-					],
-					"message": "Enter a valid city for New South Wales, 2060"
-				},
-				{
-					"code": "street_inconsistent",
-					"typeLevel": 3,
-					"fieldNames": [
-						"address1"
-					],
-					"suggestionIds": [
-						"88779db6-2c5d-5dbb-9f77-f7b07c07206a"
-					],
-					"message": "Enter a valid street name for New South Wales, 2060"
-				}
-			],
-			"suggestions": [
-				{
-					"id": "88779db6-2c5d-5dbb-9f77-f7b07c07206a",
-					"address1": "100 Miller Street",
-					"address2": null,
-					"city": "North Sydney",
-					"province": null,
-					"provinceCode": null,
-					"zip": null
-				}
-			]
-		}
-	}
+  "data": {
+    "validation": {
+      "candidate": ",NSW,,,,2060,[North Sydney],,Miller Street",
+      "validationScope": [
+        "country_code",
+        "province_code",
+        "zip",
+        "city",
+        "address1"
+      ],
+      "concerns": [
+        {
+          "code": "city_inconsistent",
+          "typeLevel": 3,
+          "fieldNames": [
+            "city"
+          ],
+          "suggestionIds": [
+            "88779db6-2c5d-5dbb-9f77-f7b07c07206a"
+          ],
+          "message": "Enter a valid city for New South Wales, 2060"
+        },
+        {
+          "code": "street_inconsistent",
+          "typeLevel": 3,
+          "fieldNames": [
+            "address1"
+          ],
+          "suggestionIds": [
+            "88779db6-2c5d-5dbb-9f77-f7b07c07206a"
+          ],
+          "message": "Enter a valid street name for New South Wales, 2060"
+        }
+      ],
+      "suggestions": [
+        {
+          "id": "88779db6-2c5d-5dbb-9f77-f7b07c07206a",
+          "address1": "100 Miller Street",
+          "address2": null,
+          "city": "North Sydney",
+          "province": null,
+          "provinceCode": null,
+          "zip": null
+        }
+      ]
+    }
+  }
 }
 ```
 
@@ -568,20 +567,20 @@ will produce the response:
 
 ```
 {
-	"data": {
-		"validation": {
-			"candidate": ",NSW,,,,2060,[North Sydney],,Miller Street",
-			"validationScope": [
-				"country_code",
-				"province_code",
-				"zip",
-				"city",
-				"address1"
-			],
-			"concerns": [],
-			"suggestions": []
-		}
-	}
+  "data": {
+    "validation": {
+      "candidate": ",NSW,,,,2060,[North Sydney],,Miller Street",
+      "validationScope": [
+        "country_code",
+        "province_code",
+        "zip",
+        "city",
+        "address1"
+      ],
+      "concerns": [],
+      "suggestions": []
+    }
+  }
 }
 ```
 
