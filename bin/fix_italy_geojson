@@ -32,7 +32,12 @@ module FixItalyGeojson
           .each
           .lazy
           .filter_map do |line|
-            line.force_encoding("iso-8859-1").unpack('U*').pack('C*').force_encoding('utf-8')
+            line = line.force_encoding("iso-8859-1").unpack('U*').pack('C*').force_encoding('utf-8')
+            bytes = line.bytes
+            bytes.each_with_index do |byte, index|
+              raise Encoding::UndefinedConversionError if byte == 195 && bytes[index + 1] == 34  # 0xC3 followed by "
+            end
+            line
           rescue Encoding::UndefinedConversionError => e
             nil
           end
