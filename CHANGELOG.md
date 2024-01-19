@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Update CH country profile with an address parser and has_provinces:false[#28](https://github.com/Shopify/atlas_engine/pull/28)
 - Add maintenance task migrations to dummy app [#30](https://github.com/Shopify/atlas_engine/pull/30)
 - Update datastore to load the country profile with locale, and update Saudi Arabia to use normalized components instead of the normalizer class [#23](https://github.com/Shopify/atlas_engine/pull/23)
 - Change the name of the active support notification to be consistent with `atlas_engine`[#18](https://github.com/Shopify/atlas_engine/pull/18)

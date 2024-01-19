@@ -2,6 +2,8 @@ id: CH
 validation:
   enabled: true
   default_matching_strategy: local
+  has_provinces: false
+  address_parser: AtlasEngine::De::ValidationTranscriber::AddressParser
   index_locales:
     - de
     - fr
