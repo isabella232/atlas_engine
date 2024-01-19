@@ -98,7 +98,6 @@ module AtlasEngine
       country_profile = CountryProfile.for("IT")
       assert_equal(
         [
-          AtlasEngine::It::AddressImporter::Corrections::OpenAddress::SpecialCharacterCorrector,
           AtlasEngine::It::AddressImporter::Corrections::OpenAddress::CityCorrector,
           AtlasEngine::It::AddressImporter::Corrections::OpenAddress::ProvinceCorrector,
         ],
