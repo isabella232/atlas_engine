@@ -1,0 +1,3 @@
+id: CH_FR
+validation:
+  address_parser: AtlasEngine::Ch::Locales::Fr::ValidationTranscriber::AddressParser

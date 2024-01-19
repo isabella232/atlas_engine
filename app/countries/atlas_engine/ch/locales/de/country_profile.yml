@@ -2,7 +2,6 @@ id: CH_DE
 ingestion:
   data_mapper: AtlasEngine::AddressValidation::Es::DataMappers::DecompoundingDataMapper
 validation:
-  address_parser: AtlasEngine::De::ValidationTranscriber::AddressParser
   normalized_components:
   - region2
   - region3

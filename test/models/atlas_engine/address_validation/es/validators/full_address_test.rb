@@ -135,7 +135,7 @@ module AtlasEngine
           end
 
           test "picks the best candidate for a multi-locale country" do
-            @address = address(country_code: "CH", city: "Brn")
+            @address = address(address1: "Mövenweg", zip: "8597", country_code: "CH", city: "Brn", province_code: "")
             ch_session = AddressValidation::Session.new(address: @address)
 
             ch_session.datastore(locale: "de").city_sequence = Token::Sequence.from_string(@address.city)
@@ -242,11 +242,12 @@ module AtlasEngine
 
           private
 
-          def address(address1: "123 Main Street", zip: "94102", country_code: "US", city: "San Francisco")
+          def address(address1: "123 Main Street", zip: "94102", country_code: "US", city: "San Francisco",
+            province_code: "CA")
             build_address(
               address1: address1,
               city: city,
-              province_code: "CA",
+              province_code: province_code,
               country_code: country_code,
               zip: zip,
             )
