@@ -2,6 +2,7 @@ id: IT
 validation:
   enabled: true
   default_matching_strategy: es
+  address_parser: AtlasEngine::Dk::ValidationTranscriber::AddressParser
 ingestion:
   open_address:
     feature_mapper: AtlasEngine::It::AddressImporter::OpenAddress::Mapper
