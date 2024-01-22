@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Add matching_strategy param to logs [#36](https://github.com/Shopify/atlas_engine/pull/36)
 - Remove the empty building clause from the full address query [#31](https://github.com/Shopify/atlas_engine/pull/31)
 - Update italy re-encoding script to discard malformed lines [#33](https://github.com/Shopify/atlas_engine/pull/33)
 - Add maintenance task migrations to dummy app [#30](https://github.com/Shopify/atlas_engine/pull/30)

@@ -35,6 +35,7 @@ module AtlasEngine
         end
         data = {
           country_code: address.country_code,
+          matching_strategy: result.matching_strategy,
           formatted_address: formatted_address,
           concerns: concern_codes,
           suggestions: result.suggestions.map(&:attributes),
