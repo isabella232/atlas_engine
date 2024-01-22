@@ -13,7 +13,7 @@ module AtlasEngine
 
       def setup
         @address = build_address(province_code: "BC", country_code: "CA")
-        @result = AddressValidation::Result.new
+        @result = AddressValidation::Result.new(matching_strategy: "es")
 
         @concern_codes = [
           :zip_inconsistent,
@@ -76,6 +76,7 @@ module AtlasEngine
           "[AddressValidation] Concern(s) found when validating address",
           {
             country_code: "CA",
+            matching_strategy: "es",
             formatted_address: "BC, Canada",
             concerns: expected_concern_codes,
             suggestions: [suggestion.attributes],
@@ -94,6 +95,7 @@ module AtlasEngine
           "[AddressValidation] Address validated, no concerns returned",
           {
             country_code: "CA",
+            matching_strategy: "es",
             formatted_address: "BC, Canada",
             concerns: [],
             suggestions: [],
