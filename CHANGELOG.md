@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Remove the empty building clause from the full address query [#31](https://github.com/Shopify/atlas_engine/pull/31)
 - Update italy re-encoding script to discard malformed lines [#33](https://github.com/Shopify/atlas_engine/pull/33)
 - Add maintenance task migrations to dummy app [#30](https://github.com/Shopify/atlas_engine/pull/30)
 - Update CH country profile with an address parser and has_provinces:false[#28](https://github.com/Shopify/atlas_engine/pull/28)

@@ -37,22 +37,15 @@ module AtlasEngine
         sig { returns(CountryProfile) }
         attr_reader :profile
 
-        sig { returns(Hash) }
+        sig { returns(T.nilable(Hash)) }
         def building_number_clause
-          potential_building_numbers = @parsings.potential_building_numbers.filter_map do |n|
-            AddressNumber.new(value: n).to_i
-          end.uniq
+          building_number_clause = approx_building_clauses
 
-          building_number_queries = [empty_approx_building_clause]
-          building_number_queries.unshift(
-            *T.unsafe(potential_building_numbers.map do |value|
-              approx_building_clause(value)
-            end),
-          ) if potential_building_numbers.any?
+          return if building_number_clause.nil?
 
           {
             "dis_max" => {
-              "queries" => building_number_queries,
+              "queries" => building_number_clause,
             },
           }
         end
@@ -66,6 +59,19 @@ module AtlasEngine
               },
             },
           }
+        end
+
+        sig { returns(T.nilable(Array)) }
+        def approx_building_clauses
+          potential_building_numbers = @parsings.potential_building_numbers.filter_map do |n|
+            AddressNumber.new(value: n).to_i
+          end.uniq
+
+          if potential_building_numbers.any?
+            potential_building_numbers.map do |value|
+              approx_building_clause(value)
+            end
+          end
         end
 
         sig { returns(Hash) }

@@ -6,21 +6,6 @@
           "dis_max": {
             "queries": [
               {
-                "bool": {
-                  "must_not": {
-                    "exists": {
-                      "field": "approx_building_ranges"
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        },
-        {
-          "dis_max": {
-            "queries": [
-              {
                 "match": {
                   "street": { "query": "Main Street", "fuzziness": "auto" }
                 }
@@ -49,7 +34,7 @@
           }
         }
       ],
-      "minimum_should_match": 3
+      "minimum_should_match": 2
     }
   }
 }
