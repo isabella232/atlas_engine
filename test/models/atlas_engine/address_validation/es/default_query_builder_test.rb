@@ -26,7 +26,7 @@ module AtlasEngine
           assert_equal expected_address_query("mx"), query_builder.full_address_query
         end
 
-        test "#full_address_query returns a valid query for an input missing a building number" do
+        test "#full_address_query returns a query without a building number clause where there is no building number" do
           query_builder = DefaultQueryBuilder.new(missing_number_address)
           assert_equal expected_address_query("us_missing"), query_builder.full_address_query
         end

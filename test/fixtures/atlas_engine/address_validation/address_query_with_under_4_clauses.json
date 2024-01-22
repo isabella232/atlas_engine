@@ -11,15 +11,6 @@
                     "value": 123
                   }
                 }
-              },
-              {
-                "bool": {
-                  "must_not": {
-                    "exists": {
-                      "field": "approx_building_ranges"
-                    }
-                  }
-                }
               }
             ]
           }
