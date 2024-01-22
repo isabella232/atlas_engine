@@ -50,6 +50,8 @@ Sorbet/FalseSigil:
   - db/**/*.rb
   - script/**/*
   - lib/generators/atlas_engine/install_generator.rb
+  - db/migrate/**/*.rb
+  - test/dummy/db/migrate/**/*.rb
 
 
 # Sorbet sigil must come first
