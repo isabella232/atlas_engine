@@ -4,7 +4,7 @@ Atlas Engine is a rails engine that provides a global end-to-end address validat
 
 The validation API is powered by GraphQL, an example request and explanation of the parameters and response follows:
 
-```
+```graphql
 query validation {
   validation(
     address: {
@@ -38,7 +38,7 @@ query validation {
 
 Response:
 
-```
+```json
 {
   "data": {
     "validation": {
@@ -56,12 +56,12 @@ Response:
 }
 ```
 
-*Address:* The raw input for each address line that is to be validated. Requirements for each field's format and even
+**Address:** The raw input for each address line that is to be validated. Requirements for each field's format and even
 presence or absence differs per country.
 
-*Locale:* The language in which to render any messages in the validation API response.
+**Locale:** The language in which to render any messages in the validation API response.
 
-*MatchingStrategy:* The strategy used to evaluate the validity of the address input. Out of the box, Atlas Engine
+**MatchingStrategy:** The strategy used to evaluate the validity of the address input. Out of the box, Atlas Engine
 supports three different matching strategies: `local`, `es`, and `es_street`.
   - `local` matching uses the [worldwide](https://github.com/Shopify/worldwide) gem to provide the most basic level of
   address validation. This may include simple errors (required fields not populated) or more advanced errors (province
@@ -76,19 +76,19 @@ supports three different matching strategies: `local`, `es`, and `es_street`.
   with validation of the address1 and address2 components of the address input. A more detailed explanation of how
   this strategy works can be found [here](#elasticsearch-matching-strategy).
 
-*Validation Scope*: This response object is populated with the field names from the input that have been successfully
+**Validation Scope:** This response object is populated with the field names from the input that have been successfully
 validated.
 
-*Concerns:* This response object is populated with a code if there is a validation error with the input address.
+**Concerns:** This response object is populated with a code if there is a validation error with the input address.
 A concern may also include a suggestion to fix the issue.
 
-*Suggestions:* This response object provides the corrected value for a field that has a concern if available.
+**Suggestions:** This response object provides the corrected value for a field that has a concern if available.
 
 ### Example request with a concern:
 
 Navigate to http://localhost:3000/graphiql and initiate the following request. Note the invalid zip field.
 
-```
+```graphql
 query validation {
   validation(
     address: {
@@ -122,7 +122,7 @@ query validation {
 
 Response:
 
-```
+```json
 {
   "data": {
     "validation": {
@@ -296,14 +296,14 @@ There are two tasks available: `Maintenance::AtlasEngine::GeoJsonImportTask` and
 3. Navigate to the `Maintenance::AtlasEngine::GeoJsonImportTask`. This task will transform the raw geo json file into
 records in our mysql database and has the following parameters:
 
-clear_records: If checked, removes any existing records for the country in the database.
+- **clear_records:** If checked, removes any existing records for the country in the database.
 
-country_code: (required) The ISO country code of the data we are ingesting.
+- **country_code: (required)** The ISO country code of the data we are ingesting.
 In this example, the country code of Australia is `AU`.
 
-geojson_file_path: (required) The fully qualified path of the previously downloaded geojson data from open addresses.
+- **geojson_file_path: (required)** The fully qualified path of the previously downloaded geojson data from open addresses.
 
-locale: (optional) The language of the data in the open addresses file.
+- **locale: (optional)** The language of the data in the open addresses file.
 
 4. Once properly parameterized, click run. The process will initialize a `country_import` and should succeed immediately.
 
@@ -316,20 +316,20 @@ and use it to create documents in a new elasticsearch index which Atlas Engine w
 
 7. The `ElasticsearchIndexCreateTask` includes the following parameters:
 
-country_code: (required) the ISO country code of the data we are ingesting and the name of the elasticsearch index we
+- **country_code: (required)** the ISO country code of the data we are ingesting and the name of the elasticsearch index we
 will be creating. In this example, the country code of Australia is `AU`.
 
-locale: (optional) the language of the documents we will be creating. This is required for multi-locale countries
+- **locale: (optional)** the language of the documents we will be creating. This is required for multi-locale countries
 as our indexes are separated by language.
 
-province_codes: (optional) an allow list of province codes to create documents for. If left blank the task will create
+- **province_codes: (optional)** an allow list of province codes to create documents for. If left blank the task will create
 documents for the entire dataset.
 
-shard_override: (optional) the number of shards to create this index with. If left blank the default will be used.
+- **shard_override: (optional)** the number of shards to create this index with. If left blank the default will be used.
 
-replica_override: (optional) the number of replicas to create this index with. If left blank the default will be used.
+- **replica_override: (optional)** the number of replicas to create this index with. If left blank the default will be used.
 
-activate_index: (optional) if checked, immediately promote this index to be the index queried by atlas engine.
+- **activate_index: (optional)** if checked, immediately promote this index to be the index queried by atlas engine.
 If unchecked, the created index will need to be activated manually.
 
 8. Once properly parameterized, click run. The maintenance task UI will track the progress of the index creation.
@@ -345,7 +345,7 @@ the more advanced elasticsearch matching strategies `es` and `es_street`.
 
 Consider the following example of an invalid `AU` address:
 
-```
+```graphql
 query validation {
   validation(
     address: {
@@ -379,7 +379,7 @@ query validation {
 
 When input into `http://localhost:3000/graphiql`, this query should produce the following response:
 
-```
+```json
 {
   "data": {
     "validation": {
@@ -435,7 +435,7 @@ The `es_street` level of validation can also be used to correct errors in the `a
 input. In the following request we have modified our query to make a second error in our input - searching for
 `miller ave` instead of `miller st`.
 
-```
+```graphql
 query validation {
   validation(
     address: {
@@ -469,7 +469,7 @@ query validation {
 
 This query produces the following response:
 
-```
+```json
 {
   "data": {
     "validation": {
@@ -531,7 +531,7 @@ If both of these suggestions are applied to the input address the subsequent req
 
 The corrected input of
 
-```
+```graphql
 query validation {
   validation(
     address: {
@@ -565,7 +565,7 @@ query validation {
 
 will produce the response:
 
-```
+```json
 {
   "data": {
     "validation": {
