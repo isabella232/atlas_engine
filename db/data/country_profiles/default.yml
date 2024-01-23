@@ -11,8 +11,6 @@ validation:
   has_provinces: true
   index_locales: []
   default_matching_strategy: local
-  city_fields:
-    - city_aliases
   normalized_components: []
   exclusions: {}
   partial_postal_code_range_for_length: {}
