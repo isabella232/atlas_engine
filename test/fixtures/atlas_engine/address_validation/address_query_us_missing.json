@@ -29,8 +29,8 @@
           }
         },
         {
-          "term": {
-            "province_code": { "value": "ca" }
+          "match": {
+            "province_code": { "query": "ca" }
           }
         }
       ],

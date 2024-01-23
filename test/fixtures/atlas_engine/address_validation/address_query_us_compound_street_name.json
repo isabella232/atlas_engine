@@ -67,9 +67,9 @@
           }
         },
         {
-          "term": {
+          "match": {
             "province_code": {
-              "value": "tx"
+              "query": "tx"
             }
           }
         }
