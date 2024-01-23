@@ -31,11 +31,11 @@ module AtlasEngine
               bm_cities = [
                 {
                   input: ["City of Hamilton"],
-                  expected: ["City of Hamilton"], # no aliases
+                  expected: ["City of Hamilton", "Hamilton"],
                 },
                 {
                   input: ["Hamilton"],
-                  expected: ["Hamilton", "Hamilton Parish"],
+                  expected: ["Hamilton Parish", "Hamilton"],
                 },
                 {
                   input: ["Town of St. George"],
@@ -43,35 +43,39 @@ module AtlasEngine
                 },
                 {
                   input: ["St. George's"],
-                  expected: ["St. George's", "St. George's Parish"],
+                  expected: ["St. George's Parish", "St. George's"],
                 },
                 {
                   input: ["Devonshire"],
-                  expected: ["Devonshire", "Devonshire Parish"],
+                  expected: ["Devonshire Parish", "Devonshire"],
                 },
                 {
                   input: ["Paget"],
-                  expected: ["Paget", "Paget Parish"],
+                  expected: ["Paget Parish", "Paget"],
                 },
                 {
                   input: ["Pembroke"],
-                  expected: ["Pembroke", "Pembroke Parish"],
+                  expected: ["Pembroke Parish", "Pembroke"],
                 },
                 {
                   input: ["Sandys"],
-                  expected: ["Sandys", "Sandys Parish"],
+                  expected: ["Sandys Parish", "Sandys"],
                 },
                 {
                   input: ["Smiths"],
-                  expected: ["Smiths", "Smiths Parish"],
+                  expected: ["Smiths Parish", "Smiths"],
                 },
                 {
                   input: ["Southampton"],
-                  expected: ["Southampton", "Southampton Parish"],
+                  expected: ["Southampton Parish", "Southampton"],
                 },
                 {
                   input: ["Warwick"],
-                  expected: ["Warwick", "Warwick Parish"],
+                  expected: ["Warwick Parish", "Warwick"],
+                },
+                {
+                  input: ["A new Parish"],
+                  expected: ["A new Parish"], # no aliases
                 },
               ]
 
