@@ -2,8 +2,6 @@ id: US
 validation:
   enabled: true
   default_matching_strategy: es_street
-  city_fields:
-    - city_aliases
   address_parser: AtlasEngine::ValidationTranscriber::AddressParserNorthAmerica
 ingestion:
   settings:

@@ -81,7 +81,6 @@ module AtlasEngine
       assert_equal("some_value", profile.validation.key)
       assert_equal(false, profile.validation.enabled)
       assert_equal("local", profile.validation.default_matching_strategy)
-      assert_equal(["city_aliases"], profile.validation.city_fields)
       assert_equal([], profile.validation.normalized_components)
       assert_equal({}, profile.validation.exclusions)
       assert_equal({}, profile.validation.partial_postal_code_range_for_length)
