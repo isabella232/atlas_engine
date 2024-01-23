@@ -18,27 +18,37 @@ module AtlasEngine
         assert_equal "123 Main St", formatter.strip_trailing_punctuation("123 Main St, ")
       end
 
-      test "#strip_word strips the given needle from the haystack" do
+      test "#strip_word strips the second string from the first" do
         formatter = MockFormatter.new
         assert_equal "123 Main St", formatter.strip_word("123 Main St Apt 1", "Apt 1")
       end
 
-      test "#strip_word removes surrounding commas/spaces when stripping the needle from the haystack" do
+      test "#strip_word strips the second string from the beginning of the first" do
+        formatter = MockFormatter.new
+        assert_equal "Apt 1", formatter.strip_word("123 Main St Apt 1", "123 Main St")
+      end
+
+      test "#strip_word removes surrounding commas/spaces when stripping the second string from the first" do
         formatter = MockFormatter.new
         assert_equal "123 Main St, NY", formatter.strip_word("123 Main St, Apt 1, NY", "Apt 1")
       end
 
-      test "#strip_word strips the given needle from the haystack, even if it has special regex chars" do
+      test "#strip_word removes surrounding commas/spaces when stripping the second string from the beginning of the first" do
+        formatter = MockFormatter.new
+        assert_equal "Apt 1, NY", formatter.strip_word("123 Main St, Apt 1, NY", "123 Main St")
+      end
+
+      test "#strip_word strips the second string from the first, even if it has special regex chars" do
         formatter = MockFormatter.new
         assert_equal "123 Main St", formatter.strip_word("123 Main St Apt (", "Apt (")
       end
 
-      test "#strip_word replaces with a space when the needle is surrounded by spaces" do
+      test "#strip_word replaces with a space when the second string is surrounded by spaces in the first string" do
         formatter = MockFormatter.new
         assert_equal "123 Main St Arizona", formatter.strip_word("123 Main St Pheonix Arizona", "Pheonix")
       end
 
-      test "#strip_word does not add a space when the needle is not surrounded by spaces" do
+      test "#strip_word does not add a space when the second string is not surrounded by spaces in the first string" do
         formatter = MockFormatter.new
         assert_equal "123 Main St Arizona", formatter.strip_word("123 Main St,Pheonix, Arizona", "Pheonix")
       end

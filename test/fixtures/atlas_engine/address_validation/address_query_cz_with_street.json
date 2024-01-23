@@ -1,0 +1,76 @@
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "dis_max": {
+            "queries": [
+              {
+                "term": {
+                  "approx_building_ranges": {
+                    "value": 10
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "dis_max": {
+            "queries": [
+              {
+                "match": {
+                  "street": {
+                    "query": "U Lužického semináře",
+                    "fuzziness": "auto"
+                  }
+                }
+              },
+              {
+                "match": {
+                  "street": {
+                    "query": "ULužickéhosemináře",
+                    "fuzziness": "auto"
+                  }
+                }
+              },
+              {
+                "match": {
+                  "street_stripped": {
+                    "query": "ULužickéhosemináře",
+                    "fuzziness": "auto"
+                  }
+                }
+              },
+              {
+                "bool": {
+                  "must_not": {
+                    "exists": {
+                      "field": "street"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "nested": {
+            "path": "city_aliases",
+            "query": {
+              "match": {
+                "city_aliases.alias": { "query": "Praha", "fuzziness": "auto" }
+              }
+            }
+          }
+        },
+        {
+          "match": {
+            "zip": { "query": "118 00", "fuzziness": "auto" }
+          }
+        }
+      ],
+      "minimum_should_match": 2
+    }
+  }
+}

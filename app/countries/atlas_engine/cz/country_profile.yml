@@ -2,5 +2,6 @@ id: CZ
 validation:
   enabled: true
   default_matching_strategy: es
-  address_parser: AtlasEngine::Dk::ValidationTranscriber::AddressParser
+  address_parser: AtlasEngine::Cz::ValidationTranscriber::AddressParser
+  query_builder: AtlasEngine::Cz::AddressValidation::Es::QueryBuilder
   has_provinces: false

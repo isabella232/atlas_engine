@@ -91,23 +91,28 @@ module AtlasEngine
         def street_clause
           {
             "dis_max" => {
-              "queries" => street_query_values.map do |value|
-                {
-                  "match" => {
-                    "street" => { "query" => value, "fuzziness" => "auto" },
-                  },
-                }
-              end.union(
-                stripped_street_query_values.map do |value|
-                  {
-                    "match" => {
-                      "street_stripped" => { "query" => value, "fuzziness" => "auto" },
-                    },
-                  }
-                end,
-              ),
+              "queries" => build_street_queries,
             },
           }
+        end
+
+        sig { returns(Array) }
+        def build_street_queries
+          street_query_values.map do |value|
+            {
+              "match" => {
+                "street" => { "query" => value, "fuzziness" => "auto" },
+              },
+            }
+          end.union(
+            stripped_street_query_values.map do |value|
+              {
+                "match" => {
+                  "street_stripped" => { "query" => value, "fuzziness" => "auto" },
+                },
+              }
+            end,
+          )
         end
 
         sig { returns(T::Array[String]) }
