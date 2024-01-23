@@ -13,8 +13,8 @@ module AtlasEngine
 
       sig { params(haystack: String, needle: String).returns(String) }
       def strip_word(haystack, needle)
-        string = haystack.sub(/[\s](#{Regexp.escape(needle)})([\s]|$)/i, " ").strip
-        string = string.sub(/[\s,](#{Regexp.escape(needle)})([\s,]|$)/i, "").strip
+        string = haystack.sub(/([\s]|^)(#{Regexp.escape(needle)})([\s]|$)/i, " ").strip
+        string = string.sub(/([\s,]|^)(#{Regexp.escape(needle)})([\s,]|$)/i, "").strip
         string = strip_trailing_punctuation(string)
         string || ""
       end

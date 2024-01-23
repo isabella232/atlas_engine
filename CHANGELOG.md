@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Hook up docker compose to dockerfile that installs analysis-icu plugin in dockerized es [#32](https://github.com/Shopify/atlas_engine/pull/32)
 - Add matching_strategy param to logs [#36](https://github.com/Shopify/atlas_engine/pull/36)
+- Add custom parser and query builder for CZ to handle addresses with no street names [#34](https://github.com/Shopify/atlas_engine/pull/34)
 - Remove the empty building clause from the full address query [#31](https://github.com/Shopify/atlas_engine/pull/31)
 - Update italy re-encoding script to discard malformed lines [#33](https://github.com/Shopify/atlas_engine/pull/33)
 - Add maintenance task migrations to dummy app [#30](https://github.com/Shopify/atlas_engine/pull/30)
