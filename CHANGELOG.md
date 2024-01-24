@@ -26,6 +26,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Security in case of vulnerabilities.
 
 ## [Unreleased]
+
+- Configure sequence comparison policy for South Korea [#58](https://github.com/Shopify/atlas_engine/pull/58)
 - Configurable sequence comparison policy [#54](https://github.com/Shopify/atlas_engine/pull/54)
 - Emit StatsD validation metric when address_unknown concern is returned [#55](https://github.com/Shopify/atlas_engine/pull/55)
 - Enable ES level validation for Slovenia (SI) [#44](https://github.com/Shopify/atlas_engine/pull/44)

@@ -5,6 +5,9 @@ ingestion:
 validation:
   enabled: true
   default_matching_strategy: es
+  comparison_policies:
+    city:
+      unmatched: ignore_left_unmatched
   restrictions:
     - class: AtlasEngine::Restrictions::UnsupportedScript
       params:
