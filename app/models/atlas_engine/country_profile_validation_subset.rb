@@ -44,5 +44,10 @@ module AtlasEngine
     def address_parser
       attributes.dig("address_parser").constantize
     end
+
+    sig { returns(T::Array[String]) }
+    def normalized_components
+      attributes.dig("normalized_components") || []
+    end
   end
 end
