@@ -1,4 +1,10 @@
 id: PL
+ingestion:
+  correctors:
+    open_address:
+      - AtlasEngine::Pl::AddressImporter::Corrections::OpenAddress::CityCorrector
+      - AtlasEngine::Pl::AddressImporter::Corrections::OpenAddress::PostalCodePlaceholderCorrector
+      - AtlasEngine::Pl::AddressImporter::Corrections::OpenAddress::EmptyStreetCorrector
 validation:
   address_parser: AtlasEngine::Pl::ValidationTranscriber::AddressParser
   enabled: true

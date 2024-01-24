@@ -1,0 +1,12 @@
+street_synonyms:
+## street suffixes
+- aleja, al # avenue
+- osiedle, os # housing estate
+- plac, pl # square
+- ulica, ul # street
+## titles
+- święta, św # saint (feminine)
+- świętego, św # saint
+- święty, św # saint (masculine)
+city_synonyms:
+- wielkopolska, wlkp # Greater Poland
