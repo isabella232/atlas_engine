@@ -89,7 +89,7 @@ module Maintenance
         task = Maintenance::AtlasEngine::ElasticsearchIndexCreateTask.new
         task.attributes = { country_code: "US", province_codes: "IL", repository: @repository }
 
-        @repository.expects(:create_next_index).with(ensure_clean: true).returns(true)
+        @repository.expects(:create_next_index).with(ensure_clean: true, raise_errors: true).returns(true)
 
         task.collection
       end
