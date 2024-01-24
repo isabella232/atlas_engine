@@ -26,7 +26,7 @@ module AtlasEngine
           sig { override.void }
           def update_result
             result.candidate = candidate&.serialize
-            return if unmatched_components.empty?
+            return if unmatched_components_to_validate.empty?
 
             update_concerns_and_suggestions
             update_result_scope
@@ -62,7 +62,7 @@ module AtlasEngine
 
           sig { void }
           def add_concerns_with_suggestions
-            unmatched_components.keys.each do |unmatched_component|
+            unmatched_components_to_validate.keys.each do |unmatched_component|
               field_name = unmatched_field_name(unmatched_component)
               if field_name.nil?
                 log_unknown_field_name
@@ -72,7 +72,7 @@ module AtlasEngine
               concern = ConcernBuilder.new(
                 unmatched_component: unmatched_component,
                 unmatched_field: field_name,
-                matched_components: matched_components.keys,
+                matched_components: matched_components_to_validate.keys,
                 address: session.address,
                 suggestion_ids: [suggestion.id].compact,
               ).build
@@ -87,7 +87,7 @@ module AtlasEngine
 
             @suggestion ||= SuggestionBuilder.from_comparisons(
               session.address.to_h,
-              unmatched_components,
+              unmatched_components_to_validate,
               candidate,
               unmatched_fields,
             )
@@ -103,11 +103,25 @@ module AtlasEngine
             @unmatched_components || split_matched_and_unmatched_components.second
           end
 
+          sig { returns(T::Hash[Symbol, AtlasEngine::AddressValidation::Token::Sequence::Comparison]) }
+          def matched_components_to_validate
+            matched_components.select do |k, _v|
+              components_to_validate.include?(k)
+            end
+          end
+
+          sig { returns(T::Hash[Symbol, AtlasEngine::AddressValidation::Token::Sequence::Comparison]) }
+          def unmatched_components_to_validate
+            unmatched_components.select do |k, _v|
+              components_to_validate.include?(k)
+            end
+          end
+
           sig { returns(T::Hash[Symbol, T.nilable(AtlasEngine::AddressValidation::Token::Sequence::Comparison)]) }
           def matched_and_unmatched_components
             components = {}
             @matched_and_unmatched_components ||= begin
-              components_to_validate.each do |field|
+              components_to_compare.each do |field|
                 components[field] = @address_comparison.send(:"#{field}_comparison")
               end
               components
@@ -116,7 +130,17 @@ module AtlasEngine
 
           sig { returns(T::Array[Symbol]) }
           def components_to_validate
-            ComponentsToValidate.new(session, candidate, street_comparison).run
+            relevant_components.components_to_validate
+          end
+
+          sig { returns(T::Array[Symbol]) }
+          def components_to_compare
+            relevant_components.components_to_compare
+          end
+
+          sig { returns(RelevantComponents) }
+          def relevant_components
+            @relevant_components ||= RelevantComponents.new(session, candidate, street_comparison)
           end
 
           sig do
@@ -124,6 +148,9 @@ module AtlasEngine
               T.nilable(AtlasEngine::AddressValidation::Token::Sequence::Comparison)]])
           end
           def split_matched_and_unmatched_components
+            return @matched_components, @unmatched_components if defined?(@matched_components) &&
+              defined?(@unmatched_components)
+
             @matched_components, @unmatched_components = matched_and_unmatched_components.partition do |_, comparison|
               comparison&.match?
             end.map(&:to_h)
@@ -139,9 +166,9 @@ module AtlasEngine
           sig { params(component: Symbol).returns(T.nilable(Symbol)) }
           def unmatched_field_name(component)
             return component unless component == :street
-            return if unmatched_components[:street].nil?
+            return if unmatched_components_to_validate[:street].nil?
 
-            original_street = T.must(unmatched_components[:street]).left_sequence.raw_value
+            original_street = T.must(unmatched_components_to_validate[:street]).left_sequence.raw_value
 
             if session.address.address1.to_s.include?(original_street)
               :address1

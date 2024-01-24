@@ -5,7 +5,7 @@ module AtlasEngine
   module AddressValidation
     module Validators
       module FullAddress
-        class ComponentsToValidate
+        class RelevantComponents
           extend T::Sig
 
           attr_reader :session, :candidate, :street_comparison
@@ -31,29 +31,35 @@ module AtlasEngine
           end
 
           sig { returns(T::Array[Symbol]) }
-          def run
+          def components_to_validate
             supported_components = ALL_SUPPORTED_COMPONENTS.dup - unsupported_components_for_country
             supported_components.delete(:street) if exclude_street_validation?
             supported_components
+          end
+
+          sig { returns(T::Array[Symbol]) }
+          def components_to_compare
+            ALL_SUPPORTED_COMPONENTS.dup - unsupported_components_for_country
           end
 
           private
 
           sig { returns(T::Boolean) }
           def exclude_street_validation?
-            return true unless session.matching_strategy == AddressValidation::MatchingStrategies::EsStreet
+            return @exclude_street_validation if defined?(@exclude_street_validation)
 
-            if street_comparison.blank?
+            @exclude_street_validation = if session.matching_strategy !=
+                AddressValidation::MatchingStrategies::EsStreet
+              true
+            elsif street_comparison.blank?
               emit_excluded_validation("street", "not_found")
-              return true
-            end
-
-            if exclusions("street").any? { |exclusion| exclusion.apply?(session, candidate) }
+              true
+            elsif exclusions("street").any? { |exclusion| exclusion.apply?(session, candidate) }
               emit_excluded_validation("street", "excluded")
-              return true
+              true
+            else
+              false
             end
-
-            false
           end
 
           sig { params(component: String).returns(T::Array[T.class_of(Exclusions::ExclusionBase)]) }
@@ -73,13 +79,15 @@ module AtlasEngine
 
           sig { returns(T::Array[Symbol]) }
           def unsupported_components_for_country
-            unsupported_components = []
-            country = Worldwide.region(code: session.address.country_code)
-            unsupported_components << :province_code if country.province_optional?
-            unsupported_components << :province_code if country.hide_provinces_from_addresses
-            unsupported_components << :city unless country.city_required?
-            unsupported_components << :zip unless country.zip_required? && !country.zip_autofill_enabled
-            unsupported_components.uniq
+            @unsupported_components_for_country ||= begin
+              unsupported_components = []
+              country = Worldwide.region(code: session.address.country_code)
+              unsupported_components << :province_code if country.province_optional?
+              unsupported_components << :province_code if country.hide_provinces_from_addresses
+              unsupported_components << :city unless country.city_required?
+              unsupported_components << :zip unless country.zip_required? && !country.zip_autofill_enabled
+              unsupported_components.uniq
+            end
           end
         end
       end

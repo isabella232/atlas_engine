@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Update Bermuda city alias assignment and synonyms [#43](https://github.com/Shopify/atlas_engine/pull/43)
 - Remove unused validation.city_fields param from country profiles [#42](https://github.com/Shopify/atlas_engine/pull/42)
+- Update CandidateResult to factor in all address components in comparisons [#40](https://github.com/Shopify/atlas_engine/pull/40)
 - Hook up docker compose to dockerfile that installs analysis-icu plugin in dockerized es [#32](https://github.com/Shopify/atlas_engine/pull/32)
 - Add matching_strategy param to logs [#36](https://github.com/Shopify/atlas_engine/pull/36)
 - Add custom parser and query builder for CZ to handle addresses with no street names [#34](https://github.com/Shopify/atlas_engine/pull/34)
