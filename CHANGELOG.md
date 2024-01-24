@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Use match query for province_code clause in query builder [#45](https://github.com/Shopify/atlas_engine/pull/45)
 - Convert all ComparisonHelper functionality into instanced methods [#50](https://github.com/Shopify/atlas_engine/pull/50)
 - Update Bermuda city alias assignment and synonyms [#43](https://github.com/Shopify/atlas_engine/pull/43)
 - Remove unused validation.city_fields param from country profiles [#42](https://github.com/Shopify/atlas_engine/pull/42)

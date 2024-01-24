@@ -160,8 +160,8 @@ module AtlasEngine
         sig { returns(T.nilable(Hash)) }
         def province_clause
           {
-            "term" => {
-              "province_code" => { "value" => address.province_code.to_s.downcase },
+            "match" => {
+              "province_code" => { "query" => address.province_code.to_s.downcase },
             },
           } if profile.attributes.dig("validation", "has_provinces")
         end

@@ -38,9 +38,9 @@
           }
         },
         {
-          "term": {
+          "match": {
             "province_code": {
-              "value": "camp"
+              "query": "camp"
             }
           }
         }
