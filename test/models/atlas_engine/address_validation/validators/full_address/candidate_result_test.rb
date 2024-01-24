@@ -218,11 +218,43 @@ module AtlasEngine
           end
 
           test "adds address_unknown concern without suggestions when ConcernBuilder.should_suggest? is false /
-              candidate differs from input address by 3+ fields" do
+              candidate differs from input address by 3+ components" do
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
             @address = address
             result = result()
             candidate = candidate(city: "Poletown", zip: "H0H 0H0", province_code: "NU")
+            @klass.new(candidate: candidate, session: session, result: result).update_result
+
+            assert_equal 1, result.concerns.size
+            assert_equal [:country_code, :province_code, :zip, :city], result.validation_scope
+            address_unknown_concern = result.concerns.first
+            assert_equal :address_unknown, address_unknown_concern.code
+            assert_empty address_unknown_concern.suggestion_ids
+          end
+
+          test "adds address_unknown concern without suggestions when ConcernBuilder.should_suggest? is false /
+              candidate differs from input address by 3+ components, including components we are not validating" do
+            ConcernBuilder.expects(:should_suggest?).once.returns(false)
+            @address = address(
+              {
+                address1: "Via Tito Livio 11",
+                address2: nil,
+                city: "Biancano",
+                zip: "82030",
+                province_code: "BN",
+                country_code: "IT",
+              },
+            )
+            result = result()
+            candidate = candidate(
+              street: "Via San Vito",
+              city: "Fragneto Monforte",
+              zip: "82020",
+              province_code: "BN",
+              country_code: "IT",
+            )
+            matching_strategy = AddressValidation::MatchingStrategies::Es
+            session = AddressValidation::Session.new(address: @address, matching_strategy: matching_strategy)
             @klass.new(candidate: candidate, session: session, result: result).update_result
 
             assert_equal 1, result.concerns.size
@@ -266,10 +298,14 @@ module AtlasEngine
               phone: nil,
             })
 
-            mock_components_to_validate = mock
-            ComponentsToValidate.expects(:new).returns(mock_components_to_validate)
+            RelevantComponents.any_instance.stubs(:components_to_compare).returns([
+              :city,
+              :province_code,
+              :zip,
+              :street,
+            ])
             # excludes street component
-            mock_components_to_validate.expects(:run).returns([:city, :province_code, :zip])
+            RelevantComponents.any_instance.stubs(:components_to_validate).returns([:city, :province_code, :zip])
 
             result = result()
 
@@ -316,10 +352,14 @@ module AtlasEngine
               address_comparison: address_comparison(candidate, session),
             )
 
-            mock_components_to_validate = mock
+            RelevantComponents.any_instance.stubs(:components_to_compare).returns([
+              :city,
+              :province_code,
+              :zip,
+              :street,
+            ])
             # excludes city component
-            mock_components_to_validate.expects(:run).returns([:province_code, :zip, :street])
-            ComponentsToValidate.expects(:new).returns(mock_components_to_validate)
+            RelevantComponents.any_instance.stubs(:components_to_validate).returns([:province_code, :zip, :street])
 
             result = result()
 
@@ -356,9 +396,8 @@ module AtlasEngine
               address_comparison: address_comparison(candidate, session),
             )
 
-            mock_components_to_validate = mock
-            ComponentsToValidate.expects(:new).returns(mock_components_to_validate)
-            mock_components_to_validate.expects(:run).returns([:street])
+            RelevantComponents.any_instance.stubs(:components_to_compare).returns([:street])
+            RelevantComponents.any_instance.stubs(:components_to_validate).returns([:street])
 
             assert_log_append(
               :info,

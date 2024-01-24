@@ -9,7 +9,7 @@ module AtlasEngine
   module AddressValidation
     module Validators
       module FullAddress
-        class ComponentsToValidateTest < ActiveSupport::TestCase
+        class RelevantComponentsTest < ActiveSupport::TestCase
           include AddressValidationTestHelper
           include AddressValidation::TokenHelper
           include StatsD::Instrument::Assertions
@@ -27,37 +27,41 @@ module AtlasEngine
             @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
             @street_comparison = default_street_comparison
-            @all_components = ComponentsToValidate::ALL_SUPPORTED_COMPONENTS
+            @all_components = RelevantComponents::ALL_SUPPORTED_COMPONENTS
           end
 
-          test "#run returns an array of all supported components" do
+          test "#components_to_compare returns an array of all supported components" do
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components,
-                ComponentsToValidate.new(@session, @candidate, @street_comparison).run
+                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
             end
           end
 
-          test "#run returns an array without the street component when matching strategy is not EsStreet" do
+          test "#components_to_validate returns an array without the street component when matching strategy is not EsStreet" do
             session = session(@address, AddressValidation::MatchingStrategies::Es)
 
             assert_no_statsd_calls("AddressValidation.skip") do
+              assert_equal @all_components,
+                RelevantComponents.new(session, @candidate, @street_comparison).components_to_compare
               assert_equal @all_components - [:street],
-                ComponentsToValidate.new(session, @candidate, @street_comparison).run
+                RelevantComponents.new(session, @candidate, @street_comparison).components_to_validate
             end
           end
 
-          test "#run returns an array without the street component when there is no street comparison" do
+          test "#components_to_validate returns an array without the street component when there is no street comparison" do
             assert_statsd_increment(
               "AddressValidation.skip",
               times: 1,
               tags: { component: "street", reason: "not_found", country: @session.country_code },
             ) do
+              assert_equal @all_components,
+                RelevantComponents.new(@session, @candidate, nil).components_to_compare
               assert_equal @all_components - [:street],
-                ComponentsToValidate.new(@session, @candidate, nil).run
+                RelevantComponents.new(@session, @candidate, nil).components_to_validate
             end
           end
 
-          test "#run returns an array without the street component when a street exclusion applies" do
+          test "#components_to_validate returns an array without the street component when a street exclusion applies" do
             validation = mock
             validation.expects(:validation_exclusions).with(component: "street").returns([DummyExclusion])
             mock_profile = instance_double(CountryProfile)
@@ -70,12 +74,14 @@ module AtlasEngine
               times: 1,
               tags: { component: "street", reason: "excluded", country: @session.country_code },
             ) do
+              assert_equal @all_components,
+                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
               assert_equal @all_components - [:street],
-                ComponentsToValidate.new(@session, @candidate, @street_comparison).run
+                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_validate
             end
           end
 
-          test "#run returns an array without province_code when a country does not use provinces in addresses" do
+          test "#components_to_compare returns an array without province_code when a country does not use provinces in addresses" do
             @address = create_address(
               address1: "237 Rue de la Convention",
               zip: "75015",
@@ -86,11 +92,11 @@ module AtlasEngine
             @candidate = candidate(@address)
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code],
-                ComponentsToValidate.new(@session, @candidate, @street_comparison).run
+                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
             end
           end
 
-          test "#run returns an array without province_code when a country hides provinces" do
+          test "#components_to_compare returns an array without province_code when a country hides provinces" do
             @address = create_address(
               address1: "Easter Shian Farm 1",
               city: "Dunkeld",
@@ -102,27 +108,27 @@ module AtlasEngine
             @candidate = candidate(@address)
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code],
-                ComponentsToValidate.new(@session, @candidate, @street_comparison).run
+                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
             end
           end
 
-          test "#run returns an array without zip when a country does not use zips in addresses" do
+          test "#components_to_compare returns an array without zip when a country does not use zips in addresses" do
             @address = create_address(address1: "34-6th Crescent", country_code: "ZW", city: "Harare")
             @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code, :zip],
-                ComponentsToValidate.new(@session, @candidate, @street_comparison).run
+                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
             end
           end
 
-          test "#run returns an array without city when a country does not use cities in addresses" do
+          test "#components_to_compare returns an array without city when a country does not use cities in addresses" do
             @address = create_address(address1: "Apostolic Palace", country_code: "VA", city: "Harare", zip: "00120")
             @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:city, :province_code, :zip],
-                ComponentsToValidate.new(@session, @candidate, @street_comparison).run
+                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
             end
           end
 
