@@ -11,14 +11,22 @@ module AtlasEngine
           sig { returns(Sequence) }
           attr_reader :left, :right
 
+          sig { returns(T::Hash[T::Array[Token], Token::Comparison]) }
           attr_reader :comparison_cache
 
           MAX_ALLOWED_EDIT_DISTANCE_PERCENT = 0.5
 
-          sig { params(left_sequence: Sequence, right_sequence: Sequence).void }
-          def initialize(left_sequence:, right_sequence:)
+          sig do
+            params(
+              left_sequence: Sequence,
+              right_sequence: Sequence,
+              comparison_policy: ComparisonPolicy,
+            ).void
+          end
+          def initialize(left_sequence:, right_sequence:, comparison_policy: ComparisonPolicy::DEFAULT_POLICY)
             @left = left_sequence
             @right = right_sequence
+            @comparison_policy = comparison_policy
             @comparison_cache = Hash.new do |h, (l_tok, r_tok)|
               h[[l_tok, r_tok]] = AddressValidation::Token::Comparator.new(l_tok, r_tok).compare
             end
@@ -35,6 +43,9 @@ module AtlasEngine
 
           private
 
+          sig { returns(ComparisonPolicy) }
+          attr_reader :comparison_policy
+
           sig do
             params(
               left_permutations: T::Array[Token],
@@ -43,7 +54,7 @@ module AtlasEngine
           end
           def token_comparisons(left_permutations, right_permutations)
             left_permutations.product(right_permutations).map do |l_tok, r_tok|
-              comparison_cache[[l_tok, r_tok]]
+              T.must(comparison_cache[[l_tok, r_tok]])
             end
           end
 
@@ -133,7 +144,7 @@ module AtlasEngine
 
             remaining_right_tokens = remove_synonyms_at_same_position(remaining_right_tokens)
 
-            remaining_left_tokens.concat(remaining_right_tokens)
+            apply_unmatched_policy(remaining_left_tokens, remaining_right_tokens)
           end
 
           sig { params(token: Token, other_token: Token).returns(T::Boolean) }
@@ -150,6 +161,29 @@ module AtlasEngine
                 tokens.reject! { |token| token.type == "SYNONYM" } if tokens.size > 1
               end
               .values.flatten
+          end
+
+          sig do
+            params(
+              left_unmatched_tokens: T::Array[Token],
+              right_unmatched_tokens: T::Array[Token],
+            ).returns(T::Array[Token])
+          end
+          def apply_unmatched_policy(left_unmatched_tokens, right_unmatched_tokens)
+            case comparison_policy.unmatched
+            when :ignore_left_unmatched
+              right_unmatched_tokens
+            when :ignore_right_unmatched
+              left_unmatched_tokens
+            when :ignore_largest_unmatched_side
+              if right_unmatched_tokens.size > left_unmatched_tokens.size
+                left_unmatched_tokens
+              else
+                right_unmatched_tokens
+              end
+            else
+              left_unmatched_tokens.concat(right_unmatched_tokens)
+            end
           end
         end
       end

@@ -17,5 +17,10 @@ validation:
   query_builder: AtlasEngine::AddressValidation::Es::DefaultQueryBuilder
   address_parser: AtlasEngine::ValidationTranscriber::AddressParserBase
   restrictions: []
+  comparison_policies:
+    street: {}
+    city: {}
+    zip: {}
+    province_code: {}
 decompounding_patterns:
   street: []

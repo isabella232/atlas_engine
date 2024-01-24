@@ -26,6 +26,7 @@ module AtlasEngine
               best_comparison(
                 street_sequence,
                 candidate_sequences,
+                field_policy(:street),
               )
             end.min
           end
@@ -37,6 +38,7 @@ module AtlasEngine
             @city_comparison = best_comparison(
               datastore.fetch_city_sequence,
               T.must(candidate.component(:city)).sequences,
+              field_policy(:city),
             )
           end
 
@@ -56,6 +58,7 @@ module AtlasEngine
             @province_code_comparison = best_comparison(
               Token::Sequence.from_string(normalized_session_province_code),
               [Token::Sequence.from_string(normalized_candidate_province_code)],
+              field_policy(:province_code),
             )
           end
 
@@ -76,6 +79,7 @@ module AtlasEngine
             @zip_comparison = best_comparison(
               zip_sequence,
               T.must(candidate.component(:zip)).sequences,
+              field_policy(:zip),
             )
           end
 
@@ -102,22 +106,30 @@ module AtlasEngine
             params(
               sequence: Token::Sequence,
               component_sequences: T::Array[Token::Sequence],
+              comparison_policy: Token::Sequence::ComparisonPolicy,
             ).returns(T.nilable(Token::Sequence::Comparison))
           end
           def best_comparison(
             sequence,
-            component_sequences
+            component_sequences,
+            comparison_policy = Token::Sequence::ComparisonPolicy::DEFAULT_POLICY
           )
             component_sequences.map do |component_sequence|
               Token::Sequence::Comparator.new(
                 left_sequence: sequence,
                 right_sequence: component_sequence,
+                comparison_policy:,
               ).compare
             end.min_by.with_index do |comparison, index|
               # ruby's `min` and `sort` methods are not stable
               # so we need to prefer the leftmost comparison when two comparisons are equivalent
               [comparison, index]
             end
+          end
+
+          sig { params(field: Symbol).returns(Token::Sequence::ComparisonPolicy) }
+          def field_policy(field)
+            datastore.country_profile.validation.comparison_policy(field)
           end
 
           sig { params(candidate: Candidate).returns(T::Array[AddressNumberRange]) }
