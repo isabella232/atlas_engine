@@ -27,6 +27,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+nil.
+
+---
+
+[0.2.0] - 2024-01-24
+
 - Use match query for province_code clause in query builder [#45](https://github.com/Shopify/atlas_engine/pull/45)
 - Improve validation for Belgium [#47](https://github.com/Shopify/atlas_engine/pull/47)
 - Convert all ComparisonHelper functionality into instanced methods [#50](https://github.com/Shopify/atlas_engine/pull/50)
@@ -46,7 +52,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Update datastore to load the country profile with locale, and update Saudi Arabia to use normalized components instead of the normalizer class [#23](https://github.com/Shopify/atlas_engine/pull/23)
 - Change the name of the active support notification to be consistent with `atlas_engine`[#18](https://github.com/Shopify/atlas_engine/pull/18)
 - Add corrector to fix encoding issues in Italy's OA data and updated Italy's mapper to not titleize the street names [#17](https://github.com/Shopify/atlas_engine/pull/17)
----
 
 [0.1.2] - 2024-01-18
 
