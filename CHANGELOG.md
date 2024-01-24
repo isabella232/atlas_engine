@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Allow nil address 2 in BuildingNumberInAddress1OrAddress2 predicate [#57](https://github.com/Shopify/atlas_engine/pull/57)
 - Improve indexing for Poland [#56](https://github.com/Shopify/atlas_engine/pull/56)
 - Configure sequence comparison policy for South Korea [#58](https://github.com/Shopify/atlas_engine/pull/58)
 - Configurable sequence comparison policy [#54](https://github.com/Shopify/atlas_engine/pull/54)
