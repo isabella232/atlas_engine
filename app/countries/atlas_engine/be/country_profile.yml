@@ -6,6 +6,8 @@ ingestion:
 validation:
   enabled: true
   default_matching_strategy: local
+  address_parser: AtlasEngine::Be::ValidationTranscriber::AddressParser
+  has_provinces: false 
   index_locales:
   - fr
   - nl
