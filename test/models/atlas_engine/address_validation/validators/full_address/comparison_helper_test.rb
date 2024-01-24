@@ -20,7 +20,9 @@ module AtlasEngine
             input_street_sequences = [Token::Sequence.from_string(address.address1)]
             datastore.street_sequences = input_street_sequences
 
-            comparison = ComparisonHelper.street_comparison(datastore: datastore, candidate: candidate)
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.street_comparison
             candidate_street_sequences = candidate.component(:street).sequences
 
             comparisons = comparison.token_comparisons
@@ -44,7 +46,9 @@ module AtlasEngine
             input_city_sequence = Token::Sequence.from_string(address.city)
             datastore.city_sequence = input_city_sequence
 
-            comparison = ComparisonHelper.city_comparison(datastore: datastore, candidate: candidate)
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.city_comparison
             candidate_city_sequences = candidate.component(:city).sequences
 
             comparisons = comparison.token_comparisons
@@ -70,7 +74,9 @@ module AtlasEngine
             input_city_sequence = Token::Sequence.from_string(address.city)
             datastore.city_sequence = input_city_sequence
 
-            comparison = ComparisonHelper.city_comparison(datastore: datastore, candidate: candidate)
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.city_comparison
             candidate_city_sequences = candidate.component(:city).sequences
 
             comparisons = comparison.token_comparisons
@@ -91,7 +97,11 @@ module AtlasEngine
               source: { "country_code" => "US", "province_code" => "TX" },
             )
             address = build_address(province_code: "US-TX", country_code: "US")
-            comparison = ComparisonHelper.province_code_comparison(address: address, candidate: candidate)
+            datastore = Es::Datastore.new(address: address)
+
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.province_code_comparison
 
             assert_empty comparison.unmatched_tokens
 
@@ -106,8 +116,11 @@ module AtlasEngine
               source: { "country_code" => "US", "province_code" => "PR" },
             )
             address = build_address(province_code: "US-PR", country_code: "US")
+            datastore = Es::Datastore.new(address: address)
 
-            comparison = ComparisonHelper.province_code_comparison(address: address, candidate: candidate)
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.province_code_comparison
 
             assert_empty comparison.unmatched_tokens
 
@@ -119,8 +132,11 @@ module AtlasEngine
           test "#zip_comparison compares the session zip with the candidate zip field" do
             candidate = Candidate.new(id: "A", source: { "zip" => "J9A 2V2" })
             address = build_address(country_code: "CA", zip: "j9a2v2")
+            datastore = Es::Datastore.new(address: address)
 
-            comparison = ComparisonHelper.zip_comparison(address: address, candidate: candidate)
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.zip_comparison
             candidate_zip_sequences = candidate.component(:zip).sequences
 
             assert_predicate comparison, :match?
@@ -132,8 +148,11 @@ module AtlasEngine
           test "#zip_comparison compares the session zip with a truncated candidate zip field when applicable" do
             candidate = Candidate.new(id: "A", source: { "zip" => "S2919 BNA" })
             address = build_address(country_code: "AR", zip: "S2919")
+            datastore = Es::Datastore.new(address: address)
 
-            comparison = ComparisonHelper.zip_comparison(address: address, candidate: candidate)
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.zip_comparison
 
             candidate.component(:zip).value = "S2919"
             expected_candidate_zip_sequences = candidate.component(:zip).sequences
@@ -152,7 +171,9 @@ module AtlasEngine
             address = build_address(country_code: "CA", address1: "1 Main St")
             datastore = Es::Datastore.new(address: address)
 
-            comparison = ComparisonHelper.building_comparison(datastore: datastore, candidate: candidate)
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.building_comparison
 
             assert comparison.match?
           end
@@ -160,8 +181,11 @@ module AtlasEngine
           test "returns nil comparison for candidate when there is no field value to compare" do
             candidate = Candidate.new(id: "A", source: { "zip" => nil })
             address = build_address(country_code: "CA", zip: "j9a2v2")
+            datastore = Es::Datastore.new(address: address)
 
-            comparison = ComparisonHelper.zip_comparison(address: address, candidate: candidate)
+            helper = ComparisonHelper.new(address:, candidate:, datastore:)
+
+            comparison = helper.zip_comparison
             candidate_zip_sequences = candidate.component(:zip).sequences
 
             assert_nil comparison

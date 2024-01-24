@@ -9,6 +9,8 @@ module AtlasEngine
           extend T::Sig
           include LogHelper
 
+          delegate :street_comparison, to: :address_comparison
+
           sig do
             params(
               candidate: AddressValidation::CandidateTuple,
@@ -25,7 +27,7 @@ module AtlasEngine
 
           sig { override.void }
           def update_result
-            result.candidate = candidate&.serialize
+            result.candidate = candidate.serialize
             return if unmatched_components_to_validate.empty?
 
             update_concerns_and_suggestions
@@ -39,7 +41,11 @@ module AtlasEngine
 
           private
 
+          sig { returns(Candidate) }
           attr_reader :candidate
+
+          sig { returns(AddressComparison) }
+          attr_reader :address_comparison
 
           sig { void }
           def update_concerns_and_suggestions
@@ -154,13 +160,6 @@ module AtlasEngine
             @matched_components, @unmatched_components = matched_and_unmatched_components.partition do |_, comparison|
               comparison&.match?
             end.map(&:to_h)
-          end
-
-          sig { returns(T.nilable(AtlasEngine::AddressValidation::Token::Sequence::Comparison)) }
-          def street_comparison
-            return @street_comparison if defined?(@street_comparison)
-
-            @street_comparison = @address_comparison.street_comparison
           end
 
           sig { params(component: Symbol).returns(T.nilable(Symbol)) }
