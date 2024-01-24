@@ -50,5 +50,33 @@ module AtlasEngine
       }
       assert_not CountryProfile.new(profile_attributes).validation.multi_locale?
     end
+
+    test "comparison_policy returns field's ComparisonPolicy when defined" do
+      profile_attributes = {
+        "id" => "PL",
+        "validation" => {
+          "comparison_policies" => {
+            "street" => {
+              "unmatched" => "ignore_right_unmatched",
+            },
+          },
+        },
+      }
+
+      validation_subset = CountryProfile.new(profile_attributes).validation
+
+      assert_equal :ignore_right_unmatched, validation_subset.comparison_policy(:street).unmatched
+    end
+
+    test "comparison_policy returns default comparison policy as fallback" do
+      profile_attributes = {
+        "id" => "PL",
+      }
+
+      validation_subset = CountryProfile.new(profile_attributes).validation
+
+      assert_equal AddressValidation::Token::Sequence::ComparisonPolicy::DEFAULT_POLICY,
+        validation_subset.comparison_policy(:street)
+    end
   end
 end

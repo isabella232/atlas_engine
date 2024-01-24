@@ -312,6 +312,102 @@ module AtlasEngine
             assert_comparison(s1_strt, :comp, s2_street, token_comparisons[1], 2)
           end
 
+          test "#compare correctly implements the `ignore_left_unmatched` policy" do
+            seq1 = sequence("123", "main", "strt", "apt", "a")
+            _s1_123, s1_main, s1_strt, _s1_apt, _s1_a = seq1.tokens
+            seq2 = sequence("main", "street", "w")
+            s2_main, s2_street, s2_w = seq2.tokens
+
+            comparison_policy = AddressValidation::Token::Sequence::ComparisonPolicy.new(
+              unmatched: :ignore_left_unmatched,
+            )
+
+            comparison = AddressValidation::Token::Sequence::Comparator.new(
+              left_sequence: seq1,
+              right_sequence: seq2,
+              comparison_policy:,
+            ).compare
+
+            token_comparisons = comparison.token_comparisons
+
+            assert_equal [s2_w], comparison.unmatched_tokens
+
+            assert_comparison(s1_main, :equal, s2_main, token_comparisons[0])
+            assert_comparison(s1_strt, :comp, s2_street, token_comparisons[1], 2)
+          end
+
+          test "#compare correctly implements the `ignore_right_unmatched` policy" do
+            seq1 = sequence("123", "main", "strt", "apt", "a")
+            s1_123, s1_main, s1_strt, s1_apt, s1_a = seq1.tokens
+            seq2 = sequence("main", "street", "w")
+            s2_main, s2_street, _s2_w = seq2.tokens
+
+            comparison_policy = AddressValidation::Token::Sequence::ComparisonPolicy.new(
+              unmatched: :ignore_right_unmatched,
+            )
+
+            comparison = AddressValidation::Token::Sequence::Comparator.new(
+              left_sequence: seq1,
+              right_sequence: seq2,
+              comparison_policy:,
+            ).compare
+
+            token_comparisons = comparison.token_comparisons
+
+            assert_equal [s1_123, s1_apt, s1_a], comparison.unmatched_tokens
+
+            assert_comparison(s1_main, :equal, s2_main, token_comparisons[0])
+            assert_comparison(s1_strt, :comp, s2_street, token_comparisons[1], 2)
+          end
+
+          test "#compare correctly implements the `ignore_largest_unmatched_side` policy" do
+            seq1 = sequence("123", "main", "strt", "apt", "a")
+            _s1_123, s1_main, s1_strt, _s1_apt, _s1_a = seq1.tokens
+            seq2 = sequence("main", "street", "w")
+            s2_main, s2_street, s2_w = seq2.tokens
+
+            comparison_policy = AddressValidation::Token::Sequence::ComparisonPolicy.new(
+              unmatched: :ignore_largest_unmatched_side,
+            )
+
+            comparison = AddressValidation::Token::Sequence::Comparator.new(
+              left_sequence: seq1,
+              right_sequence: seq2,
+              comparison_policy:,
+            ).compare
+
+            token_comparisons = comparison.token_comparisons
+
+            assert_equal [s2_w], comparison.unmatched_tokens
+
+            assert_comparison(s1_main, :equal, s2_main, token_comparisons[0])
+            assert_comparison(s1_strt, :comp, s2_street, token_comparisons[1], 2)
+          end
+
+          test "#compare: `ignore_largest_unmatched_side` drops left unmatched when unmatched token count is tied" do
+            seq1 = sequence("123", "main", "strt")
+            _s1_123, s1_main, s1_strt = seq1.tokens
+            seq2 = sequence("main", "street", "w")
+            s2_main, s2_street, s2_w = seq2.tokens
+
+            comparison_policy = AddressValidation::Token::Sequence::ComparisonPolicy.new(
+              unmatched: :ignore_largest_unmatched_side,
+            )
+
+            comparison = AddressValidation::Token::Sequence::Comparator.new(
+              left_sequence: seq1,
+              right_sequence: seq2,
+              comparison_policy:,
+            ).compare
+
+            token_comparisons = comparison.token_comparisons
+
+            assert_equal [s2_w], comparison.unmatched_tokens
+
+            assert_comparison(s1_main, :equal, s2_main, token_comparisons[0])
+            assert_comparison(s1_strt, :comp, s2_street, token_comparisons[1], 2)
+          end
+
           test "sequences contain synonyms" do
             seq1 = sequence("123", "main", ["st", "street"])
             s1_123, s1_main, s1_street_syn = seq1.tokens

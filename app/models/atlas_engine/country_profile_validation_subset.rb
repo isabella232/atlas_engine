@@ -49,5 +49,19 @@ module AtlasEngine
     def normalized_components
       attributes.dig("normalized_components") || []
     end
+
+    sig { params(field: Symbol).returns(AddressValidation::Token::Sequence::ComparisonPolicy) }
+    def comparison_policy(field)
+      field_policy = attributes.dig(
+        "comparison_policies",
+        field.to_s,
+      )&.deep_symbolize_keys&.deep_transform_values!(&:to_sym)
+
+      if field_policy.present?
+        AddressValidation::Token::Sequence::ComparisonPolicy.new(**field_policy)
+      else
+        AddressValidation::Token::Sequence::ComparisonPolicy::DEFAULT_POLICY
+      end
+    end
   end
 end
