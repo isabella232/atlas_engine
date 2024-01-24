@@ -1,0 +1,4 @@
+id: SI
+validation:
+  enabled: true
+  default_matching_strategy: es

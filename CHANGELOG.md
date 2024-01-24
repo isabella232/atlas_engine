@@ -26,8 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Security in case of vulnerabilities.
 
 ## [Unreleased]
-
-nil.
+- Enable ES level validation for Slovenia (SI) [#44](https://github.com/Shopify/atlas_engine/pull/44)
 
 ---
 
