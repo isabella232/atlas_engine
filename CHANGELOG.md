@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Convert all ComparisonHelper functionality into instanced methods [#50](https://github.com/Shopify/atlas_engine/pull/50)
 - Update Bermuda city alias assignment and synonyms [#43](https://github.com/Shopify/atlas_engine/pull/43)
 - Remove unused validation.city_fields param from country profiles [#42](https://github.com/Shopify/atlas_engine/pull/42)
 - Update CandidateResult to factor in all address components in comparisons [#40](https://github.com/Shopify/atlas_engine/pull/40)

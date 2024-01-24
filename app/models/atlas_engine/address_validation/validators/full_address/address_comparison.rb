@@ -9,34 +9,18 @@ module AtlasEngine
           extend T::Sig
           include Comparable
 
-          attr_reader :street_comparison,
+          attr_reader :comparison_helper
+
+          delegate :street_comparison,
             :city_comparison,
-            :zip_comparison,
             :province_code_comparison,
-            :building_comparison
+            :zip_comparison,
+            :building_comparison,
+            to: :comparison_helper
 
           sig { params(address: AbstractAddress, candidate: Candidate, datastore: DatastoreBase).void }
           def initialize(address:, candidate:, datastore:)
-            @street_comparison = ComparisonHelper.street_comparison(
-              datastore: datastore,
-              candidate: candidate,
-            )
-            @city_comparison = ComparisonHelper.city_comparison(
-              datastore: datastore,
-              candidate: candidate,
-            )
-            @zip_comparison = ComparisonHelper.zip_comparison(
-              address: address,
-              candidate: candidate,
-            )
-            @province_code_comparison = ComparisonHelper.province_code_comparison(
-              address: address,
-              candidate: candidate,
-            )
-            @building_comparison = ComparisonHelper.building_comparison(
-              datastore: datastore,
-              candidate: candidate,
-            )
+            @comparison_helper = ComparisonHelper.new(address:, candidate:, datastore:)
           end
 
           sig { params(other: AddressComparison).returns(Integer) }
