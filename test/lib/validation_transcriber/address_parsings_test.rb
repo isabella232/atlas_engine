@@ -58,6 +58,16 @@ module AtlasEngine
         assert_equal ["123"], AddressParsings.new(address_input: partial_address).potential_building_numbers
       end
 
+      test "#potential_building_numbers ignores long numeric values" do
+        partial_address = build_address(
+          address1: "12345678901 Main St",
+          address2: "Apt 1",
+          country_code: "CA",
+        )
+
+        assert_equal [], AddressParsings.new(address_input: partial_address).potential_building_numbers
+      end
+
       test "unparsable addresses are logged" do
         address_hash = {
           address1: "Elgin St",
