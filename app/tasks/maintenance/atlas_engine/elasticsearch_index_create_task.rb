@@ -36,7 +36,7 @@ module Maintenance
         record_count = ::AtlasEngine::PostAddress.where(address_conditions).size
         raise "No records to process for country code: #{country_code}" if record_count.zero?
 
-        repository.create_next_index(ensure_clean: true)
+        repository.create_next_index(ensure_clean: true, raise_errors: true)
 
         ::AtlasEngine::PostAddress.where(address_conditions).in_batches(of: batch_size)
       end

@@ -10,7 +10,12 @@ module AtlasEngine
         include DatastoreBase
         extend T::Sig
 
+        sig { override.returns(CountryProfile) }
+        attr_reader :country_profile
+
+        sig { override.returns(ValidationTranscriber::AddressParsings) }
         attr_reader :parsings
+
         attr_writer :candidates # meant for test setup only
 
         sig { params(address: AbstractAddress, locale: T.nilable(String)).void }
@@ -21,9 +26,9 @@ module AtlasEngine
           raise ArgumentError, "address has no country_code" if address.country_code.blank?
 
           @country_code = T.must(address.country_code.to_s)
-          @profile = CountryProfile.for(country_code.to_s.upcase, @locale)
+          @country_profile = CountryProfile.for(country_code.to_s.upcase, @locale)
 
-          if locale.nil? && @profile.validation.multi_locale?
+          if locale.nil? && @country_profile.validation.multi_locale?
             raise ArgumentError, "#{country_code} is a multi-locale country and requires a locale"
           end
 
@@ -107,7 +112,7 @@ module AtlasEngine
 
         private
 
-        attr_reader :address, :country_code, :locale, :profile, :query_builder
+        attr_reader :address, :country_code, :locale, :query_builder
 
         sig { returns(Token::Sequence) }
         def fetch_city_sequence_internal
@@ -153,7 +158,7 @@ module AtlasEngine
 
         sig { params(candidates: T::Array[Candidate]).void }
         def assign_term_vectors_to_candidates(candidates)
-          return if profile.validation.normalized_components.blank?
+          return if country_profile.validation.normalized_components.blank?
 
           candidate_term_vectors = measure_es_validation_request_time(method: "term_vectors") do
             repository.term_vectors(term_vectors_query(candidates))
@@ -167,7 +172,7 @@ module AtlasEngine
           {
             ids: candidates.map(&:id),
             parameters: {
-              fields: profile.validation.normalized_components,
+              fields: country_profile.validation.normalized_components,
               field_statistics: false,
             },
           }
@@ -219,7 +224,7 @@ module AtlasEngine
             FieldDecompounder.new(
               field: :street,
               value: street_value,
-              country_profile: profile,
+              country_profile:,
             ).call,
           )
         end

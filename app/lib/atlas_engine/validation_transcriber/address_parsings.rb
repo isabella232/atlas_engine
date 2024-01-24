@@ -42,7 +42,7 @@ module AtlasEngine
 
       sig { returns(T::Array[String]) }
       def potential_building_numbers
-        parsings.pluck(:building_num).compact.uniq
+        parsings.pluck(:building_num).compact.uniq.reject { |n| n.match?(/\d{7,}/) }
       end
 
       sig { params(address_input: AddressValidation::AbstractAddress).void }
