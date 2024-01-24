@@ -45,7 +45,11 @@ module AtlasEngine
             concerns.each do |concern|
               tags.merge!(concern.attributes.slice(:code, :type))
 
-              StatsD.increment("AddressValidation.#{ending_breadcrumb}", tags: tags)
+              if concern.attributes[:code] == :address_unknown
+                StatsD.increment("AddressValidation.unknown", tags: tags.except(:component))
+              else
+                StatsD.increment("AddressValidation.#{ending_breadcrumb}", tags: tags)
+              end
             end
           end
         end
@@ -57,7 +61,7 @@ module AtlasEngine
       def component_concerns(component)
         if component.equal?(:street)
           result.concerns.select do |c|
-            c.attributes[:code] =~ /^(address1|address2|street).*/
+            c.attributes[:code] =~ /^(address1|address2|street|address_unknown).*/
           end
         elsif component.equal?(:building_number)
           result.concerns.select do |c|

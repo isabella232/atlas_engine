@@ -110,6 +110,32 @@ module AtlasEngine
         end
       end
 
+      test "#run emits unknown when an address_unknown concern is found" do
+        expected_concern = AddressValidation::Concern.new(
+          field_names: [:address1],
+          code: :address_unknown,
+          message: "",
+          type: AddressValidation::Concern::TYPES[:warning],
+          type_level: 2,
+          suggestion_ids: [],
+        )
+
+        assert_statsd_increment(
+          "AddressValidation.unknown",
+          times: 1,
+          tags: {
+            country: "CA",
+            code: :address_unknown,
+            type: AddressValidation::Concern::TYPES[:warning],
+          },
+        ) do
+          AddressValidation::StatsdEmitter.new(
+            address: @address,
+            result: AddressValidation::Result.new(concerns: [expected_concern]),
+          ).run
+        end
+      end
+
       test "#component_concerns returns the correct concerns" do
         components = [:country, :province, :zip, :city, :street, :building_number, :phone]
         expected_return_values = {
