@@ -14,10 +14,11 @@ module AtlasEngine
                   override.params(
                     session: AtlasEngine::AddressValidation::Session,
                     candidate: AtlasEngine::AddressValidation::Candidate,
+                    address_comparison: AtlasEngine::AddressValidation::Validators::FullAddress::AddressComparison,
                   )
                     .returns(T::Boolean)
                 end
-                def apply?(session, candidate)
+                def apply?(session, candidate, address_comparison)
                   true
                 end
               end

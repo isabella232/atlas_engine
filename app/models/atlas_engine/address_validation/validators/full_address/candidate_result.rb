@@ -146,7 +146,7 @@ module AtlasEngine
 
           sig { returns(RelevantComponents) }
           def relevant_components
-            @relevant_components ||= RelevantComponents.new(session, candidate, street_comparison)
+            @relevant_components ||= RelevantComponents.new(session, candidate, address_comparison)
           end
 
           sig do
