@@ -33,6 +33,7 @@ module AtlasEngine
           sig { returns(T::Array[Symbol]) }
           def components_to_validate
             supported_components = ALL_SUPPORTED_COMPONENTS.dup - unsupported_components_for_country
+            apply_exclusions(supported_components)
             supported_components.delete(:street) if exclude_street_validation?
             supported_components
           end
@@ -44,6 +45,18 @@ module AtlasEngine
 
           private
 
+          sig { params(supported_components: T::Array[Symbol]).void }
+          def apply_exclusions(supported_components)
+            supported_components.delete_if do |component|
+              exclusions(component).any? do |exclusion|
+                if exclusion.apply?(session, candidate)
+                  emit_excluded_validation(component, "excluded")
+                  true
+                end
+              end
+            end
+          end
+
           sig { returns(T::Boolean) }
           def exclude_street_validation?
             return @exclude_street_validation if defined?(@exclude_street_validation)
@@ -52,22 +65,24 @@ module AtlasEngine
                 AddressValidation::MatchingStrategies::EsStreet
               true
             elsif street_comparison.blank?
-              emit_excluded_validation("street", "not_found")
-              true
-            elsif exclusions("street").any? { |exclusion| exclusion.apply?(session, candidate) }
-              emit_excluded_validation("street", "excluded")
+              emit_excluded_validation(:street, "not_found")
               true
             else
               false
             end
           end
 
-          sig { params(component: String).returns(T::Array[T.class_of(Exclusions::ExclusionBase)]) }
+          sig { params(component: Symbol).returns(T::Array[T.class_of(Exclusions::ExclusionBase)]) }
           def exclusions(component)
-            CountryProfile.for(session.country_code).validation.validation_exclusions(component: component)
+            country_profile.validation.validation_exclusions(component: component)
           end
 
-          sig { params(component: String, reason: String).void }
+          sig { returns(CountryProfile) }
+          def country_profile
+            @country_profile ||= CountryProfile.for(session.country_code)
+          end
+
+          sig { params(component: Symbol, reason: String).void }
           def emit_excluded_validation(component, reason)
             tags = [
               "reason:#{reason}",

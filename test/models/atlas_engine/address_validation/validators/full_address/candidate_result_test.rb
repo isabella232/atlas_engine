@@ -22,7 +22,7 @@ module AtlasEngine
           test "always adds serialized candidate to result" do
             @address = address
             result = result()
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            @klass.new(candidate: candidate_tuple, session: session(@address), result: result).update_result
 
             assert_equal ",ON,,,,K2P 1L4,Ottawa,,150 Elgin Street", result.candidate
           end
@@ -30,7 +30,7 @@ module AtlasEngine
           test "does not modify result concerns when candidate and address are a match" do
             @address = address
             result = result()
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            @klass.new(candidate: candidate_tuple, session: session(@address), result: result).update_result
 
             assert_equal AddressValidation::Result::SORTED_VALIDATION_SCOPES, result.validation_scope
             assert_empty result.concerns
@@ -40,8 +40,8 @@ module AtlasEngine
           test "does not modify result concerns when candidate and address are have a match in multiple array values" do
             @address = address(city: "Orleans")
             result = result()
-            candidate = candidate(city: ["Nepean", "Orleans", "Barrhaven"])
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(city: ["Nepean", "Orleans", "Barrhaven"])
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal AddressValidation::Result::SORTED_VALIDATION_SCOPES, result.validation_scope
             assert_empty result.concerns
@@ -51,8 +51,8 @@ module AtlasEngine
           test "selects the closest matching value if the input has an edit distance of 2 from an accepted value" do
             @address = address(city: "Orlayans")
             result = result()
-            candidate = candidate(city: ["Nepean", "Orleans", "Barrhaven"])
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(city: ["Nepean", "Orleans", "Barrhaven"])
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -72,8 +72,8 @@ module AtlasEngine
           test "selects the first value in the array if the user input has over 2 edit distance from the accepted values" do
             @address = address(city: "OrleaNNNns")
             result = result()
-            candidate = candidate(city: ["Nepean", "Orleans", "Barrhaven"])
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(city: ["Nepean", "Orleans", "Barrhaven"])
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -93,8 +93,8 @@ module AtlasEngine
           test "selects the closest match within the accepted values" do
             @address = address(city: "Barrheaven")
             result = result()
-            candidate = candidate(city: ["Nepean", "Orleans", "Barrhaven"])
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(city: ["Nepean", "Orleans", "Barrhaven"])
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -136,7 +136,7 @@ module AtlasEngine
 
             result = result()
             # this simulates a discrepancy which would require us to build a suggestion
-            candidate = candidate(city: ["Nepean"])
+            candidate = candidate_tuple(city: ["Nepean"])
 
             session = AddressValidation::Session.new(address: @address).tap { |session| sequences_for(session) }
 
@@ -161,8 +161,8 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(true)
             @address = address
             result = result()
-            candidate = candidate(city: ["Nepean"], province_code: "AB")
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(city: ["Nepean"], province_code: "AB")
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -174,8 +174,8 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(true)
             @address = address
             result = result()
-            candidate = candidate(zip: "K2L 1P4", province_code: "AB")
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(zip: "K2L 1P4", province_code: "AB")
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal 1, result.suggestions.size
             assert_equal 2, result.concerns.size
@@ -194,8 +194,8 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
             @address = address(province_code: "AB") # K2P 1L4 is not valid for Alberta
             result = result()
-            candidate = candidate(province_code: "ON") # mismatch on province
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(province_code: "ON") # mismatch on province
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal 1, result.concerns.size
             assert_equal [:country_code, :province_code], result.validation_scope
@@ -209,8 +209,8 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
             @address = address
             result = result()
-            candidate = candidate(province_code: "AB") # mismatch on province
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(province_code: "AB") # mismatch on province
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal AddressValidation::Result::SORTED_VALIDATION_SCOPES, result.validation_scope
             assert_empty result.concerns
@@ -222,8 +222,8 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
             @address = address
             result = result()
-            candidate = candidate(city: "Poletown", zip: "H0H 0H0", province_code: "NU")
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(city: "Poletown", zip: "H0H 0H0", province_code: "NU")
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal 1, result.concerns.size
             assert_equal [:country_code, :province_code, :zip, :city], result.validation_scope
@@ -235,24 +235,9 @@ module AtlasEngine
           test "adds address_unknown concern without suggestions when ConcernBuilder.should_suggest? is false /
               candidate differs from input address by 3+ components, including components we are not validating" do
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
-            @address = address(
-              {
-                address1: "Via Tito Livio 11",
-                address2: nil,
-                city: "Biancano",
-                zip: "82030",
-                province_code: "BN",
-                country_code: "IT",
-              },
-            )
+            @address = address
             result = result()
-            candidate = candidate(
-              street: "Via San Vito",
-              city: "Fragneto Monforte",
-              zip: "82020",
-              province_code: "BN",
-              country_code: "IT",
-            )
+            candidate = candidate_tuple(city: "Poletown", zip: "H0H 0H0", street: "Main Ave")
             matching_strategy = AddressValidation::MatchingStrategies::Es
             session = AddressValidation::Session.new(address: @address, matching_strategy: matching_strategy)
             @klass.new(candidate: candidate, session: session, result: result).update_result
@@ -267,8 +252,8 @@ module AtlasEngine
           test "removes the validation scopes of unmatched fields and their contained scopes" do
             @address = address
             result = result()
-            candidate = candidate(city: ["Nepean"], zip: "K2L 1P4")
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            candidate = candidate_tuple(city: ["Nepean"], zip: "K2L 1P4")
+            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
 
             assert_equal [:country_code, :province_code], result.validation_scope
           end
@@ -413,12 +398,12 @@ module AtlasEngine
             assert_empty result.concerns
           end
 
-          def candidate(source = {})
+          def candidate_tuple(source = {})
             candidate_hash = @address.to_h.transform_keys(address1: :street).merge(source)
             candidate = AddressValidation::Candidate.new(id: "A", source: candidate_hash)
             AddressValidation::CandidateTuple.new(
               candidate: candidate,
-              address_comparison: address_comparison(candidate, session),
+              address_comparison: address_comparison(candidate, session(@address)),
             )
           end
 
@@ -441,20 +426,6 @@ module AtlasEngine
               country_code: "CA",
             }
             build_address(**default_address.merge(overrides))
-          end
-
-          def session
-            @session ||= AddressValidation::Session.new(address: @address).tap do |session|
-              # setting the street and city sequences leads the Datastore to skip the actual ES _analyze requests.
-              sequences_for(session)
-            end
-          end
-
-          def sequences_for(session)
-            session.datastore.street_sequences = [
-              AtlasEngine::AddressValidation::Token::Sequence.from_string(@address.address1),
-            ]
-            session.datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(@address.city)
           end
 
           def result(overrides = {})

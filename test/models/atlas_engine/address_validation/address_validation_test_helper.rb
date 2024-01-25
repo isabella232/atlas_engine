@@ -90,6 +90,26 @@ module AtlasEngine
           matching_strategy: "es_street",
         )
       end
+
+      def session(address)
+        AtlasEngine::AddressValidation::Session.new(address: address).tap do |session|
+          # setting the street and city sequences leads the Datastore to skip the actual ES _analyze requests.
+          sequences_for(session)
+        end
+      end
+
+      def sequences_for(session)
+        session.datastore.street_sequences = [
+          AtlasEngine::AddressValidation::Token::Sequence.from_string(session.address1),
+        ]
+        session.datastore.city_sequence =
+          AtlasEngine::AddressValidation::Token::Sequence.from_string(session.city)
+      end
+
+      def candidate(address)
+        candidate_hash = address.to_h.transform_keys(address1: :street)
+        AtlasEngine::AddressValidation::Candidate.new(id: "A", source: candidate_hash)
+      end
     end
   end
 end
