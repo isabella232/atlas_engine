@@ -8,7 +8,14 @@ module AtlasEngine
         class RelevantComponents
           extend T::Sig
 
-          attr_reader :session, :candidate, :street_comparison
+          sig { returns(Session) }
+          attr_reader :session
+
+          sig { returns(Candidate) }
+          attr_reader :candidate
+
+          sig { returns(AddressComparison) }
+          attr_reader :address_comparison
 
           ALL_SUPPORTED_COMPONENTS = [
             :province_code,
@@ -21,13 +28,13 @@ module AtlasEngine
             params(
               session: Session,
               candidate: Candidate,
-              street_comparison: T.nilable(AtlasEngine::AddressValidation::Token::Sequence::Comparison),
+              address_comparison: AddressComparison,
             ).void
           end
-          def initialize(session, candidate, street_comparison)
+          def initialize(session, candidate, address_comparison)
             @session = session
             @candidate = candidate
-            @street_comparison = street_comparison
+            @address_comparison = address_comparison
           end
 
           sig { returns(T::Array[Symbol]) }
@@ -49,7 +56,7 @@ module AtlasEngine
           def apply_exclusions(supported_components)
             supported_components.delete_if do |component|
               exclusions(component).any? do |exclusion|
-                if exclusion.apply?(session, candidate)
+                if exclusion.apply?(session, candidate, address_comparison)
                   emit_excluded_validation(component, "excluded")
                   true
                 end
@@ -64,7 +71,7 @@ module AtlasEngine
             @exclude_street_validation = if session.matching_strategy !=
                 AddressValidation::MatchingStrategies::EsStreet
               true
-            elsif street_comparison.blank?
+            elsif address_comparison.street_comparison.blank?
               emit_excluded_validation(:street, "not_found")
               true
             else

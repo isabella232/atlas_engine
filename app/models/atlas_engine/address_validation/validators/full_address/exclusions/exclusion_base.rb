@@ -12,8 +12,14 @@ module AtlasEngine
               extend T::Helpers
               abstract!
 
-              sig { abstract.params(session: Session, candidate: Candidate).returns(T::Boolean) }
-              def apply?(session, candidate); end
+              sig do
+                abstract.params(
+                  session: Session,
+                  candidate: Candidate,
+                  address_comparison: AddressComparison,
+                ).returns(T::Boolean)
+              end
+              def apply?(session, candidate, address_comparison); end
             end
           end
         end

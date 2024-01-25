@@ -16,7 +16,7 @@ module AtlasEngine
 
           class DummyExclusion
             class << self
-              def apply?(_session, _candidate)
+              def apply?(_session, _candidate, mock_address_comparison)
                 true
               end
             end
@@ -26,14 +26,14 @@ module AtlasEngine
             @address = create_address
             @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
-            @street_comparison = default_street_comparison
+            @address_comparison = mock_address_comparison
             @all_components = RelevantComponents::ALL_SUPPORTED_COMPONENTS
           end
 
           test "#components_to_compare returns an array of all supported components" do
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components,
-                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
+                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
             end
           end
 
@@ -42,22 +42,24 @@ module AtlasEngine
 
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components,
-                RelevantComponents.new(session, @candidate, @street_comparison).components_to_compare
+                RelevantComponents.new(session, @candidate, @address_comparison).components_to_compare
               assert_equal @all_components - [:street],
-                RelevantComponents.new(session, @candidate, @street_comparison).components_to_validate
+                RelevantComponents.new(session, @candidate, @address_comparison).components_to_validate
             end
           end
 
           test "#components_to_validate returns an array without the street component when there is no street comparison" do
+            @address_comparison.stubs(:street_comparison).returns(nil)
+
             assert_statsd_increment(
               "AddressValidation.skip",
               times: 1,
               tags: { component: "street", reason: "not_found", country: @session.country_code },
             ) do
               assert_equal @all_components,
-                RelevantComponents.new(@session, @candidate, nil).components_to_compare
+                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
               assert_equal @all_components - [:street],
-                RelevantComponents.new(@session, @candidate, nil).components_to_validate
+                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_validate
             end
           end
 
@@ -84,9 +86,9 @@ module AtlasEngine
                 tags: { component: "city", reason: "excluded", country: @session.country_code },
               ) do
                 assert_equal @all_components,
-                  RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
+                  RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
                 assert_equal @all_components - [:street, :city],
-                  RelevantComponents.new(@session, @candidate, @street_comparison).components_to_validate
+                  RelevantComponents.new(@session, @candidate, @address_comparison).components_to_validate
               end
             end
           end
@@ -102,7 +104,7 @@ module AtlasEngine
             @candidate = candidate(@address)
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code],
-                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
+                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
             end
           end
 
@@ -118,7 +120,7 @@ module AtlasEngine
             @candidate = candidate(@address)
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code],
-                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
+                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
             end
           end
 
@@ -128,7 +130,7 @@ module AtlasEngine
             @candidate = candidate(@address)
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code, :zip],
-                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
+                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
             end
           end
 
@@ -138,7 +140,7 @@ module AtlasEngine
             @candidate = candidate(@address)
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:city, :province_code, :zip],
-                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
+                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
             end
           end
 
@@ -177,12 +179,16 @@ module AtlasEngine
             )
           end
 
-          def default_street_comparison
-            sequence_comparison(
+          def mock_address_comparison
+            street_comparison = sequence_comparison(
               token_comparisons: [
                 token_comparison(left: token(value: "street"), right: token(value: "street")),
               ],
             )
+
+            typed_mock(AddressComparison).tap do |mock|
+              mock.stubs(:street_comparison).returns(street_comparison)
+            end
           end
 
           def building_comparison(numbers:, candidate_ranges:)

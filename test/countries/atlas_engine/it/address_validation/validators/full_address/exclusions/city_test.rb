@@ -21,7 +21,13 @@ module AtlasEngine
                   country_code: "IT",
                   zip: "38121",
                 )
-                assert City.apply?(session(address), candidate(address))
+                assert City.apply?(session(address), candidate(address), mock_address_comparison)
+              end
+
+              private
+
+              def mock_address_comparison
+                typed_mock(AtlasEngine::AddressValidation::Validators::FullAddress::AddressComparison)
               end
             end
           end
