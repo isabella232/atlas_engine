@@ -57,6 +57,30 @@ module AtlasEngine
 
               assert_nil BuildingNumberInAddress1OrAddress2.new(field: :address1, address: address).evaluate
             end
+
+            test "when missing building number in address1 and address2 is nil" do
+              address = build_address_obj(
+                address1: "Marinierskade",
+                address2: nil,
+                city: "Amsterdam",
+                zip: "1018 HX",
+                country_code: "NL",
+              )
+
+              concern = BuildingNumberInAddress1OrAddress2.new(field: :address1, address: address).evaluate
+
+              expected_concern =
+                {
+                  field_names: [:address1, :address2, :country],
+                  message: "Add a building number if you have one.",
+                  code: :missing_building_number,
+                  type: "warning",
+                  type_level: 3,
+                  suggestion_ids: [],
+                }
+
+              assert_equal expected_concern, concern&.attributes
+            end
           end
         end
       end

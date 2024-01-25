@@ -12,7 +12,7 @@ module AtlasEngine
               return unless @cache.country.country?
               return unless @cache.country.building_number_required
               return unless @cache.country.building_number_may_be_in_address2
-              return if contains_number?(T.must(@address.address1)) || contains_number?(T.must(@address.address2))
+              return if contains_number?(T.must(@address.address1)) || contains_number?(@address.address2)
 
               build_concern
             end
@@ -31,7 +31,7 @@ module AtlasEngine
               )
             end
 
-            sig { params(text: String).returns(T::Boolean) }
+            sig { params(text: T.nilable(String)).returns(T::Boolean) }
             def contains_number?(text)
               /[0-9\u0660-\u0669\u06f0-\u06f9\u0966-\u096f\uff10-\uff19]/.match?(text)
             end
