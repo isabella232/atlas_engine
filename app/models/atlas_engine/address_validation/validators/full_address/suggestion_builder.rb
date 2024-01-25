@@ -126,7 +126,7 @@ module AtlasEngine
               ).returns(String)
             end
             def generic_field_suggestion(comparison, candidate, field)
-              if comparison.token_match_count == 0 || comparison.aggregate_edit_distance > 2
+              if comparison.token_match_count == 0 || comparison.aggregate_distance > 2
                 candidate.component(field)&.first_value
               else
                 comparison.right_sequence.raw_value
