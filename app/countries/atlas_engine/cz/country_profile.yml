@@ -5,3 +5,6 @@ validation:
   address_parser: AtlasEngine::Cz::ValidationTranscriber::AddressParser
   query_builder: AtlasEngine::Cz::AddressValidation::Es::QueryBuilder
   has_provinces: false
+  comparison_policies:
+    city:
+      unmatched: ignore_left_unmatched
