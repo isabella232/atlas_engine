@@ -18,7 +18,7 @@ module AtlasEngine
     end
 
     test ".validation.validation_exclusions value is correct" do
-      assert_equal [], @profile.validation.validation_exclusions(component: "bogus")
+      assert_equal [], @profile.validation.validation_exclusions(component: :bogus)
     end
 
     test ".validation.enabled is correct" do

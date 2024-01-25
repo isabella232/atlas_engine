@@ -24,11 +24,11 @@ module AtlasEngine
     end
 
     sig do
-      params(component: String)
+      params(component: Symbol)
         .returns(T::Array[T.class_of(AddressValidation::Validators::FullAddress::Exclusions::ExclusionBase)])
     end
     def validation_exclusions(component:)
-      validation_exclusions = attributes.dig("exclusions", component) || []
+      validation_exclusions = attributes.dig("exclusions", component.to_s) || []
       validation_exclusions.map(&:constantize)
     end
 

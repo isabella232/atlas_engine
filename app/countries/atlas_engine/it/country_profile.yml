@@ -3,6 +3,9 @@ validation:
   enabled: true
   default_matching_strategy: es
   address_parser: AtlasEngine::Dk::ValidationTranscriber::AddressParser
+  exclusions:
+    city:
+      - AtlasEngine::It::AddressValidation::Validators::FullAddress::Exclusions::City
 ingestion:
   open_address:
     feature_mapper: AtlasEngine::It::AddressImporter::OpenAddress::Mapper

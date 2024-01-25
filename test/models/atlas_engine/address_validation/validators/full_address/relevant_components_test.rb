@@ -61,9 +61,13 @@ module AtlasEngine
             end
           end
 
-          test "#components_to_validate returns an array without the street component when a street exclusion applies" do
+          test "#components_to_validate returns an array without excluded components when exclusions apply" do
             validation = mock
-            validation.expects(:validation_exclusions).with(component: "street").returns([DummyExclusion])
+            validation.expects(:validation_exclusions).with(component: :province_code).returns([])
+            validation.expects(:validation_exclusions).with(component: :zip).returns([])
+            validation.expects(:validation_exclusions).with(component: :street).returns([DummyExclusion])
+            validation.expects(:validation_exclusions).with(component: :city).returns([DummyExclusion])
+
             mock_profile = instance_double(CountryProfile)
             mock_profile.stubs(:validation).returns(validation)
 
@@ -74,10 +78,16 @@ module AtlasEngine
               times: 1,
               tags: { component: "street", reason: "excluded", country: @session.country_code },
             ) do
-              assert_equal @all_components,
-                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
-              assert_equal @all_components - [:street],
-                RelevantComponents.new(@session, @candidate, @street_comparison).components_to_validate
+              assert_statsd_increment(
+                "AddressValidation.skip",
+                times: 1,
+                tags: { component: "city", reason: "excluded", country: @session.country_code },
+              ) do
+                assert_equal @all_components,
+                  RelevantComponents.new(@session, @candidate, @street_comparison).components_to_compare
+                assert_equal @all_components - [:street, :city],
+                  RelevantComponents.new(@session, @candidate, @street_comparison).components_to_validate
+              end
             end
           end
 

@@ -110,11 +110,11 @@ module AtlasEngine
 
     test "#validation.validation_exclusions returns an array of exclusion class names for a given component" do
       country_profile = CountryProfile.for("US")
-      assert_equal [], country_profile.validation.validation_exclusions(component: "street")
+      assert_equal [], country_profile.validation.validation_exclusions(component: :street)
     end
 
     test "#validation_exclusions returns an empty array when an unknown component is provided" do
-      assert_equal [], CountryProfile.for("US").validation.validation_exclusions(component: "bogus")
+      assert_equal [], CountryProfile.for("US").validation.validation_exclusions(component: :bogus)
     end
 
     test "#validation.enabled returns false by default" do
