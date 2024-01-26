@@ -3,9 +3,16 @@ ingestion:
   correctors:
     open_address:
       - AtlasEngine::Pl::AddressImporter::Corrections::OpenAddress::CityCorrector
-      - AtlasEngine::Pl::AddressImporter::Corrections::OpenAddress::PostalCodePlaceholderCorrector
       - AtlasEngine::Pl::AddressImporter::Corrections::OpenAddress::EmptyStreetCorrector
 validation:
   address_parser: AtlasEngine::Pl::ValidationTranscriber::AddressParser
   enabled: true
   default_matching_strategy: es
+  exclusions:
+    city:
+      - AtlasEngine::Pl::AddressValidation::Exclusions::RuralAddress
+    zip:
+      - AtlasEngine::Pl::AddressValidation::Exclusions::PlaceholderPostalCode
+  comparison_policies:
+    street:
+      unmatched: ignore_largest_unmatched_side
