@@ -61,7 +61,7 @@ module AtlasEngine
             concern = InvalidZipConcernBuilder.for(session.address, [])
             result.concerns << concern if concern
 
-            if ConcernBuilder.too_many_unmatched_components?(unmatched_components.keys)
+            if ConcernBuilder.too_many_unmatched_components?(session.address, unmatched_components.keys)
               result.concerns << UnknownAddressConcern.new(session.address)
             end
           end

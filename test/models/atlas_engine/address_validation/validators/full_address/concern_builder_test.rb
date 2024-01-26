@@ -20,20 +20,20 @@ module AtlasEngine
               AddressValidation::Validators::FullAddress::UnknownZipForAddressConcern
             @unknown_province_klass =
               AddressValidation::Validators::FullAddress::UnknownProvinceConcern
-            @address = build_address
+            @address = build_address(country_code: "US")
             @suggestion_ids = []
           end
 
           test ".too_many_unmatched_components? is false when the # of unmatched components is below the threshold" do
-            assert_not @klass.too_many_unmatched_components?([:city])
+            assert_not @klass.too_many_unmatched_components?(@address, [:city])
           end
 
           test ".too_many_unmatched_components? is false when the # of unmatched components is at the threshold" do
-            assert_not @klass.too_many_unmatched_components?([:city, :province_code])
+            assert_not @klass.too_many_unmatched_components?(@address, [:city, :province_code])
           end
 
           test ".too_many_unmatched_components? is true when the # of unmatched components is above the threshold" do
-            assert @klass.too_many_unmatched_components?([:city, :province_code, :zip])
+            assert @klass.too_many_unmatched_components?(@address, [:city, :province_code, :zip])
           end
 
           test ".valid_zip_for_province? true when zip prefix is valid for province" do
@@ -167,7 +167,7 @@ module AtlasEngine
             address = build_address(country_code: "US", province_code: "CA", zip: "90210")
             unmatched_component_keys = [:province_code, :zip, :city]
 
-            assert unmatched_component_keys.size > @klass::UNMATCHED_COMPONENTS_SUGGESTION_THRESHOLD
+            assert unmatched_component_keys.size > 2
             assert_not @klass.should_suggest?(address, unmatched_component_keys)
           end
 

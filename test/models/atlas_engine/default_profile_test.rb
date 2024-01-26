@@ -32,5 +32,9 @@ module AtlasEngine
     test ".validation.normalized_components value is correct" do
       assert_equal [], @profile.validation.normalized_components
     end
+
+    test ".validation.unmatched_components_suggestion_threshold value is correct" do
+      assert_equal 2, @profile.validation.unmatched_components_suggestion_threshold
+    end
   end
 end

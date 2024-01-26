@@ -10,8 +10,6 @@ module AtlasEngine
 
           attr_reader :unmatched_component, :unmatched_field, :matched_components, :address, :suggestion_ids
 
-          UNMATCHED_COMPONENTS_SUGGESTION_THRESHOLD = 2
-
           class << self
             extend T::Sig
 
@@ -22,16 +20,21 @@ module AtlasEngine
               ).returns(T::Boolean)
             end
             def should_suggest?(address, unmatched_component_keys)
-              return false if too_many_unmatched_components?(unmatched_component_keys)
+              return false if too_many_unmatched_components?(address, unmatched_component_keys)
 
               return false if province_and_city_xor_zip?(unmatched_component_keys) && !valid_zip_for_province?(address)
 
               true
             end
 
-            sig { params(unmatched_component_keys: T::Array[Symbol]).returns(T::Boolean) }
-            def too_many_unmatched_components?(unmatched_component_keys)
-              unmatched_component_keys.size > UNMATCHED_COMPONENTS_SUGGESTION_THRESHOLD
+            sig do
+              params(
+                address: AbstractAddress,
+                unmatched_component_keys: T::Array[Symbol],
+              ).returns(T::Boolean)
+            end
+            def too_many_unmatched_components?(address, unmatched_component_keys)
+              unmatched_component_keys.size > unmatched_components_suggestion_threshold(address)
             end
 
             sig { params(address: AbstractAddress).returns(T::Boolean) }
@@ -61,6 +64,12 @@ module AtlasEngine
               return true unless province.province?
 
               province.valid_zip?(address.zip)
+            end
+
+            sig { params(address: AbstractAddress).returns(Integer) }
+            def unmatched_components_suggestion_threshold(address)
+              country_profile = CountryProfile.for(T.must(address.country_code))
+              country_profile.validation.unmatched_components_suggestion_threshold
             end
           end
 

@@ -63,5 +63,10 @@ module AtlasEngine
         AddressValidation::Token::Sequence::ComparisonPolicy::DEFAULT_POLICY
       end
     end
+
+    sig { returns(Integer) }
+    def unmatched_components_suggestion_threshold
+      attributes.dig("validation", "unmatched_components_suggestion_threshold") || 2
+    end
   end
 end

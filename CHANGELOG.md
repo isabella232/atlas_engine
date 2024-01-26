@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Make unmatched_components_suggestion_threshold configurable in country profiles [#71](https://github.com/Shopify/atlas_engine/pull/71)
 - Include unmatched token length in sequence comparison's "aggregate distance" [#65](https://github.com/Shopify/atlas_engine/pull/65)
 - Add an AddressComparsion argument to validation exclusions [#64](https://github.com/Shopify/atlas_engine/pull/64)
 - Add comparison policy for cities in CZ [#63](https://github.com/Shopify/atlas_engine/pull/63)
