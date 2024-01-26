@@ -45,7 +45,7 @@ module AtlasEngine
             longest_subsequence = longest_subsequence_comparison <=> other.longest_subsequence_comparison
             return -1 * longest_subsequence if longest_subsequence.nonzero?
 
-            edit_distance = aggregate_edit_distance <=> other.aggregate_edit_distance
+            edit_distance = aggregate_distance <=> other.aggregate_distance
             return edit_distance if edit_distance.nonzero?
 
             prefixes = count_by_qualifier(:prefix) <=> other.count_by_qualifier(:prefix)
@@ -92,7 +92,7 @@ module AtlasEngine
 
           sig { returns(T::Boolean) }
           def match?
-            aggregate_edit_distance == 0 && unmatched_tokens.empty?
+            aggregate_distance == 0 && unmatched_tokens.empty?
           end
 
           sig { params(threshold_percent: Float).returns(T::Boolean) }
@@ -101,8 +101,8 @@ module AtlasEngine
           end
 
           sig { returns(Integer) }
-          def aggregate_edit_distance
-            token_comparisons.sum(&:edit_distance)
+          def aggregate_distance
+            token_comparisons.sum(&:edit_distance) + unmatched_tokens.map(&:value).sum(&:length)
           end
 
           sig { returns(Integer) }

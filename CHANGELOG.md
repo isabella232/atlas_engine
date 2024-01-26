@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Include unmatched token length in sequence comparison's "aggregate distance" [#65](https://github.com/Shopify/atlas_engine/pull/65)
 - Add an AddressComparsion argument to validation exclusions [#64](https://github.com/Shopify/atlas_engine/pull/64)
 - Add comparison policy for cities in CZ [#63](https://github.com/Shopify/atlas_engine/pull/63)
 - Allow Exclusions to apply on any address component and add an Exclusion for city validation in Italy [#61](https://github.com/Shopify/atlas_engine/pull/61)

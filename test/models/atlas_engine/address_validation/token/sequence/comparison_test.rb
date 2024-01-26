@@ -327,12 +327,14 @@ module AtlasEngine
             assert_not_predicate comparison, :potential_match?
           end
 
-          test "aggregate_edit_distance returns the sum of the edit distances in a comparison" do
+          test "aggregate_distance returns the sum of the edit distances in a comparison " \
+            "plus the combined length of all unmatched tokens" do
             comparisons = [@equal_0, @prefix_2]
 
-            seq_comp = sequence_comparison(token_comparisons: comparisons)
+            seq_comp = sequence_comparison(token_comparisons: comparisons, unmatched_tokens: [@dummy1])
 
-            assert_equal 2, seq_comp.aggregate_edit_distance
+            # "dummy1".length + edit distance of 2 from @prefix_2
+            assert_equal 8, seq_comp.aggregate_distance
           end
 
           test "token_match_count returns the total number of tokens matched" do
