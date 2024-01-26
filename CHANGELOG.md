@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Improved validation suggestions for Luxembourg [#82](https://github.com/Shopify/atlas_engine/pull/82)
 - Introduce parser and city exclusion for South Korea [#79](https://github.com/Shopify/atlas_engine/pull/79)
 - Prepare PT for es validation (address parser, synonyms, zip exclusion) [#46](https://github.com/Shopify/atlas_engine/pull/46)
 - Improve ingestion and validation for Slovenia [#76](https://github.com/Shopify/atlas_engine/pull/76)
