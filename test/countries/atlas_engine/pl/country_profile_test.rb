@@ -13,10 +13,23 @@ module AtlasEngine
       test "#correctors value is correct for source open-address" do
         assert_equal [
           Pl::AddressImporter::Corrections::OpenAddress::CityCorrector,
-          Pl::AddressImporter::Corrections::OpenAddress::PostalCodePlaceholderCorrector,
           Pl::AddressImporter::Corrections::OpenAddress::EmptyStreetCorrector,
         ],
           @profile.ingestion.correctors(source: "open_address")
+      end
+
+      test "#validation_exclusions value is correct for city component" do
+        assert_equal [
+          Pl::AddressValidation::Exclusions::RuralAddress,
+        ],
+          @profile.validation.validation_exclusions(component: :city)
+      end
+
+      test "#validation_exclusions value is correct for zip component" do
+        assert_equal [
+          Pl::AddressValidation::Exclusions::PlaceholderPostalCode,
+        ],
+          @profile.validation.validation_exclusions(component: :zip)
       end
 
       test "#address_parser returns the custom PL parser" do
