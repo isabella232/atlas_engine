@@ -22,5 +22,6 @@ validation:
     city: {}
     zip: {}
     province_code: {}
+  unmatched_components_suggestion_threshold: 2
 decompounding_patterns:
   street: []
