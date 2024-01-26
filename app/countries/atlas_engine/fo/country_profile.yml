@@ -3,3 +3,7 @@ validation:
   enabled: true
   default_matching_strategy: es
   has_provinces: false
+ingestion:
+  correctors:
+    open_address:
+      - AtlasEngine::Fo::AddressImporter::Corrections::OpenAddress::CityCorrector
