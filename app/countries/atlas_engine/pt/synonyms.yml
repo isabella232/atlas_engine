@@ -1,3 +1,14 @@
+street_synonyms:
+- rua, r
+- avenida, av
+- praca, pc, pca
+- travessa, tv
+- largo, lg, l, lgo
+- beco, bc
+- calcada, cc
+- professor, prof
+- camino, cam
+- estrada, estr
 city_synonyms:
 - GDM, Gondomar
 - GMR, Guimarães
@@ -5,3 +16,4 @@ city_synonyms:
 - VGS, Vagos
 - VN, Vila Nova De
 - VN, Vila Nova Da
+- TCS, Trancoso

@@ -8,3 +8,7 @@ ingestion:
 validation:
   enabled: true
   default_matching_strategy: es
+  address_parser: AtlasEngine::Pt::ValidationTranscriber::AddressParser
+  exclusions:
+    zip:
+      - AtlasEngine::Pt::AddressValidation::Validators::FullAddress::Exclusions::Zip
