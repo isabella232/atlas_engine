@@ -1,0 +1,7 @@
+street_synonyms:
+## street suffixes
+- Slovenskih, slov
+- ulica, ul # street
+city_synonyms:
+- Slovenskih, slov
+- zgornje, zg
