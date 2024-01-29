@@ -36,6 +36,12 @@ module AtlasEngine
         assert_equal Pl::ValidationTranscriber::AddressParser,
           @profile.validation.address_parser
       end
+
+      test "#comparison_policy value is correct for street component" do
+        street_policy = @profile.validation.comparison_policy(:street)
+
+        assert_equal :ignore_largest_unmatched_side, street_policy.unmatched
+      end
     end
   end
 end
