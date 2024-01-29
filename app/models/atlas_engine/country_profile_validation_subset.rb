@@ -66,7 +66,7 @@ module AtlasEngine
 
     sig { returns(Integer) }
     def unmatched_components_suggestion_threshold
-      attributes.dig("validation", "unmatched_components_suggestion_threshold") || 2
+      attributes.dig("unmatched_components_suggestion_threshold") || 2
     end
   end
 end
