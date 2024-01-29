@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 inherit_gem:
   rubocop-shopify: rubocop.yml
 
@@ -87,3 +89,7 @@ Sorbet/ForbidIncludeConstLiteral:
 # Disabling this cop until we are able to clean up violations
 Sorbet/CallbackConditionalsBinding:
   Enabled: false
+
+# Forbit usages of T::Struct and T::Props
+Sorbet/ForbidTStruct:
+  Enabled: true

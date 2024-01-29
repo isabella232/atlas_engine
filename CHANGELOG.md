@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Enable Sorbet/ForbidTStruct cop [#78] (https://github.com/Shopify/atlas_engine/pull/78)
 - Fix lookup of unmatched_components_suggestion_threshold [#73](https://github.com/Shopify/atlas_engine/pull/73)
 - Add city corrector for Faroe Islands [#72](https://github.com/Shopify/atlas_engine/pull/72)
 - Configure validation support for Poland [#70](https://github.com/Shopify/atlas_engine/pull/70)
