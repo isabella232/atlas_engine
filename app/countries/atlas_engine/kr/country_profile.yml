@@ -5,9 +5,13 @@ ingestion:
 validation:
   enabled: true
   default_matching_strategy: es
+  address_parser: AtlasEngine::Kr::ValidationTranscriber::AddressParser
   comparison_policies:
     city:
       unmatched: ignore_left_unmatched
+  exclusions:
+    city:
+      - AtlasEngine::Kr::AddressValidation::Validators::FullAddress::Exclusions::City
   restrictions:
     - class: AtlasEngine::Restrictions::UnsupportedScript
       params:
