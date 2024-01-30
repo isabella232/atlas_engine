@@ -146,7 +146,7 @@ module AtlasEngine
         end
 
         street_tokens_ridiculous?(
-          street: T.must(street),
+          street: street,
           unit_type: unit_type,
           unit_num: unit_num,
           num_street_space: num_street_space,
