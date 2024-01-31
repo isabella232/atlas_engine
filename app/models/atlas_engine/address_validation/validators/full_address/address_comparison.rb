@@ -9,18 +9,17 @@ module AtlasEngine
           extend T::Sig
           include Comparable
 
-          attr_reader :comparison_helper
-
-          delegate :street_comparison,
-            :city_comparison,
-            :province_code_comparison,
-            :zip_comparison,
-            :building_comparison,
-            to: :comparison_helper
-
           sig { params(address: AbstractAddress, candidate: Candidate, datastore: DatastoreBase).void }
           def initialize(address:, candidate:, datastore:)
-            @comparison_helper = ComparisonHelper.new(address:, candidate:, datastore:)
+            @street_comparison = StreetComparison.new(address: address, candidate: candidate, datastore: datastore)
+            @city_comparison = CityComparison.new(address: address, candidate: candidate, datastore: datastore)
+            @province_code_comparison = ProvinceCodeComparison.new(
+              address: address,
+              candidate: candidate,
+              datastore: datastore,
+            )
+            @zip_comparison = ZipComparison.new(address: address, candidate: candidate, datastore: datastore)
+            @building_comparison = BuildingComparison.new(address: address, candidate: candidate, datastore: datastore)
           end
 
           sig { params(other: AddressComparison).returns(Integer) }
@@ -43,6 +42,31 @@ module AtlasEngine
           sig { returns(T::Boolean) }
           def potential_match?
             street_comparison.nil? || T.must(street_comparison).potential_match?
+          end
+
+          sig { returns(T.nilable(Token::Sequence::Comparison)) }
+          def zip_comparison
+            @zip_comparison.compare
+          end
+
+          sig { returns(T.nilable(Token::Sequence::Comparison)) }
+          def street_comparison
+            @street_comparison.compare
+          end
+
+          sig { returns(T.nilable(Token::Sequence::Comparison)) }
+          def city_comparison
+            @city_comparison.compare
+          end
+
+          sig { returns(T.nilable(Token::Sequence::Comparison)) }
+          def province_code_comparison
+            @province_code_comparison.compare
+          end
+
+          sig { returns(NumberComparison) }
+          def building_comparison
+            @building_comparison.compare
           end
 
           protected
