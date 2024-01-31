@@ -1,12 +1,15 @@
 id: LU
 validation:
   enabled: true
-  has_provinces: true
+  has_provinces: false
   default_matching_strategy: es
+  address_parser: AtlasEngine::Lu::ValidationTranscriber::AddressParser
   index_locales:
     - fr
     - lb
+  unmatched_components_suggestion_threshold: 1
 ingestion:
   correctors:
     open_address:
       - AtlasEngine::Lu::AddressImporter::Corrections::OpenAddress::LocaleCorrector
+      - AtlasEngine::Lu::AddressImporter::Corrections::OpenAddress::CityCorrector
