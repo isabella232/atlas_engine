@@ -18,7 +18,7 @@ module AtlasEngine
         previous_definition,
         <<~MESSAGE.squish,
           The current schema is out of date.
-          Update the schema with `AtlasEngine::Schema.dump`.
+          Update the schema with `rake app:atlas_engine:graphql:schema_dump`.
         MESSAGE
       )
     end
