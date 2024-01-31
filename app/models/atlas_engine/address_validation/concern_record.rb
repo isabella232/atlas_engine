@@ -53,12 +53,17 @@ module AtlasEngine
           new(
             **T.unsafe(
               {
-                result: result,
+                result: duplicate(result),
                 **result.address,
                 **context.except(:client_request_id),
               },
             ),
           )
+        end
+
+        sig { params(obj: T.untyped).returns(T.untyped) }
+        def duplicate(obj)
+          Marshal.load(Marshal.dump(obj))
         end
       end
 
