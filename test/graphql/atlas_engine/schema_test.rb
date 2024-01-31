@@ -14,8 +14,8 @@ module AtlasEngine
       previous_definition = file_schema.read
 
       assert_equal(
-        current_definition,
         previous_definition,
+        current_definition,
         <<~MESSAGE.squish,
           The current schema is out of date.
           Update the schema with `rake app:atlas_engine:graphql:schema_dump`.
