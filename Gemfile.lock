@@ -156,7 +156,7 @@ GEM
     hashdiff (1.1.0)
     hashie (5.0.0)
     htmlentities (4.3.4)
-    i18n (1.12.0)
+    i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.7.1)
     irb (1.11.0)
@@ -368,7 +368,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    worldwide (0.6.7)
+    worldwide (0.7.0)
       activesupport (~> 7.0)
       i18n
       phonelib (~> 0.8)
