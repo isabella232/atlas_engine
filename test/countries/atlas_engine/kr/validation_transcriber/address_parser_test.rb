@@ -2,12 +2,13 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "models/atlas_engine/address_validation/address_validation_test_helper"
 
 module AtlasEngine
   module Kr
     module ValidationTranscriber
       class AddressParserTest < ActiveSupport::TestCase
-        include ValidationTranscriber
+        include AtlasEngine::AddressValidation::AddressValidationTestHelper
 
         test "CountryProfile for KR loads the correct address parser" do
           assert_equal(AddressParser, CountryProfile.for("KR").validation.address_parser)
@@ -40,7 +41,7 @@ module AtlasEngine
               [{ province: "경기", si: "성남시", gu: "분당구", street: "동판교로", building_num: "122" }],
             ],
           ].each do |country_code, address1, expected|
-            check_parsing(country_code, address1, nil, expected)
+            check_parsing(AddressParser, country_code, address1, nil, expected)
           end
         end
 
@@ -66,26 +67,8 @@ module AtlasEngine
               ],
             ],
           ].each do |country_code, address1, address2, expected|
-            check_parsing(country_code, address1, address2, expected)
+            check_parsing(AddressParser, country_code, address1, address2, expected)
           end
-        end
-
-        private
-
-        def check_parsing(country_code, address1, address2, expected, components = nil)
-          components ||= {}
-          components.merge!(country_code: country_code.to_s.upcase, address1: address1, address2: address2)
-          address = AtlasEngine::AddressValidation::Address.new(**components)
-
-          actual = AddressParser.new(address: address).parse
-
-          assert(
-            expected.to_set.subset?(actual.to_set),
-            "For input ( address1: #{address1.inspect}, address2: #{address2.inspect} )\n\n " \
-              "#{expected.inspect} \n\n" \
-              "Must be included in: \n\n" \
-              "#{actual.inspect}",
-          )
         end
       end
     end
