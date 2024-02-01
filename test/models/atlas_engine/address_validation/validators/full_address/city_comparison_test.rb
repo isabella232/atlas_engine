@@ -13,7 +13,7 @@ module AtlasEngine
           include AddressValidation::TokenHelper
           include AddressValidationTestHelper
 
-          test "#compare compares the analyzed city with the candidate city field" do
+          test "#sequence_comparison compares the analyzed city with the candidate city field" do
             candidate = Candidate.new(id: "A", source: { "city" => ["Bronx"] })
             address = build_address(city: "The Bronx", country_code: "US")
 
@@ -23,7 +23,7 @@ module AtlasEngine
 
             city_comparison = CityComparison.new(address:, candidate:, datastore:)
 
-            comparison = city_comparison.compare
+            comparison = city_comparison.sequence_comparison
             candidate_city_sequences = candidate.component(:city).sequences
 
             comparisons = comparison.token_comparisons
@@ -38,7 +38,7 @@ module AtlasEngine
             assert_comparison(i_bronx, :equal, c_bronx, comparisons[0])
           end
 
-          test "#compare compares the analyzed city with the candidate city field that has multiple values" do
+          test "#sequence_comparison compares the analyzed city with the candidate city field that has multiple values" do
             candidate = Candidate.new(
               id: "A",
               source: { "city" => ["Bronx", "The Bronx", "El Bronxo"] },
@@ -51,7 +51,7 @@ module AtlasEngine
 
             city_comparison = CityComparison.new(address:, candidate:, datastore:)
 
-            comparison = city_comparison.compare
+            comparison = city_comparison.sequence_comparison
             candidate_city_sequences = candidate.component(:city).sequences
 
             comparisons = comparison.token_comparisons

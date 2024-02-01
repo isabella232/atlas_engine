@@ -18,12 +18,15 @@ module AtlasEngine
                     .returns(T::Boolean)
                 end
                 def apply?(session, candidate, address_comparison)
-                  return true if address_comparison.street_comparison.nil? ||
-                    address_comparison.building_comparison.nil? ||
-                    address_comparison.building_comparison.candidate_ranges.empty?
+                  street_comparison_result = address_comparison.street_comparison.sequence_comparison
+                  building_comparison_result = address_comparison.building_comparison.sequence_comparison
 
-                  !T.must(address_comparison.street_comparison).match? ||
-                    !T.must(address_comparison.building_comparison).match?
+                  return true if street_comparison_result.nil? ||
+                    building_comparison_result.nil? ||
+                    T.must(building_comparison_result).candidate_ranges.empty?
+
+                  !T.must(street_comparison_result).match? ||
+                    !T.must(building_comparison_result).match?
                 end
               end
             end

@@ -9,7 +9,7 @@ module AtlasEngine
           extend T::Sig
 
           sig { override.returns(T.nilable(Token::Sequence::Comparison)) }
-          def compare
+          def sequence_comparison
             return @city_comparison if defined?(@city_comparison)
 
             @city_comparison = best_comparison(

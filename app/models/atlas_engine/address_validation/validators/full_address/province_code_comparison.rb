@@ -9,7 +9,7 @@ module AtlasEngine
           extend T::Sig
 
           sig { override.returns(T.nilable(Token::Sequence::Comparison)) }
-          def compare
+          def sequence_comparison
             return @province_code_comparison if defined?(@province_code_comparison)
 
             normalized_session_province_code = ValidationTranscriber::ProvinceCodeNormalizer.normalize(

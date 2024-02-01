@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Update `AddressComparison.<field_comparison>` methods to return `FieldComparisonBase` instances instead of `Token::Sequence::Comparison` [#95](https://github.com/Shopify/atlas_engine/pull/95)
 - Address TestCase#fixture_path deprecation [#94](https://github.com/Shopify/atlas_engine/pull/94)
 - Address parser test cleanup [#92](https://github.com/Shopify/atlas_engine/pull/92)
 - Split field comparison logic into their respective classes [#93](https://github.com/Shopify/atlas_engine/pull/93)

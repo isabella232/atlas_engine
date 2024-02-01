@@ -71,7 +71,7 @@ module AtlasEngine
             @exclude_street_validation = if session.matching_strategy !=
                 AddressValidation::MatchingStrategies::EsStreet
               true
-            elsif address_comparison.street_comparison.blank?
+            elsif address_comparison.street_comparison.sequence_comparison.blank?
               emit_excluded_validation(:street, "not_found")
               true
             else

@@ -128,7 +128,7 @@ module AtlasEngine
             components = {}
             @matched_and_unmatched_components ||= begin
               components_to_compare.each do |field|
-                components[field] = @address_comparison.send(:"#{field}_comparison")
+                components[field] = @address_comparison.send(:"#{field}_comparison").sequence_comparison
               end
               components
             end
