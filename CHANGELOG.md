@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 - Address TestCase#fixture_path deprecation [#94](https://github.com/Shopify/atlas_engine/pull/94)
+- Address parser test cleanup [#92](https://github.com/Shopify/atlas_engine/pull/92)
 - Improved validation suggestions for Luxembourg [#82](https://github.com/Shopify/atlas_engine/pull/82)
 - Store a duplicate of Result in ConcernRecord [#85](https://github.com/Shopify/atlas_engine/pull/85)
 - Introduce parser and city exclusion for South Korea [#79](https://github.com/Shopify/atlas_engine/pull/79)

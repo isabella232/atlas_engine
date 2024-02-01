@@ -2,47 +2,32 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "models/atlas_engine/address_validation/address_validation_test_helper"
 
 module AtlasEngine
   module Cz
-    class AddressParserTest < ActiveSupport::TestCase
-      include ValidationTranscriber
+    module ValidationTranscriber
+      class AddressParserTest < ActiveSupport::TestCase
+        include AtlasEngine::AddressValidation::AddressValidationTestHelper
 
-      test "Street name and standard building number" do
-        expected = [{ street: "U Lužického semináře", building_num: "10" }]
-        check_parsing(:cz, "U Lužického semináře 10", nil, expected, nil)
-      end
-
-      test "Street name and building number with slash" do
-        expected = [{ street: "Králova", building_num: "816/20" }]
-        check_parsing(:cz, "Králova 816/20", nil, expected, nil)
-      end
-
-      test "No street name" do
-        [ # city name repeated in place of street
-          [:cz, "Drnovice 250", [{ building_num: "250" }], { city: "Drnovice" }],
-          [:cz, "250", [{ building_num: "250" }], { city: "Drnovice" }],
-        ].each do |country_code, input, expected, components|
-          check_parsing(country_code, input, nil, expected, components)
+        test "Street name and standard building number" do
+          expected = [{ street: "U Lužického semináře", building_num: "10" }]
+          check_parsing(AddressParser, :cz, "U Lužického semináře 10", nil, expected, nil)
         end
-      end
 
-      private
+        test "Street name and building number with slash" do
+          expected = [{ street: "Králova", building_num: "816/20" }]
+          check_parsing(AddressParser, :cz, "Králova 816/20", nil, expected, nil)
+        end
 
-      def check_parsing(country_code, address1, address2, expected, components = nil)
-        components ||= {}
-        components.merge!(country_code: country_code.to_s.upcase, address1: address1, address2: address2)
-        address = AtlasEngine::AddressValidation::Address.new(**components)
-
-        actual = ValidationTranscriber::AddressParser.new(address: address).parse
-
-        assert(
-          expected.to_set.subset?(actual.to_set),
-          "For input ( address1: #{address1.inspect}, address2: #{address2.inspect} )\n\n " \
-            "#{expected.inspect} \n\n" \
-            "Must be included in: \n\n" \
-            "#{actual.inspect}",
-        )
+        test "No street name" do
+          [ # city name repeated in place of street
+            [:cz, "Drnovice 250", [{ building_num: "250" }], { city: "Drnovice" }],
+            [:cz, "250", [{ building_num: "250" }], { city: "Drnovice" }],
+          ].each do |country_code, input, expected, components|
+            check_parsing(AddressParser, country_code, input, nil, expected, components)
+          end
+        end
       end
     end
   end

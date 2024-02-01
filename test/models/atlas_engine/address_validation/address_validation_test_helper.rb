@@ -110,6 +110,24 @@ module AtlasEngine
         candidate_hash = address.to_h.transform_keys(address1: :street)
         AtlasEngine::AddressValidation::Candidate.new(id: "A", source: candidate_hash)
       end
+
+      # rubocop:disable Metrics/ParameterLists
+      def check_parsing(parser_class, country_code, address1, address2, expected, components = nil)
+        components ||= {}
+        components.merge!(country_code: country_code.to_s.upcase, address1: address1, address2: address2)
+        address = AtlasEngine::AddressValidation::Address.new(**components)
+
+        actual = parser_class.new(address: address).parse
+
+        assert(
+          expected.to_set.subset?(actual.to_set),
+          "For input ( address1: #{address1.inspect}, address2: #{address2.inspect} )\n\n " \
+            "#{expected.inspect} \n\n" \
+            "Must be included in: \n\n" \
+            "#{actual.inspect}",
+        )
+      end
+      # rubocop:enable Metrics/ParameterLists
     end
   end
 end

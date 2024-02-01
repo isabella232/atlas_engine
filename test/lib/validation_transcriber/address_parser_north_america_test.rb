@@ -14,7 +14,7 @@ module AtlasEngine
           [:us, "", "", []],
           [:us, nil, nil, []],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -25,7 +25,7 @@ module AtlasEngine
           [:us, nil, "4th Street", []],
           [:us, nil, "Louis 14th", []],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -42,7 +42,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -77,7 +77,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -101,7 +101,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -214,7 +214,7 @@ module AtlasEngine
             [{ building_num: "5859", street: "Tom Hebert Rd", unit_type: "Trlr", unit_num: "57" }],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -237,7 +237,7 @@ module AtlasEngine
           ],
           [:us, nil, "463 E 147 St. #2F", [{ building_num: "463", street: "E 147 St.", unit_num: "2F" }]],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -262,7 +262,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -274,7 +274,7 @@ module AtlasEngine
             [{ building_num: "97-45", street: "Queens Boulevard", unit_type: "Apt", unit_num: "703" }],
           ],
         ].each do |country_code, input, expected|
-          check_parsing(country_code, input, nil, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, input, nil, expected)
         end
       end
 
@@ -283,7 +283,7 @@ module AtlasEngine
           [:us, "A1 Colonial Drive", nil, [{ building_num: "A1", street: "Colonial Drive" }]],
           [:us, "A30", "Colonial Drive", [{ building_num: "A30", street: "Colonial Drive" }]],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -328,7 +328,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -340,7 +340,7 @@ module AtlasEngine
             [{ building_num: "C1A", street: "Calle Tirado Garcia" }],
           ],
         ].each do |country_code, input, expected|
-          check_parsing(country_code, input, nil, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, input, nil, expected)
         end
       end
 
@@ -363,7 +363,7 @@ module AtlasEngine
           # Also a real address (believe it or not):  1/2 Nelson Street, Clinton MA 01510
           [:us, nil, "1/2 Nelson Street", [{ building_num: "1/2", street: "Nelson Street" }]],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -392,7 +392,7 @@ module AtlasEngine
           [:us, "2550 AN COUNTY ROAD 485", nil, [{ building_num: "2550", street: "AN COUNTY ROAD 485" }]],
           [:us, "18056 CSAH 14", nil, [{ building_num: "18056", street: "CSAH 14" }]],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -448,7 +448,7 @@ module AtlasEngine
           [:us, "5808 8055 South", "L304", [{ building_num: "5808", street: "8055 South" }]],
           [:us, "5784 W 7935 S", nil, [{ building_num: "5784", street: "W 7935 S" }]],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -470,7 +470,7 @@ module AtlasEngine
             [{ building_name: "Adler Planetarium", building_num: "1300", street: "South Lake Shore Drive" }],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -486,7 +486,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -521,7 +521,7 @@ module AtlasEngine
             [{ building_num: "3400", street: "Austin Lane" }],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -553,7 +553,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -569,7 +569,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, components, expected|
-          check_parsing(country_code, address1, address2, expected, components)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected, components)
         end
       end
 
@@ -591,7 +591,7 @@ module AtlasEngine
             [],
           ],
         ].each do |country_code, address1, address2, components, expected|
-          check_parsing(country_code, address1, address2, expected, components)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected, components)
         end
       end
 
@@ -612,7 +612,7 @@ module AtlasEngine
             [{ building_num: "8124", street: "N 33rd Drive", unit_type: "Unit", unit_num: "1" }],
           ],
         ].each do |country_code, address1, address2, components, expected|
-          check_parsing(country_code, address1, address2, expected, components)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected, components)
         end
       end
 
@@ -709,7 +709,7 @@ module AtlasEngine
             [{ po_box: "1238" }],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -748,7 +748,7 @@ module AtlasEngine
             ],
           ],
         ].each do |country_code, address1, address2, expected|
-          check_parsing(country_code, address1, address2, expected)
+          check_parsing(AddressParserNorthAmerica, country_code, address1, address2, expected)
         end
       end
 
@@ -770,22 +770,6 @@ module AtlasEngine
           "For input #{address_specification.inspect},\n"\
             "expected parsings to include #{expected.inspect},\n"\
             "but got #{actual.inspect}.",
-        )
-      end
-
-      def check_parsing(country_code, address1, address2, expected, components = nil)
-        components ||= {}
-        components.merge!(country_code: country_code.to_s.upcase, address1: address1, address2: address2)
-        address = build_address(**components)
-
-        actual = AddressParserNorthAmerica.new(address: address).parse
-
-        assert(
-          expected.to_set.subset?(actual.to_set),
-          "For input ( address1: #{address1.inspect}, address2: #{address2.inspect} )\n\n " \
-            "#{expected.inspect} \n\n" \
-            "Must be included in: \n\n" \
-            "#{actual.inspect}",
         )
       end
     end
