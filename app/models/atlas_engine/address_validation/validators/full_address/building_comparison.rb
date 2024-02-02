@@ -9,7 +9,7 @@ module AtlasEngine
           extend T::Sig
 
           sig { override.returns(T.nilable(NumberComparison)) }
-          def compare
+          def sequence_comparison
             @building_comparison ||= NumberComparison.new(
               numbers: datastore.parsings.potential_building_numbers,
               candidate_ranges: building_ranges_from_candidate(candidate),

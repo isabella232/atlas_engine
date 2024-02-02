@@ -23,7 +23,7 @@ module AtlasEngine
             private
 
             def poor_city_match?(address_comparison)
-              address_comparison.city_comparison.aggregate_distance > 2
+              address_comparison.city_comparison.sequence_comparison.aggregate_distance > 2
             end
 
             sig { params(candidate: AtlasEngine::AddressValidation::Candidate).returns(T::Boolean) }

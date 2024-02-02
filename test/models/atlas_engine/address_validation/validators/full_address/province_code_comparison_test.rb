@@ -13,7 +13,7 @@ module AtlasEngine
           include AddressValidation::TokenHelper
           include AddressValidationTestHelper
 
-          test "#compare compares the session province with the candidate province field" do
+          test "#sequence_comparison compares the session province with the candidate province field" do
             candidate = Candidate.new(
               id: "A",
               source: { "country_code" => "US", "province_code" => "TX" },
@@ -23,7 +23,7 @@ module AtlasEngine
 
             province_code_comparison = ProvinceCodeComparison.new(address:, candidate:, datastore:)
 
-            comparison = province_code_comparison.compare
+            comparison = province_code_comparison.sequence_comparison
 
             assert_empty comparison.unmatched_tokens
 
@@ -32,7 +32,7 @@ module AtlasEngine
             assert_equal stubbed_sequence, comparison.right_sequence
           end
 
-          test "#compare handles US terriories " do
+          test "#sequence_comparison handles US terriories " do
             candidate = AddressValidation::Candidate.new(
               id: "A",
               source: { "country_code" => "US", "province_code" => "PR" },
@@ -42,7 +42,7 @@ module AtlasEngine
 
             province_code_comparison = ProvinceCodeComparison.new(address:, candidate:, datastore:)
 
-            comparison = province_code_comparison.compare
+            comparison = province_code_comparison.sequence_comparison
 
             assert_empty comparison.unmatched_tokens
 

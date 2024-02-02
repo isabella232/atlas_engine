@@ -9,7 +9,7 @@ module AtlasEngine
           extend T::Sig
 
           sig { override.returns(T.nilable(Token::Sequence::Comparison)) }
-          def compare
+          def sequence_comparison
             return @street_comparison if defined?(@street_comparison)
 
             street_sequences = datastore.fetch_street_sequences

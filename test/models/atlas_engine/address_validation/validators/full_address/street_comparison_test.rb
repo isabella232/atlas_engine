@@ -13,7 +13,7 @@ module AtlasEngine
           include AddressValidation::TokenHelper
           include AddressValidationTestHelper
 
-          test "#compare compares the session street sequences with the candidate street sequences" do
+          test "#sequence_comparison compares the session street sequences with the candidate street sequences" do
             candidate = Candidate.new(id: "A", source: { "street" => "County Road 34" })
             address = build_address(address1: "1234 County Road 34", country_code: "US")
             datastore = Es::Datastore.new(address: address)
@@ -22,7 +22,7 @@ module AtlasEngine
 
             street_comparison = StreetComparison.new(address:, candidate:, datastore:)
 
-            comparison = street_comparison.compare
+            comparison = street_comparison.sequence_comparison
             candidate_street_sequences = candidate.component(:street).sequences
 
             comparisons = comparison.token_comparisons

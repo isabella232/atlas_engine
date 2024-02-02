@@ -19,7 +19,7 @@ module AtlasEngine
           end
 
           sig { abstract.returns(T.any(T.nilable(Token::Sequence::Comparison), T.nilable(NumberComparison))) }
-          def compare; end
+          def sequence_comparison; end
 
           private
 

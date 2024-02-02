@@ -9,7 +9,7 @@ module AtlasEngine
           extend T::Sig
 
           sig { override.returns(T.nilable(Token::Sequence::Comparison)) }
-          def compare
+          def sequence_comparison
             return @zip_comparison if defined?(@zip_comparison)
 
             candidate.component(:zip)&.value = PostalCodeMatcher.new(

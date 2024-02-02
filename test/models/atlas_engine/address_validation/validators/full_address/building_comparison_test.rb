@@ -13,7 +13,7 @@ module AtlasEngine
           include AddressValidation::TokenHelper
           include AddressValidationTestHelper
 
-          test "#compare compares the session building number with the candidate building number ranges" do
+          test "#sequence_comparison compares the session building number with the candidate building number ranges" do
             candidate = Candidate.new(
               id: "A",
               source: { "building_and_unit_ranges" => "{\"(0..99)/1\": {}}" },
@@ -23,7 +23,7 @@ module AtlasEngine
 
             building_comparison = BuildingComparison.new(address:, candidate:, datastore:)
 
-            comparison = building_comparison.compare
+            comparison = building_comparison.sequence_comparison
 
             assert comparison.match?
           end

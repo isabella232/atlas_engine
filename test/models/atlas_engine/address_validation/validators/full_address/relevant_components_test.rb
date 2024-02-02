@@ -49,7 +49,7 @@ module AtlasEngine
           end
 
           test "#components_to_validate returns an array without the street component when there is no street comparison" do
-            @address_comparison.stubs(:street_comparison).returns(nil)
+            @address_comparison.street_comparison.stubs(:sequence_comparison).returns(nil)
 
             assert_statsd_increment(
               "AddressValidation.skip",
@@ -180,14 +180,15 @@ module AtlasEngine
           end
 
           def mock_address_comparison
-            street_comparison = sequence_comparison(
+            street_comparison_mock = mock
+            street_comparison_mock.stubs(:sequence_comparison).returns(sequence_comparison(
               token_comparisons: [
                 token_comparison(left: token(value: "street"), right: token(value: "street")),
               ],
-            )
+            ))
 
             typed_mock(AddressComparison).tap do |mock|
-              mock.stubs(:street_comparison).returns(street_comparison)
+              mock.stubs(:street_comparison).returns(street_comparison_mock)
             end
           end
 
