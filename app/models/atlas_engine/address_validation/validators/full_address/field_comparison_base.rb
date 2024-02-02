@@ -11,6 +11,8 @@ module AtlasEngine
 
           abstract!
 
+          SUPPORTED_FIELDS = Set.new([:street, :city, :zip, :province_code, :building])
+
           sig { params(address: AbstractAddress, candidate: Candidate, datastore: DatastoreBase).void }
           def initialize(address:, candidate:, datastore:)
             @address = address

@@ -68,5 +68,14 @@ module AtlasEngine
     def unmatched_components_suggestion_threshold
       attributes.dig("unmatched_components_suggestion_threshold") || 2
     end
+
+    sig { params(field: Symbol).returns(T::Class[AddressValidation::Validators::FullAddress::FieldComparisonBase]) }
+    def address_comparison(field:)
+      unless field.in?(AddressValidation::Validators::FullAddress::FieldComparisonBase::SUPPORTED_FIELDS)
+        raise ArgumentError.new, "Field #{field} is not supported"
+      end
+
+      attributes.dig("address_comparison", field.to_s).constantize
+    end
   end
 end

@@ -23,5 +23,11 @@ validation:
     zip: {}
     province_code: {}
   unmatched_components_suggestion_threshold: 2
+  address_comparison:
+    street: AtlasEngine::AddressValidation::Validators::FullAddress::StreetComparison
+    city: AtlasEngine::AddressValidation::Validators::FullAddress::CityComparison
+    zip: AtlasEngine::AddressValidation::Validators::FullAddress::ZipComparison
+    province_code: AtlasEngine::AddressValidation::Validators::FullAddress::ProvinceCodeComparison
+    building: AtlasEngine::AddressValidation::Validators::FullAddress::BuildingComparison
 decompounding_patterns:
   street: []

@@ -78,5 +78,25 @@ module AtlasEngine
       assert_equal AddressValidation::Token::Sequence::ComparisonPolicy::DEFAULT_POLICY,
         validation_subset.comparison_policy(:street)
     end
+
+    test "address_comparison raises error if field is not supported" do
+      validation_subset = CountryProfile.for(CountryProfile::DEFAULT_PROFILE).validation
+      assert_raises(ArgumentError) { validation_subset.address_comparison(field: :unsupported_field) }
+    end
+
+    test "address_comparison returns the correct address comparison class for each field" do
+      validation_subset = CountryProfile.for(CountryProfile::DEFAULT_PROFILE).validation
+
+      assert_equal AddressValidation::Validators::FullAddress::StreetComparison,
+        validation_subset.address_comparison(field: :street)
+      assert_equal AddressValidation::Validators::FullAddress::CityComparison,
+        validation_subset.address_comparison(field: :city)
+      assert_equal AddressValidation::Validators::FullAddress::ZipComparison,
+        validation_subset.address_comparison(field: :zip)
+      assert_equal AddressValidation::Validators::FullAddress::ProvinceCodeComparison,
+        validation_subset.address_comparison(field: :province_code)
+      assert_equal AddressValidation::Validators::FullAddress::BuildingComparison,
+        validation_subset.address_comparison(field: :building)
+    end
   end
 end
