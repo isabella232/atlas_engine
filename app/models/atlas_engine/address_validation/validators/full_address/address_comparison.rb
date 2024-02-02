@@ -42,35 +42,27 @@ module AtlasEngine
 
           sig { returns(ZipComparison) }
           def zip_comparison
-            @zip_comparison ||= ZipComparison.new(address: address, candidate: candidate, datastore: datastore)
+            @zip_comparison ||= field_comparison(field: :zip)
           end
 
           sig { returns(StreetComparison) }
           def street_comparison
-            @street_comparison ||= StreetComparison.new(address: address, candidate: candidate, datastore: datastore)
+            @street_comparison ||= field_comparison(field: :street)
           end
 
           sig { returns(CityComparison) }
           def city_comparison
-            @city_comparison ||= CityComparison.new(address: address, candidate: candidate, datastore: datastore)
+            @city_comparison ||= field_comparison(field: :city)
           end
 
           sig { returns(ProvinceCodeComparison) }
           def province_code_comparison
-            @province_code_comparison ||= ProvinceCodeComparison.new(
-              address: address,
-              candidate: candidate,
-              datastore: datastore,
-            )
+            @province_code_comparison ||= field_comparison(field: :province_code)
           end
 
           sig { returns(BuildingComparison) }
           def building_comparison
-            @building_comparison ||= BuildingComparison.new(
-              address: address,
-              candidate: candidate,
-              datastore: datastore,
-            )
+            @building_comparison ||= field_comparison(field: :building)
           end
 
           protected
@@ -101,6 +93,12 @@ module AtlasEngine
           sig { returns(AtlasEngine::AddressValidation::Token::Sequence::Comparison) }
           def merged_comparison
             @merged_comparisons ||= text_comparisons.reduce(&:merge)
+          end
+
+          sig { params(field: Symbol).returns(FieldComparisonBase) }
+          def field_comparison(field:)
+            klass = CountryProfile.for(address.country_code).validation.address_comparison(field: field)
+            klass.new(address: address, candidate: candidate, datastore: datastore)
           end
         end
       end
