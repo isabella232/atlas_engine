@@ -22,7 +22,8 @@ module AtlasEngine
                     address_comparison.building_comparison.nil? ||
                     address_comparison.building_comparison.candidate_ranges.empty?
 
-                  !address_comparison.street_comparison.match? || !address_comparison.building_comparison.match?
+                  !T.must(address_comparison.street_comparison).match? ||
+                    !T.must(address_comparison.building_comparison).match?
                 end
               end
             end
