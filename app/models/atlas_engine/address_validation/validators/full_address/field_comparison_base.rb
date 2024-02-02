@@ -23,6 +23,13 @@ module AtlasEngine
           sig { abstract.returns(T.any(T.nilable(Token::Sequence::Comparison), T.nilable(NumberComparison))) }
           def sequence_comparison; end
 
+          sig { returns(T::Boolean) }
+          def match?
+            return false if sequence_comparison.nil?
+
+            T.must(sequence_comparison).match?
+          end
+
           private
 
           sig { returns(AbstractAddress) }

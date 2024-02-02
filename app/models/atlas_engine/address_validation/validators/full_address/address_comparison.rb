@@ -68,15 +68,15 @@ module AtlasEngine
           protected
 
           sig do
-            returns(T::Array[T.any(AtlasEngine::AddressValidation::Token::Sequence::Comparison, NumberComparison)])
+            returns(T::Array[FieldComparisonBase])
           end
           def comparisons
             [
-              street_comparison.sequence_comparison,
-              city_comparison.sequence_comparison,
-              zip_comparison.sequence_comparison,
-              province_code_comparison.sequence_comparison,
-              building_comparison.sequence_comparison,
+              street_comparison,
+              city_comparison,
+              zip_comparison,
+              province_code_comparison,
+              building_comparison,
             ].compact_blank
           end
 
