@@ -41,7 +41,7 @@ module AtlasEngine
         headers: { "content-type" => "application/json" },
         body: {}
       )
-        url = "#{ENV["ELASTICSEARCH_URL"]}/" + path.sub(%r{^/}, "")
+        url = (ENV["ELASTICSEARCH_URL"] || "http://localhost:9200") + "/#{path.sub(%r{^/}, "")}"
         stub_request(method, url).to_return(
           status: status,
           headers: headers,
