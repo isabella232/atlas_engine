@@ -1,6 +1,14 @@
-# Atlas Engine
+# 🌐  Atlas Engine
 
 Atlas Engine is a rails engine that provides a global end-to-end address validation API for rails apps.
+
+* [Address Validation API](#address-validation-api)
+* [Rails App Installation](#rails-app-installation)
+* [Local Development Installation](#local-development-installation)
+* [Address Data Ingestion](#address-data-ingestion)
+* [Elasticsearch Matching Strategy](#elasticsearch-matching-strategy)
+
+## Address Validation API
 
 The validation API is powered by GraphQL, an example request and explanation of the parameters and response follows:
 
@@ -156,7 +164,7 @@ being an invalid zip code for the province `ON`. It also returns the human reada
 
 The validation scope excludes zip because the zip was not successfully validated.
 
-## Installation of Atlas Engine in your rails app
+## Rails App Installation
 
 ### Initial setup
 Add the engine to your gemfile
@@ -182,7 +190,7 @@ rails atlas_engine:install:migrations
 rails db:migrate
 ```
 
-## Setup Atlas Engine for contribution / local development
+## Local Development Installation
 
 This setup guide is based on a mac os development environment. Your tooling may vary.
 
@@ -275,7 +283,7 @@ Run sorbet check
 srb tc
 ```
 
-## Ingestion
+## Address Data Ingestion
 
 In order to power the more advanced validation matching strategies that provide city / state / zip and even street
 level address validation, your app must have a populated elasticsearch index per country available for `atlas_engine`
