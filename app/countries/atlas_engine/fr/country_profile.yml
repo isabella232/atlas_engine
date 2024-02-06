@@ -11,3 +11,4 @@ validation:
   address_parser: AtlasEngine::Fr::ValidationTranscriber::AddressParser
   enabled: true
   default_matching_strategy: es
+  has_provinces: false
