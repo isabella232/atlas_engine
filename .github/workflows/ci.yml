@@ -54,9 +54,6 @@ jobs:
       if: ${{ matrix.gemfile == 'gemfiles/rails_edge.gemfile' }}
       run: bundle info rails | head -1
 
-    - name: Setup project
-      run: bash setup
-
     - name: Set up database
       run: RAILS_ENV=test bundle exec rails db:setup
 
