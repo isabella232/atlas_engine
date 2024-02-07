@@ -62,7 +62,8 @@
           "match": {
             "zip": {
               "query": "77084",
-              "fuzziness": "auto"
+              "fuzziness": "auto",
+              "prefix_length": 0
             }
           }
         },

@@ -33,7 +33,8 @@
           "match": {
             "zip": {
               "query": "24040",
-              "fuzziness": "auto"
+              "fuzziness": "auto",
+              "prefix_length": 0
             }
           }
         },

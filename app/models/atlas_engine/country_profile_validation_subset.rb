@@ -77,5 +77,10 @@ module AtlasEngine
 
       attributes.dig("address_comparison", field.to_s).constantize
     end
+
+    sig { returns(Integer) }
+    def zip_prefix_length
+      attributes.dig("zip_prefix_length") || 0
+    end
   end
 end

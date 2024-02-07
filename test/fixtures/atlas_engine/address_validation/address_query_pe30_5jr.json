@@ -26,7 +26,7 @@
                   ]
                 }
               },
-              { "match": { "zip": {"query": "PE30 5JR", "fuzziness": "auto"} } }
+              { "match": { "zip": {"query": "PE30 5JR", "fuzziness": "auto", "prefix_length": 0 } } }
             ]
           }
         },
@@ -54,7 +54,7 @@
                   ]
                 }
               },
-              { "match": {"zip": {"query": "PE30 5JR", "fuzziness": "auto"}} }
+              { "match": {"zip": {"query": "PE30 5JR", "fuzziness": "auto", "prefix_length": 0 }} }
             ]
           }
         }
