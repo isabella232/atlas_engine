@@ -42,7 +42,7 @@
         },
         {
           "match": {
-            "zip": { "query": "683 04", "fuzziness": "auto" }
+            "zip": { "query": "683 04", "fuzziness": "auto", "prefix_length": 0 }
           }
         }
       ],

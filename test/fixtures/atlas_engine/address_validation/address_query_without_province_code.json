@@ -49,7 +49,7 @@
         },
         {
           "match": {
-            "zip": { "query": "94102", "fuzziness": "auto" }
+            "zip": { "query": "94102", "fuzziness": "auto", "prefix_length": 0 }
           }
         }
       ],

@@ -70,7 +70,8 @@
           "match": {
             "zip": {
               "query": "94102",
-              "fuzziness": "auto"
+              "fuzziness": "auto",
+              "prefix_length": 0
             }
           }
         },

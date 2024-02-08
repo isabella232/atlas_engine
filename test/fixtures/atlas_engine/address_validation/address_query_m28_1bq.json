@@ -27,7 +27,7 @@
                   ]
                 }
               },
-              { "match": {"zip": {"query": "M28 1BQ", "fuzziness": "auto"}} }
+              { "match": {"zip": {"query": "M28 1BQ", "fuzziness": "auto", "prefix_length": 0 }} }
             ]
           }
         },
@@ -56,7 +56,7 @@
                   ]
                 }
               },
-              { "match": {"zip": {"query": "M28 1BQ", "fuzziness": "auto"}} }
+              { "match": {"zip": {"query": "M28 1BQ", "fuzziness": "auto", "prefix_length": 0 }} }
             ]
           }
         },
@@ -85,7 +85,7 @@
                   ]
                 }
               },
-              {"match": {"zip": {"query": "M28 1BQ", "fuzziness": "auto"}}}
+              {"match": {"zip": {"query": "M28 1BQ", "fuzziness": "auto", "prefix_length": 0 }}}
             ]
           }
         }

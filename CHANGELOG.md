@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Add `zip_prefix_length` config in country profile to tune zip fuzzy search [#112](https://github.com/Shopify/atlas_engine/pull/112)
 - Add address parser and synonyms for Spain [#111](https://github.com/Shopify/atlas_engine/pull/111)
 - Update FR country profile to set has_provinces to false [#108](https://github.com/Shopify/atlas_engine/pull/108)
 - Add `.match?` method to `FieldComparisonBase` [#99](https://github.com/Shopify/atlas_engine/pull/99)

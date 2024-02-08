@@ -150,9 +150,14 @@ module AtlasEngine
           normalized_zip = ValidationTranscriber::ZipNormalizer.normalize(
             country_code: address.country_code, zip: address.zip,
           )
+
           {
             "match" => {
-              "zip" => { "query" => normalized_zip, "fuzziness" => "auto" },
+              "zip" => {
+                "query" => normalized_zip,
+                "fuzziness" => "auto",
+                "prefix_length" => profile.validation.zip_prefix_length,
+              },
             },
           }
         end

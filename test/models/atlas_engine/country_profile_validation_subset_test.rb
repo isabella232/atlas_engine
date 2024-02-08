@@ -98,5 +98,23 @@ module AtlasEngine
       assert_equal AddressValidation::Validators::FullAddress::BuildingComparison,
         validation_subset.address_comparison(field: :building)
     end
+
+    test "zip_prefix_length returns the defined prefix length" do
+      profile_attributes = {
+        "validation" => {
+          "zip_prefix_length" => 3,
+        },
+      }
+
+      validation_subset = CountryProfile.new(profile_attributes).validation
+
+      assert_equal 3, validation_subset.zip_prefix_length
+    end
+
+    test "zip_prefix_length returns 0 if undefined" do
+      validation_subset = CountryProfile.for(CountryProfile::DEFAULT_PROFILE).validation
+
+      assert_equal 0, validation_subset.zip_prefix_length
+    end
   end
 end
