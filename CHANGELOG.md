@@ -27,6 +27,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Nil.
+
+---
+
+[0.3.0] - 2024-02-08
+
 - Add `zip_prefix_length` config in country profile to tune zip fuzzy search [#112](https://github.com/Shopify/atlas_engine/pull/112)
 - Add address parser and synonyms for Spain [#111](https://github.com/Shopify/atlas_engine/pull/111)
 - Update FR country profile to set has_provinces to false [#108](https://github.com/Shopify/atlas_engine/pull/108)
@@ -56,8 +62,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Configurable sequence comparison policy [#54](https://github.com/Shopify/atlas_engine/pull/54)
 - Emit StatsD validation metric when address_unknown concern is returned [#55](https://github.com/Shopify/atlas_engine/pull/55)
 - Enable ES level validation for Slovenia (SI) [#44](https://github.com/Shopify/atlas_engine/pull/44)
-
----
 
 [0.2.0] - 2024-01-24
 
