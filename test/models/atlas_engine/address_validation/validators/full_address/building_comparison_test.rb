@@ -21,7 +21,7 @@ module AtlasEngine
             address = build_address(country_code: "CA", address1: "1 Main St")
             datastore = Es::Datastore.new(address: address)
 
-            building_comparison = BuildingComparison.new(address:, candidate:, datastore:)
+            building_comparison = BuildingComparison.new(address:, candidate:, datastore:, component: :building)
 
             comparison = building_comparison.sequence_comparison
 

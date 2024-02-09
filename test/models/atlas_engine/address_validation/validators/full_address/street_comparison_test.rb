@@ -20,7 +20,7 @@ module AtlasEngine
             input_street_sequences = [Token::Sequence.from_string(address.address1)]
             datastore.street_sequences = input_street_sequences
 
-            street_comparison = StreetComparison.new(address:, candidate:, datastore:)
+            street_comparison = StreetComparison.new(address:, candidate:, datastore:, component: :street)
 
             comparison = street_comparison.sequence_comparison
             candidate_street_sequences = candidate.component(:street).sequences

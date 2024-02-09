@@ -18,13 +18,14 @@ module AtlasEngine
             @address = address
             @candidate = candidate
             @datastore = datastore
+            @comparators_hash = {}
           end
 
           sig { params(other: AddressComparison).returns(Integer) }
           def <=>(other)
             # prefer addresses having more matched fields, e.g. matching on street + city + zip is better than
             # just matching on street + zip, or street + province
-            matches = comparisons.count(&:match?) <=> other.comparisons.count(&:match?)
+            matches = comparators.count(&:match?) <=> other.comparators.count(&:match?)
             return matches * -1 if matches.nonzero?
 
             # merge all sequence comparisons together, erasing the individual field boundaries, and prefer
@@ -34,7 +35,7 @@ module AtlasEngine
 
           sig { returns(String) }
           def inspect
-            "<addrcomp street#{comparisons.inspect}/>"
+            "<addrcomp street#{comparators.inspect}/>"
           end
 
           sig { returns(T::Boolean) }
@@ -44,27 +45,50 @@ module AtlasEngine
 
           sig { returns(ZipComparison) }
           def zip_comparison
-            @zip_comparison ||= field_comparison(field: :zip)
+            T.cast(self.for(:zip), ZipComparison)
           end
 
           sig { returns(StreetComparison) }
           def street_comparison
-            @street_comparison ||= field_comparison(field: :street)
+            T.cast(self.for(:street), StreetComparison)
           end
 
           sig { returns(CityComparison) }
           def city_comparison
-            @city_comparison ||= field_comparison(field: :city)
+            T.cast(self.for(:city), CityComparison)
           end
 
           sig { returns(ProvinceCodeComparison) }
           def province_code_comparison
-            @province_code_comparison ||= field_comparison(field: :province_code)
+            T.cast(self.for(:province_code), ProvinceCodeComparison)
           end
 
           sig { returns(BuildingComparison) }
           def building_comparison
-            @building_comparison ||= field_comparison(field: :building)
+            T.cast(self.for(:building), BuildingComparison)
+          end
+
+          sig { params(component: Symbol).returns(FieldComparisonBase) }
+          def for(component)
+            @comparators_hash[component] ||= begin
+              klass = datastore.country_profile.validation.component_comparison(component)
+              klass.new(
+                address: address,
+                candidate: candidate,
+                datastore: datastore,
+                component: component,
+              )
+            end
+          end
+
+          sig { returns(T::Array[Symbol]) }
+          def components
+            comparators.map(&:component)
+          end
+
+          sig { returns(T::Array[Symbol]) }
+          def relevant_components
+            comparators.select(&:relevant?).map(&:component)
           end
 
           protected
@@ -72,35 +96,23 @@ module AtlasEngine
           sig do
             returns(T::Array[FieldComparisonBase])
           end
-          def comparisons
-            [
-              street_comparison,
-              city_comparison,
-              zip_comparison,
-              province_code_comparison,
-              building_comparison,
-            ].compact_blank
+          def comparators
+            datastore.country_profile.validation.address_comparison.keys.map do |component|
+              self.for(component.to_sym)
+            end
           end
 
           sig { returns(T::Array[AtlasEngine::AddressValidation::Token::Sequence::Comparison]) }
           def text_comparisons
-            [
-              street_comparison.sequence_comparison,
-              city_comparison.sequence_comparison,
-              zip_comparison.sequence_comparison,
-              province_code_comparison.sequence_comparison,
-            ].compact_blank
+            comparators.filter_map do |comparator|
+              comparison = comparator.sequence_comparison
+              comparison if comparison.class == AtlasEngine::AddressValidation::Token::Sequence::Comparison
+            end.compact_blank
           end
 
           sig { returns(AtlasEngine::AddressValidation::Token::Sequence::Comparison) }
           def merged_comparison
             @merged_comparisons ||= text_comparisons.reduce(&:merge)
-          end
-
-          sig { params(field: Symbol).returns(FieldComparisonBase) }
-          def field_comparison(field:)
-            klass = CountryProfile.for(address.country_code).validation.address_comparison(field: field)
-            klass.new(address: address, candidate: candidate, datastore: datastore)
           end
         end
       end

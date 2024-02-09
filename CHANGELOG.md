@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Remove session from Validation::Exclusion [#135](https://github.com/Shopify/atlas_engine/pull/135)
 - Send parsings and country profile into QueryBuilder initializer [#134](https://github.com/Shopify/atlas_engine/pull/134)
 - Remove the unnecessary instantiation of worldwide region from CountryProfile.for [#130](https://github.com/Shopify/atlas_engine/pull/130)
+- Dynamically load adress comparison components [#122](https://github.com/Shopify/atlas_engine/pull/122)
 
 ---
 

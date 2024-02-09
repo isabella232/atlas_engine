@@ -9,8 +9,6 @@ module AtlasEngine
           extend T::Sig
           include LogHelper
 
-          delegate :street_comparison, to: :address_comparison
-
           sig do
             params(
               candidate: AddressValidation::CandidateTuple,
@@ -127,8 +125,8 @@ module AtlasEngine
           def matched_and_unmatched_components
             components = {}
             @matched_and_unmatched_components ||= begin
-              components_to_compare.each do |field|
-                components[field] = @address_comparison.send(:"#{field}_comparison").sequence_comparison
+              components_to_compare.each do |component|
+                components[component] = @address_comparison.for(component).sequence_comparison
               end
               components
             end

@@ -26,8 +26,13 @@ module AtlasEngine
             @address = create_address
             @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
+            @all_components = [
+              :province_code,
+              :city,
+              :zip,
+              :street,
+            ]
             @address_comparison = mock_address_comparison
-            @all_components = RelevantComponents::ALL_SUPPORTED_COMPONENTS
           end
 
           test "#components_to_compare returns an array of all supported components" do
@@ -189,6 +194,7 @@ module AtlasEngine
 
             typed_mock(AddressComparison).tap do |mock|
               mock.stubs(:street_comparison).returns(street_comparison_mock)
+              mock.stubs(:relevant_components).returns(@all_components)
             end
           end
 

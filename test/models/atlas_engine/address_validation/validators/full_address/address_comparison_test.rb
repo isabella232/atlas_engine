@@ -282,6 +282,28 @@ module AtlasEngine
             )
             assert_not address_comparison.potential_match?
           end
+
+          test "#components returns the components from the country profile" do
+            assert_equal(
+              [:street, :city, :zip, :province_code, :building],
+              AddressComparison.new(
+                address: @address,
+                candidate: @candidate,
+                datastore: @datastore,
+              ).components,
+            )
+          end
+
+          test "#relevant_components returns only relevant components from the country profile when requested" do
+            assert_equal(
+              [:street, :city, :zip, :province_code],
+              AddressComparison.new(
+                address: @address,
+                candidate: @candidate,
+                datastore: @datastore,
+              ).relevant_components,
+            )
+          end
         end
       end
     end

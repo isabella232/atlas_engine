@@ -8,6 +8,11 @@ module AtlasEngine
         class StreetComparison < FieldComparisonBase
           extend T::Sig
 
+          sig { override.returns(T::Boolean) }
+          def relevant?
+            true
+          end
+
           sig { override.returns(T.nilable(Token::Sequence::Comparison)) }
           def sequence_comparison
             return @street_comparison if defined?(@street_comparison)
