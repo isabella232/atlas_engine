@@ -6,7 +6,7 @@ gemspec
 
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "mysql2"
+gem "trilogy"
 
 group :development, :test do
   gem "dotenv-rails", require: "dotenv/rails-now"

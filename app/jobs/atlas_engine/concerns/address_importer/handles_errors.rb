@@ -23,7 +23,7 @@ module AtlasEngine
           end
 
           retry_on(
-            Mysql2::Error::ConnectionError,
+            Trilogy::ConnectionError,
             wait: 10.seconds,
             attempts: 5,
           ) do |job, exception|

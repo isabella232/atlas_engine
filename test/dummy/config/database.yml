@@ -13,7 +13,7 @@ development: &development
   <<: *default
   encoding: utf8mb4
   collation: utf8mb4_unicode_ci
-  adapter: mysql2
+  adapter: trilogy
   pool: 5
   username: root
   password:
@@ -23,7 +23,6 @@ development: &development
 test:
   <<: *development
   database: db_test
-
 
 production:
   <<: *development
