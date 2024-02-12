@@ -160,7 +160,7 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
-    irb (1.11.1)
+    irb (1.11.2)
       rdoc
       reline (>= 0.4.2)
     job-iteration (1.4.1)
@@ -175,7 +175,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    maintenance_tasks (2.5.0)
+    maintenance_tasks (2.5.1)
       actionpack (>= 6.0)
       activejob (>= 6.0)
       activerecord (>= 6.0)
@@ -185,7 +185,7 @@ GEM
     marcel (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.5)
-    minitest (5.21.2)
+    minitest (5.22.2)
     minitest-distributed (0.2.10)
       minitest (~> 5.12)
       redis (>= 5.0.6, < 6)
@@ -377,7 +377,7 @@ GEM
     yard-sorbet (0.8.1)
       sorbet-runtime (>= 0.5)
       yard (>= 0.9)
-    zeitwerk (2.6.12)
+    zeitwerk (2.6.13)
 
 PLATFORMS
   arm64-darwin-22
