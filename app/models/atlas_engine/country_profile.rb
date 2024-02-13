@@ -71,6 +71,11 @@ module AtlasEngine
 
     DEFAULT_PROFILE = "DEFAULT"
 
+    COUNTRIES = T.let(
+      Worldwide::Regions.all.select(&:country?).reject(&:deprecated?).map(&:iso_code).to_set,
+      T::Set[String],
+    )
+
     add_index :id, unique: true
     self.base_path = ""
     self.backend = Backend
@@ -183,7 +188,7 @@ module AtlasEngine
       def for(country_code, locale = nil)
         raise CountryNotFoundError if country_code.blank?
 
-        unless country_code == DEFAULT_PROFILE || Worldwide.region(code: country_code).country?
+        unless country_code == DEFAULT_PROFILE || COUNTRIES.include?(country_code.upcase)
           raise CountryNotFoundError
         end
 
