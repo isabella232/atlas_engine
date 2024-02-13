@@ -22,7 +22,7 @@ module AtlasEngine
         class ConnectionErrorsJob < ApplicationJob
           include HandlesErrors
           def perform(country_import_id:)
-            raise Mysql2::Error::ConnectionError, "Error"
+            raise Trilogy::TimeoutError, "Error"
           end
         end
 
