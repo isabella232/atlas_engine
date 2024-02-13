@@ -37,5 +37,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency("sorbet-runtime")
   spec.add_dependency("state_machines-activerecord")
   spec.add_dependency("statsd-instrument")
+  spec.add_dependency("trilogy")
   spec.add_dependency("worldwide", ">= 0.6.7")
 end

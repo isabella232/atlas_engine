@@ -16,6 +16,7 @@ PATH
       sorbet-runtime
       state_machines-activerecord
       statsd-instrument
+      trilogy
       worldwide (>= 0.6.7)
 
 GEM
@@ -403,7 +404,6 @@ DEPENDENCIES
   sprockets-rails
   tapioca
   thor
-  trilogy
   webmock
 
 BUNDLED WITH

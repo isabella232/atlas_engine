@@ -6,8 +6,6 @@ gemspec
 
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "trilogy"
-
 group :development, :test do
   gem "dotenv-rails", require: "dotenv/rails-now"
   # For loading the /graphiql assests
