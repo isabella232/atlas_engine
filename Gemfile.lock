@@ -175,7 +175,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    maintenance_tasks (2.5.1)
+    maintenance_tasks (2.6.0)
       actionpack (>= 6.0)
       activejob (>= 6.0)
       activerecord (>= 6.0)
