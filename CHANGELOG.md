@@ -27,7 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-nil.
+- Remove the unnecessary instantiation of worldwide region from CountryProfile.for [#130](https://github.com/Shopify/atlas_engine/pull/130)
 
 ---
 
