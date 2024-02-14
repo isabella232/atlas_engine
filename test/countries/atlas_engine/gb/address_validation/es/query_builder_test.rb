@@ -19,7 +19,8 @@ module AtlasEngine
               zip: "M28 1BQ",
               country_code: "GB",
             )
-            query_builder = AtlasEngine::AddressValidation::Es::QueryBuilder.for(address)
+            parsings = parsings_for(address)
+            query_builder = AtlasEngine::AddressValidation::Es::QueryBuilder.for(address, parsings)
 
             assert_equal expected_query_for_postcode(address.zip), query_builder.full_address_query
           end
@@ -32,7 +33,8 @@ module AtlasEngine
               zip: "PE30 5JR",
               country_code: "GB",
             )
-            query_builder = AtlasEngine::AddressValidation::Es::QueryBuilder.for(address)
+            parsings = parsings_for(address)
+            query_builder = AtlasEngine::AddressValidation::Es::QueryBuilder.for(address, parsings)
 
             assert_equal expected_query_for_postcode(address.zip), query_builder.full_address_query
           end

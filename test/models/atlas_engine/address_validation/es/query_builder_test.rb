@@ -11,22 +11,32 @@ module AtlasEngine
         include AtlasEngine::AddressValidation::AddressValidationTestHelper
 
         test ".for with an address having an invalid country code raises an error" do
+          parsings = parsings_for(us_address)
+
           assert_raises(CountryProfile::CountryNotFoundError) do
-            QueryBuilder.for(invalid_country_address)
+            QueryBuilder.for(invalid_country_address, parsings)
           end
         end
 
         test ".for returns a QueryBuilder for a US address" do
-          query_builder = QueryBuilder.for(us_address)
+          parsings = parsings_for(us_address)
+
+          query_builder = QueryBuilder.for(us_address, parsings)
           assert query_builder.is_a?(Es::DefaultQueryBuilder)
         end
 
         test ".for returns a GbQueryBuilder for a UK address" do
-          query_builder = QueryBuilder.for(gb_address)
+          parsings = parsings_for(gb_address)
+
+          query_builder = QueryBuilder.for(gb_address, parsings)
           assert query_builder.is_a?(Gb::AddressValidation::Es::QueryBuilder)
         end
 
         test ".for returns a query builder if locale is provided for a multi-locale country" do
+          locale = "de"
+
+          parsings = parsings_for(ch_address, locale)
+
           profile_attributes = {
             "id" => "CH_DE",
             "validation" => {
@@ -36,7 +46,7 @@ module AtlasEngine
           }
           CountryProfile.expects(:for).with("CH", "de").returns(CountryProfile.new(profile_attributes)).at_least_once
 
-          query_builder = QueryBuilder.for(ch_address, "de")
+          query_builder = QueryBuilder.for(ch_address, parsings, locale)
           assert_instance_of(Es::DefaultQueryBuilder, query_builder)
         end
 
