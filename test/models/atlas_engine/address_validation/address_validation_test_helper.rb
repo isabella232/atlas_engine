@@ -106,6 +106,13 @@ module AtlasEngine
           AtlasEngine::AddressValidation::Token::Sequence.from_string(session.city)
       end
 
+      def parsings_for(address, locale = nil)
+        AtlasEngine::ValidationTranscriber::AddressParsings.new(
+          address_input: address,
+          locale: locale,
+        )
+      end
+
       def candidate(address)
         candidate_hash = address.to_h.transform_keys(address1: :street)
         AtlasEngine::AddressValidation::Candidate.new(id: "A", source: candidate_hash)
