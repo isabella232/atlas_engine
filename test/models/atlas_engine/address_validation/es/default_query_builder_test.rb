@@ -123,7 +123,7 @@ module AtlasEngine
           assert_equal expected_address_query("without_province_code"), query_builder.full_address_query
         end
 
-        test "#full_address_query returns nested city_aliases clause" do
+        test "#full_address_query returns nested city_aliases clause if city_alias is not present" do
           parsings = parsings_for(us_address)
           profile = CountryProfile.new(
             "id" => "XX",
@@ -136,6 +136,22 @@ module AtlasEngine
 
           query_builder = DefaultQueryBuilder.new(us_address, parsings, profile)
           assert_equal expected_address_query("nested_city_aliases_one_city_field"), query_builder.full_address_query
+        end
+
+        test "#full_address_query returns city match clause if city_alias is false" do
+          parsings = parsings_for(us_address)
+          profile = CountryProfile.new(
+            "id" => "XX",
+            "validation" => {
+              "key" => "some_value",
+              "has_provinces" => true,
+              "city_alias" => false,
+              "address_parser" => "AtlasEngine::ValidationTranscriber::AddressParserNorthAmerica",
+            },
+          )
+
+          query_builder = DefaultQueryBuilder.new(us_address, parsings, profile)
+          assert_equal expected_address_query("city_match"), query_builder.full_address_query
         end
 
         private

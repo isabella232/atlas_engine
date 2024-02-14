@@ -53,6 +53,7 @@ module AtlasEngine
               :region2,
               :region3,
               :region4,
+              :city,
               :city_aliases,
               :suburb,
               :zip,

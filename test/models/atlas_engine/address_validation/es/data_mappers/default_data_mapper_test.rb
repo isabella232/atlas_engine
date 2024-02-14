@@ -88,6 +88,12 @@ module AtlasEngine
             assert_equal expected_city_aliases, persisted_document[:city_aliases]
           end
 
+          test "#map_data maps first element of city array into city text field" do
+            persisted_document = @mapper.map_data
+
+            assert_equal "Athabasca", persisted_document[:city]
+          end
+
           test "#map_data normalizes postal codes" do
             @post_address[:zip] = "h0h0h0"
 

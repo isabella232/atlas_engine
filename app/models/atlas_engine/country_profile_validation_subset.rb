@@ -82,5 +82,10 @@ module AtlasEngine
     def zip_prefix_length
       attributes.dig("zip_prefix_length") || 0
     end
+
+    sig { returns(T::Boolean) }
+    def city_alias
+      attributes.dig("city_alias").nil? ? true : attributes.dig("city_alias")
+    end
   end
 end

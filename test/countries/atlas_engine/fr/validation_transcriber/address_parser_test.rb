@@ -47,7 +47,7 @@ module AtlasEngine
             },
           ]
           examples.each do |sample|
-            address = AddressValidation::Address.new(
+            address = AtlasEngine::AddressValidation::Address.new(
               address1: sample[:address1],
               address2: sample[:address2],
               country_code: "FR",
@@ -59,7 +59,7 @@ module AtlasEngine
         private
 
         def build_address(address1: nil, address2: nil)
-          AddressValidation::Address.new(
+          AtlasEngine::AddressValidation::Address.new(
             address1: address1,
             address2: address2,
             country_code: "FR",
