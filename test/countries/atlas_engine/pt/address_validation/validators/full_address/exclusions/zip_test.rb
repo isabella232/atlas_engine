@@ -29,7 +29,7 @@ module AtlasEngine
                   address1: "Rua Marginal",
                   building_and_unit_ranges: "{\"(0..99)/1\": {}}",
                 })
-                assert Zip.apply?(session(@address), @candidate, address_comparison)
+                assert Zip.apply?(@candidate, address_comparison)
               end
 
               test "#apply? returns true if building number does not match" do
@@ -37,7 +37,7 @@ module AtlasEngine
                   address1: "Avenida Marginal",
                   building_and_unit_ranges: "{\"(100..299)/1\": {}}",
                 })
-                assert Zip.apply?(session(@address), @candidate, address_comparison)
+                assert Zip.apply?(@candidate, address_comparison)
               end
 
               test "#apply? returns false only if building and street comparison match exactly" do
@@ -45,7 +45,7 @@ module AtlasEngine
                   address1: "Avenida Marginal",
                   building_and_unit_ranges: "{\"(0..99)/1\": {}}",
                 })
-                assert_not Zip.apply?(session(@address), @candidate, address_comparison)
+                assert_not Zip.apply?(@candidate, address_comparison)
               end
 
               private

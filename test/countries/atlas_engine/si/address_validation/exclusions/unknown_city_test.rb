@@ -14,13 +14,6 @@ module AtlasEngine
           include AtlasEngine::AddressValidation::TokenHelper
 
           test "#apply? returns true when city comparison is poor" do
-            address = build_address(
-              address1: "Belca 40",
-              city: "Mojstrana",
-              country_code: "SI",
-              zip: "4281",
-            )
-
             rural_candidate_address = build_address(
               address1: "Belca",
               city: "Belca",
@@ -29,17 +22,10 @@ module AtlasEngine
             )
             candidate = candidate(rural_candidate_address)
             comparison = mock_address_comparison("Mojstrana", "Belca")
-            assert UnknownCity.apply?(session(address), candidate, comparison)
+            assert UnknownCity.apply?(candidate, comparison)
           end
 
           test "#apply? returns false when city comparison is close" do
-            address = build_address(
-              address1: "Moste 63i",
-              city: "Komends", # only one letter off
-              country_code: "SI",
-              zip: "1218",
-            )
-
             rural_candidate_address = build_address(
               address1: "Moste",
               city: "Komenda",
@@ -48,7 +34,7 @@ module AtlasEngine
             )
             candidate = candidate(rural_candidate_address)
             comparison = mock_address_comparison("Komends", "Komenda")
-            assert_not UnknownCity.apply?(session(address), candidate, comparison)
+            assert_not UnknownCity.apply?(candidate, comparison)
           end
 
           private

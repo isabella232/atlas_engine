@@ -11,6 +11,8 @@ module AtlasEngine
 
           attr_reader :address, :candidate, :datastore
 
+          delegate :parsings, to: :datastore
+
           sig { params(address: AbstractAddress, candidate: Candidate, datastore: DatastoreBase).void }
           def initialize(address:, candidate:, datastore:)
             @address = address

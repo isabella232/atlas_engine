@@ -21,7 +21,7 @@ module AtlasEngine
                   country_code: "IT",
                   zip: "38121",
                 )
-                assert City.apply?(session(address), candidate(address), mock_address_comparison)
+                assert City.apply?(candidate(address), mock_address_comparison)
               end
 
               private

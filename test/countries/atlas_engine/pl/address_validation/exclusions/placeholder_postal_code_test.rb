@@ -12,13 +12,6 @@ module AtlasEngine
           include AtlasEngine::AddressValidation::AddressValidationTestHelper
 
           test "#apply? returns true when candidate has placeholder zip" do
-            address = build_address(
-              address1: "Artyleryjska 18c",
-              city: "Bolesławiec",
-              country_code: "PL",
-              zip: "59-700",
-            )
-
             candidate_address = build_address(
               address1: "Artyleryjska",
               city: "Bolesławiec",
@@ -26,7 +19,7 @@ module AtlasEngine
               zip: "00-000",
             )
             candidate = candidate(candidate_address)
-            assert PlaceholderPostalCode.apply?(session(address), candidate, mock_address_comparison)
+            assert PlaceholderPostalCode.apply?(candidate, mock_address_comparison)
           end
 
           test "#apply? returns false otherwise" do
@@ -37,7 +30,7 @@ module AtlasEngine
               zip: "59-700",
             )
             candidate = candidate(address)
-            assert_not PlaceholderPostalCode.apply?(session(address), candidate, mock_address_comparison)
+            assert_not PlaceholderPostalCode.apply?(candidate, mock_address_comparison)
           end
 
           private
