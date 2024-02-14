@@ -14,13 +14,6 @@ module AtlasEngine
           include AtlasEngine::AddressValidation::TokenHelper
 
           test "#apply? returns true when candidate has matching street and city names and city comparison is poor" do
-            address = build_address(
-              address1: "Kotowa Wola 285",
-              city: "Zaleszany",
-              country_code: "PL",
-              zip: "37-415",
-            )
-
             rural_candidate_address = build_address(
               address1: "Kotowa Wola",
               city: "Kotowa Wola",
@@ -29,17 +22,10 @@ module AtlasEngine
             )
             candidate = candidate(rural_candidate_address)
             comparison = mock_address_comparison("Zaleszany", "Kotowa Wola")
-            assert RuralAddress.apply?(session(address), candidate, comparison)
+            assert RuralAddress.apply?(candidate, comparison)
           end
 
           test "#apply? returns false when candidate has matching street and city names and city comparison is close" do
-            address = build_address(
-              address1: "Kotowa Wola 285",
-              city: "Kotowa Kola", # only one letter off
-              country_code: "PL",
-              zip: "37-415",
-            )
-
             rural_candidate_address = build_address(
               address1: "Kotowa Wola",
               city: "Kotowa Wola",
@@ -48,17 +34,10 @@ module AtlasEngine
             )
             candidate = candidate(rural_candidate_address)
             comparison = mock_address_comparison("Kotowa Kola", "Kotowa Wola")
-            assert_not RuralAddress.apply?(session(address), candidate, comparison)
+            assert_not RuralAddress.apply?(candidate, comparison)
           end
 
           test "#apply? returns false when candidate has differing street and city values (not rural)" do
-            address = build_address(
-              address1: "Kotowa Wola 285",
-              city: "Zaleszany",
-              country_code: "PL",
-              zip: "37-415",
-            )
-
             candidate_address = build_address(
               address1: "Kotowa Wola",
               city: "Trzebnica",
@@ -67,7 +46,7 @@ module AtlasEngine
             )
             candidate = candidate(candidate_address)
             comparison = mock_address_comparison("Zaleszany", "Trzebnica")
-            assert_not RuralAddress.apply?(session(address), candidate, comparison)
+            assert_not RuralAddress.apply?(candidate, comparison)
           end
 
           private

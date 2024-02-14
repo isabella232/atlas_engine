@@ -56,7 +56,7 @@ module AtlasEngine
           def apply_exclusions(supported_components)
             supported_components.delete_if do |component|
               exclusions(component).any? do |exclusion|
-                if exclusion.apply?(session, candidate, address_comparison)
+                if exclusion.apply?(candidate, address_comparison)
                   emit_excluded_validation(component, "excluded")
                   true
                 end

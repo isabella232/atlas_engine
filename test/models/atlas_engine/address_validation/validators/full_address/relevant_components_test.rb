@@ -16,7 +16,7 @@ module AtlasEngine
 
           class DummyExclusion
             class << self
-              def apply?(_session, _candidate, mock_address_comparison)
+              def apply?(_candidate, mock_address_comparison)
                 true
               end
             end
