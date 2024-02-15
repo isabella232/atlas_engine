@@ -29,7 +29,7 @@ module AtlasEngine
 
       assert_not country_import.reload.failed?
       assert_redirected_to(controller: "country_imports", action: "index")
-      assert_equal "Interruption of country import failed with StateMachines::InvalidTransition, "\
+      assert_equal "Interruption of country import failed with StateMachines::InvalidTransition, " \
         "Cannot transition state via :interrupt from :complete (Reason(s): State cannot transition via \"interrupt\")",
         flash[:alert]
     end

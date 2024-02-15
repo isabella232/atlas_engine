@@ -23,15 +23,15 @@ module AtlasEngine
 
       BUILDING_NAME = "(?<building_name>[\\w ]+)"
       BUILDING_NUM =
-        "(?<building_num>("\
-          '([[:digit:]]+\s)?([[:digit:]]+/[[:digit:]]+)|'\
-          '[[:digit:]][[:alpha:][:digit:]/\-]*|'\
-          '[[:alpha:]][[:digit:]][[:alpha:][:digit:]/\-]*'\
+        "(?<building_num>(" \
+          '([[:digit:]]+\s)?([[:digit:]]+/[[:digit:]]+)|' \
+          '[[:digit:]][[:alpha:][:digit:]/\-]*|' \
+          '[[:alpha:]][[:digit:]][[:alpha:][:digit:]/\-]*' \
           "))"
       NUMERIC_ONLY_BUILDING_NUM =
-        "(?<building_num>("\
-          '([[:digit:]]+\s+)?[[:digit:]][[:digit:]/]*[[:digit:]]|'\
-          "[[:digit:]]+"\
+        "(?<building_num>(" \
+          '([[:digit:]]+\s+)?[[:digit:]][[:digit:]/]*[[:digit:]]|' \
+          "[[:digit:]]+" \
           "))"
       NON_NUMERIC_STREET = "(?<street>[^[:digit:]/ -].*)"
       STREET = "(?<street>.+)"
