@@ -767,8 +767,8 @@ module AtlasEngine
         actual = AddressParserNorthAmerica.new(address: address).parse
         assert(
           [expected].to_set.subset?(actual.to_set),
-          "For input #{address_specification.inspect},\n"\
-            "expected parsings to include #{expected.inspect},\n"\
+          "For input #{address_specification.inspect},\n" \
+            "expected parsings to include #{expected.inspect},\n" \
             "but got #{actual.inspect}.",
         )
       end

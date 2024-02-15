@@ -230,7 +230,7 @@ module AtlasEngine
         ).void
       end
       def update_aliases_for_index(index_name:, remove_alias:, add_alias:)
-        is_writable = add_alias == active_alias ? true : false
+        is_writable = add_alias == active_alias
 
         body = {
           actions: [

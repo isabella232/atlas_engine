@@ -18,12 +18,14 @@ module Maintenance
       attribute :geojson_file_path, :string
       attribute :locale, :string
 
-      def process = ::AtlasEngine::AddressImporter::OpenAddress::GeoJsonImportLauncherJob.perform_later(
-        country_code:,
-        geojson_file_path: geojson_file_path.strip,
-        clear_records:,
-        locale:,
-      )
+      def process
+        ::AtlasEngine::AddressImporter::OpenAddress::GeoJsonImportLauncherJob.perform_later(
+          country_code:,
+          geojson_file_path: geojson_file_path.strip,
+          clear_records:,
+          locale:,
+        )
+      end
     end
   end
 end
