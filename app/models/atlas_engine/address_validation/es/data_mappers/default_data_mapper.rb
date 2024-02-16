@@ -38,6 +38,7 @@ module AtlasEngine
                   .slice(:id, :locale, :country_code, :province_code, :region1, :region2, :region3, :region4)
                   .deep_symbolize_keys,
               )
+              data[:city] = post_address[:city].first
               data[:city_aliases] = city_aliases(post_address[:city])
               data[:suburb] = post_address[:suburb]
               data[:zip] = Worldwide::Zip.normalize(

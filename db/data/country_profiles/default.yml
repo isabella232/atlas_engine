@@ -9,6 +9,8 @@ ingestion:
 validation:
   enabled: false
   has_provinces: true
+  zip_prefix_length: 0
+  city_alias: true
   index_locales: []
   default_matching_strategy: local
   normalized_components: []

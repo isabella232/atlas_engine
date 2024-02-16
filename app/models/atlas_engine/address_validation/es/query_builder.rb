@@ -145,16 +145,22 @@ module AtlasEngine
 
         sig { returns(T.nilable(Hash)) }
         def city_clause
-          {
-            "nested" => {
-              "path" => "city_aliases",
-              "query" => {
-                "match" => {
-                  "city_aliases.alias" => { "query" => address.city.to_s, "fuzziness" => "auto" },
+          if profile.validation.city_alias
+            {
+              "nested" => {
+                "path" => "city_aliases",
+                "query" => {
+                  "match" => {
+                    "city_aliases.alias" => { "query" => address.city.to_s, "fuzziness" => "auto" },
+                  },
                 },
               },
-            },
-          }
+            }
+          else
+            {
+              "match" => { "city" => { "query" => address.city.to_s, "fuzziness" => "auto" } },
+            }
+          end
         end
 
         sig { returns(Hash) }

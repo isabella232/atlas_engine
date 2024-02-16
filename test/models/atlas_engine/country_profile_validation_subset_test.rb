@@ -116,5 +116,23 @@ module AtlasEngine
 
       assert_equal 0, validation_subset.zip_prefix_length
     end
+
+    test "city_alias returns boolean if defined" do
+      profile_attributes = {
+        "validation" => {
+          "city_alias" => false,
+        },
+      }
+
+      validation_subset = CountryProfile.new(profile_attributes).validation
+
+      assert_not validation_subset.city_alias
+    end
+
+    test "city_alias returns true if undefined" do
+      validation_subset = CountryProfile.for(CountryProfile::DEFAULT_PROFILE).validation
+
+      assert validation_subset.city_alias
+    end
   end
 end

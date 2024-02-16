@@ -33,6 +33,12 @@ module AtlasEngine
               "analyzer" => "text_analyzer",
               "fields" => { "keyword" => { "type" => "keyword" } },
             },
+            "city" => {
+              "type" => "text",
+              "analyzer" => "text_analyzer",
+              "search_analyzer" => "city_analyzer",
+              "fields" => { "keyword" => { "type" => "keyword" } },
+            },
             "city_aliases" => {
               "type" => "nested",
               "dynamic" => "false",
