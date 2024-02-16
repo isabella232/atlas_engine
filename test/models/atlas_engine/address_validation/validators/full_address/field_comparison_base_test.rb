@@ -14,6 +14,11 @@ module AtlasEngine
           include AddressValidationTestHelper
 
           class DummyFieldComparison < FieldComparisonBase
+            sig { override.returns(T::Boolean) }
+            def relevant?
+              true
+            end
+
             def sequence_comparison
               nil
             end
@@ -27,6 +32,7 @@ module AtlasEngine
               address: @address,
               candidate: @candidate,
               datastore: @datastore,
+              component: :zip,
             )
           end
 

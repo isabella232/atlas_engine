@@ -21,7 +21,7 @@ module AtlasEngine
             input_city_sequence = Token::Sequence.from_string(address.city)
             datastore.city_sequence = input_city_sequence
 
-            city_comparison = CityComparison.new(address:, candidate:, datastore:)
+            city_comparison = CityComparison.new(address:, candidate:, datastore:, component: :city)
 
             comparison = city_comparison.sequence_comparison
             candidate_city_sequences = candidate.component(:city).sequences
@@ -49,7 +49,7 @@ module AtlasEngine
             input_city_sequence = Token::Sequence.from_string(address.city)
             datastore.city_sequence = input_city_sequence
 
-            city_comparison = CityComparison.new(address:, candidate:, datastore:)
+            city_comparison = CityComparison.new(address:, candidate:, datastore:, component: :city)
 
             comparison = city_comparison.sequence_comparison
             candidate_city_sequences = candidate.component(:city).sequences

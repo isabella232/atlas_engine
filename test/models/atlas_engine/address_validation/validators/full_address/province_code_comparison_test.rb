@@ -21,7 +21,12 @@ module AtlasEngine
             address = build_address(province_code: "US-TX", country_code: "US")
             datastore = Es::Datastore.new(address: address)
 
-            province_code_comparison = ProvinceCodeComparison.new(address:, candidate:, datastore:)
+            province_code_comparison = ProvinceCodeComparison.new(
+              address:,
+              candidate:,
+              datastore:,
+              component: :province_code,
+            )
 
             comparison = province_code_comparison.sequence_comparison
 
@@ -40,7 +45,12 @@ module AtlasEngine
             address = build_address(province_code: "US-PR", country_code: "US")
             datastore = Es::Datastore.new(address: address)
 
-            province_code_comparison = ProvinceCodeComparison.new(address:, candidate:, datastore:)
+            province_code_comparison = ProvinceCodeComparison.new(
+              address:,
+              candidate:,
+              datastore:,
+              component: :province_code,
+            )
 
             comparison = province_code_comparison.sequence_comparison
 

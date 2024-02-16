@@ -8,6 +8,11 @@ module AtlasEngine
         class BuildingComparison < FieldComparisonBase
           extend T::Sig
 
+          sig { override.returns(T::Boolean) }
+          def relevant?
+            false
+          end
+
           sig { override.returns(T.nilable(NumberComparison)) }
           def sequence_comparison
             @building_comparison ||= NumberComparison.new(

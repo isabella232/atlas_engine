@@ -18,7 +18,7 @@ module AtlasEngine
             address = build_address(country_code: "CA", zip: "j9a2v2")
             datastore = Es::Datastore.new(address: address)
 
-            zip_comparison = ZipComparison.new(address:, candidate:, datastore:)
+            zip_comparison = ZipComparison.new(address:, candidate:, datastore:, component: :zip)
 
             comparison = zip_comparison.sequence_comparison
             candidate_zip_sequences = candidate.component(:zip).sequences
@@ -34,7 +34,7 @@ module AtlasEngine
             address = build_address(country_code: "AR", zip: "S2919")
             datastore = Es::Datastore.new(address: address)
 
-            zip_comparison = ZipComparison.new(address:, candidate:, datastore:)
+            zip_comparison = ZipComparison.new(address:, candidate:, datastore:, component: :zip)
 
             comparison = zip_comparison.sequence_comparison
 
@@ -52,7 +52,7 @@ module AtlasEngine
             address = build_address(country_code: "CA", zip: "j9a2v2")
             datastore = Es::Datastore.new(address: address)
 
-            zip_comparison = ZipComparison.new(address:, candidate:, datastore:)
+            zip_comparison = ZipComparison.new(address:, candidate:, datastore:, component: :zip)
 
             comparison = zip_comparison.sequence_comparison
             candidate_zip_sequences = candidate.component(:zip).sequences

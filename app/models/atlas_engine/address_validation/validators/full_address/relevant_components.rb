@@ -17,13 +17,6 @@ module AtlasEngine
           sig { returns(AddressComparison) }
           attr_reader :address_comparison
 
-          ALL_SUPPORTED_COMPONENTS = [
-            :province_code,
-            :city,
-            :zip,
-            :street,
-          ].freeze
-
           sig do
             params(
               session: Session,
@@ -35,11 +28,12 @@ module AtlasEngine
             @session = session
             @candidate = candidate
             @address_comparison = address_comparison
+            @all_supported_components = address_comparison.relevant_components.dup
           end
 
           sig { returns(T::Array[Symbol]) }
           def components_to_validate
-            supported_components = ALL_SUPPORTED_COMPONENTS.dup - unsupported_components_for_country
+            supported_components = @all_supported_components.dup - unsupported_components_for_country
             apply_exclusions(supported_components)
             supported_components.delete(:street) if exclude_street_validation?
             supported_components
@@ -47,7 +41,7 @@ module AtlasEngine
 
           sig { returns(T::Array[Symbol]) }
           def components_to_compare
-            ALL_SUPPORTED_COMPONENTS.dup - unsupported_components_for_country
+            @all_supported_components.dup - unsupported_components_for_country
           end
 
           private

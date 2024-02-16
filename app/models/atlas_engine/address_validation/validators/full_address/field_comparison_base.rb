@@ -11,14 +11,26 @@ module AtlasEngine
 
           abstract!
 
-          SUPPORTED_FIELDS = Set.new([:street, :city, :zip, :province_code, :building])
+          sig { returns(Symbol) }
+          attr_reader :component
 
-          sig { params(address: AbstractAddress, candidate: Candidate, datastore: DatastoreBase).void }
-          def initialize(address:, candidate:, datastore:)
+          sig do
+            params(
+              address: AbstractAddress,
+              candidate: Candidate,
+              datastore: DatastoreBase,
+              component: Symbol,
+            ).void
+          end
+          def initialize(address:, candidate:, datastore:, component:)
             @address = address
             @datastore = datastore
             @candidate = candidate
+            @component = component
           end
+
+          sig { abstract.returns(T::Boolean) }
+          def relevant?; end
 
           sig { abstract.returns(T.any(T.nilable(Token::Sequence::Comparison), T.nilable(NumberComparison))) }
           def sequence_comparison; end

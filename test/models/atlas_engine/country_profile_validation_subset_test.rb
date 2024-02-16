@@ -79,24 +79,19 @@ module AtlasEngine
         validation_subset.comparison_policy(:street)
     end
 
-    test "address_comparison raises error if field is not supported" do
-      validation_subset = CountryProfile.for(CountryProfile::DEFAULT_PROFILE).validation
-      assert_raises(ArgumentError) { validation_subset.address_comparison(field: :unsupported_field) }
-    end
-
-    test "address_comparison returns the correct address comparison class for each field" do
+    test "component_comparison returns the correct address comparison class for each field" do
       validation_subset = CountryProfile.for(CountryProfile::DEFAULT_PROFILE).validation
 
       assert_equal AddressValidation::Validators::FullAddress::StreetComparison,
-        validation_subset.address_comparison(field: :street)
+        validation_subset.component_comparison(:street)
       assert_equal AddressValidation::Validators::FullAddress::CityComparison,
-        validation_subset.address_comparison(field: :city)
+        validation_subset.component_comparison(:city)
       assert_equal AddressValidation::Validators::FullAddress::ZipComparison,
-        validation_subset.address_comparison(field: :zip)
+        validation_subset.component_comparison(:zip)
       assert_equal AddressValidation::Validators::FullAddress::ProvinceCodeComparison,
-        validation_subset.address_comparison(field: :province_code)
+        validation_subset.component_comparison(:province_code)
       assert_equal AddressValidation::Validators::FullAddress::BuildingComparison,
-        validation_subset.address_comparison(field: :building)
+        validation_subset.component_comparison(:building)
     end
 
     test "zip_prefix_length returns the defined prefix length" do
