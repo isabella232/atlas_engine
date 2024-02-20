@@ -10,7 +10,6 @@ module AtlasEngine
     module Validators
       module FullAddress
         class CandidateResultBaseTest < ActiveSupport::TestCase
-          include TokenHelper
           include AddressValidationTestHelper
 
           setup do
@@ -39,7 +38,7 @@ module AtlasEngine
               suggestion_ids: [],
             )
 
-            klass = TestCandidateResultBase.new(session: session, result: result)
+            klass = TestCandidateResultBase.new(address: @address, result: result)
             klass.send(:update_result_scope)
 
             assert_equal [:province_code], result.validation_scope
@@ -49,26 +48,12 @@ module AtlasEngine
             result = build_result
             result.validation_scope = [:province_code, :zip, :city, :address1, :address2]
 
-            klass = TestCandidateResultBase.new(session: session, result: result)
+            klass = TestCandidateResultBase.new(address: @address, result: result)
 
             assert_equal [:province_code, :zip, :city, :address1, :address2, :phone],
               klass.send(:contained_scopes_for, :province_code)
             assert_equal [:zip, :city, :address1, :address2, :phone], klass.send(:contained_scopes_for, :zip)
             assert_equal [:city, :address1, :address2, :phone], klass.send(:contained_scopes_for, :city)
-          end
-
-          def session
-            @session ||= Session.new(address: @address).tap do |session|
-              # setting the street and city sequences leads the Datastore to skip the actual ES _analyze requests.
-              sequences_for(session)
-            end
-          end
-
-          def sequences_for(session)
-            session.datastore.street_sequences = [
-              AtlasEngine::AddressValidation::Token::Sequence.from_string(@address.address1),
-            ]
-            session.datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(@address.city)
           end
 
           def build_result(overrides = {})

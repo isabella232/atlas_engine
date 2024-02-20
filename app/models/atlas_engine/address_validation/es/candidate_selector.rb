@@ -21,7 +21,7 @@ module AtlasEngine
           end
         end
 
-        sig { returns(T.nilable(CandidateTuple)) }
+        sig { returns(T.nilable(AddressValidation::Validators::FullAddress::AddressComparison)) }
         def best_candidate
           street_sequences_future = datastore.fetch_street_sequences_async
           city_sequences_future = datastore.fetch_city_sequence_async
@@ -36,28 +36,28 @@ module AtlasEngine
 
         attr_reader :datastore, :address
 
-        sig { returns(T::Array[CandidateTuple]) }
+        sig { returns(T::Array[AddressValidation::Validators::FullAddress::AddressComparison]) }
         def sorted_candidates
-          sorted_candidate_tuples = datastore.fetch_full_address_candidates
+          sorted_address_comparisons = datastore.fetch_full_address_candidates
             .filter_map.with_index(1) do |candidate, position|
-              address_comparison = AtlasEngine::AddressValidation::Validators::FullAddress::AddressComparison.new(
+              candidate.position = position
+              address_comparison = AddressValidation::Validators::FullAddress::AddressComparison.new(
                 address: address,
                 candidate: candidate,
                 datastore: datastore,
               )
-              tuple = CandidateTuple.new(address_comparison, position, candidate)
-              tuple if tuple.address_comparison.potential_match?
+              address_comparison if address_comparison.potential_match?
             end.sort
 
-          emit_sorted_candidates(sorted_candidate_tuples)
-          sorted_candidate_tuples
+          emit_sorted_candidates(sorted_address_comparisons.map(&:candidate))
+          sorted_address_comparisons
         end
 
-        sig { params(sorted_candidate_tuples: T::Array[CandidateTuple]).void }
-        def emit_sorted_candidates(sorted_candidate_tuples)
-          log_info("Sorted candidates:\n #{sorted_candidate_tuples.map { |tuple| tuple.candidate.serialize }}")
+        sig { params(sorted_candidates: T::Array[Candidate]).void }
+        def emit_sorted_candidates(sorted_candidates)
+          log_info("Sorted candidates:\n #{sorted_candidates.map(&:serialize)}")
 
-          initial_position_top_candidate = sorted_candidate_tuples.first&.position || 0
+          initial_position_top_candidate = sorted_candidates.first&.position || 0
           StatsD.distribution(
             "AddressValidation.query.initial_position_top_candidate",
             initial_position_top_candidate,

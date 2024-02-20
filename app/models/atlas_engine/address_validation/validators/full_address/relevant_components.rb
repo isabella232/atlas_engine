@@ -8,9 +8,6 @@ module AtlasEngine
         class RelevantComponents
           extend T::Sig
 
-          sig { returns(Session) }
-          attr_reader :session
-
           sig { returns(Candidate) }
           attr_reader :candidate
 
@@ -19,15 +16,15 @@ module AtlasEngine
 
           sig do
             params(
-              session: Session,
-              candidate: Candidate,
               address_comparison: AddressComparison,
+              matching_strategy: AtlasEngine::AddressValidation::MatchingStrategies,
             ).void
           end
-          def initialize(session, candidate, address_comparison)
-            @session = session
-            @candidate = candidate
+          def initialize(address_comparison, matching_strategy)
             @address_comparison = address_comparison
+            @matching_strategy = matching_strategy
+            @address = address_comparison.address
+            @candidate = address_comparison.candidate
             @all_supported_components = address_comparison.relevant_components.dup
           end
 
@@ -62,8 +59,7 @@ module AtlasEngine
           def exclude_street_validation?
             return @exclude_street_validation if defined?(@exclude_street_validation)
 
-            @exclude_street_validation = if session.matching_strategy !=
-                AddressValidation::MatchingStrategies::EsStreet
+            @exclude_street_validation = if @matching_strategy != AddressValidation::MatchingStrategies::EsStreet
               true
             elsif address_comparison.street_comparison.sequence_comparison.blank?
               emit_excluded_validation(:street, "not_found")
@@ -80,7 +76,7 @@ module AtlasEngine
 
           sig { returns(CountryProfile) }
           def country_profile
-            @country_profile ||= CountryProfile.for(session.country_code)
+            @country_profile ||= CountryProfile.for(@address.country_code)
           end
 
           sig { params(component: Symbol, reason: String).void }
@@ -88,7 +84,7 @@ module AtlasEngine
             tags = [
               "reason:#{reason}",
               "component:#{component}",
-              "country:#{session.country_code}",
+              "country:#{@address.country_code}",
             ]
             StatsD.increment("AddressValidation.skip", sample_rate: 1.0, tags: tags)
           end
@@ -97,7 +93,7 @@ module AtlasEngine
           def unsupported_components_for_country
             @unsupported_components_for_country ||= begin
               unsupported_components = []
-              country = Worldwide.region(code: session.address.country_code)
+              country = Worldwide.region(code: @address.country_code)
               unsupported_components << :province_code if country.province_optional?
               unsupported_components << :province_code if country.hide_provinces_from_addresses
               unsupported_components << :city unless country.city_required?

@@ -10,7 +10,7 @@ module AtlasEngine
 
           sig { void }
           def update_result
-            concern = InvalidZipConcernBuilder.for(session.address, [])
+            concern = InvalidZipConcernBuilder.for(address, [])
             result.concerns << concern if concern
 
             update_result_scope

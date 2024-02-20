@@ -6,9 +6,10 @@ module AtlasEngine
     class Candidate
       extend T::Sig
       attr_reader :id, :index
+      attr_accessor :position
 
-      sig { params(id: String, source: Hash, index: T.nilable(String)).void }
-      def initialize(id:, source:, index: nil)
+      sig { params(id: String, source: Hash, position: Integer, index: T.nilable(String)).void }
+      def initialize(id:, source:, position: 0, index: nil)
         components_hash = Hash.new { |hash, key| hash[key] = Component.new(key, nil) }
 
         @components = source.each_with_object(components_hash) do |(key, value), hash|
