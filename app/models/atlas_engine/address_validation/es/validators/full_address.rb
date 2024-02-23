@@ -30,23 +30,23 @@ module AtlasEngine
           sig { returns(AddressValidation::Validators::FullAddress::CandidateResultBase) }
           def build_candidate_result
             unless supported_address?(address)
-              return AddressValidation::Validators::FullAddress::UnsupportedScriptResult.new(session:, result:)
+              return AddressValidation::Validators::FullAddress::UnsupportedScriptResult.new(address:, result:)
             end
 
             if best_candidate.nil?
-              AddressValidation::Validators::FullAddress::NoCandidateResult.new(session:, result:)
+              AddressValidation::Validators::FullAddress::NoCandidateResult.new(address:, result:)
             else
               AddressValidation::Validators::FullAddress::CandidateResult.new(
-                candidate: T.must(best_candidate),
+                address_comparison: T.must(best_candidate),
+                matching_strategy: session.matching_strategy,
                 result: result,
-                session: session,
               )
             end
           end
 
           private
 
-          sig { returns(T.nilable(CandidateTuple)) }
+          sig { returns(T.nilable(AddressValidation::Validators::FullAddress::AddressComparison)) }
           def best_candidate
             @best_candidate ||= T.let(
               begin
@@ -63,7 +63,7 @@ module AtlasEngine
                 # We want our futures to complete even when we do not consume their value.
                 candidate_futures&.map(&:wait!)
               end,
-              T.nilable(CandidateTuple),
+              T.nilable(AddressValidation::Validators::FullAddress::AddressComparison),
             )
           end
 

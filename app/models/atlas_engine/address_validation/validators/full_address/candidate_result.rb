@@ -11,16 +11,16 @@ module AtlasEngine
 
           sig do
             params(
-              candidate: AddressValidation::CandidateTuple,
-              session: Session,
+              address_comparison: AddressComparison,
+              matching_strategy: AddressValidation::MatchingStrategies,
               result: Result,
-            )
-              .void
+            ).void
           end
-          def initialize(candidate:, session:, result:)
-            super(session: session, result: result)
-            @candidate = candidate.candidate
-            @address_comparison = candidate.address_comparison
+          def initialize(address_comparison:, matching_strategy:, result:)
+            super(address: address_comparison.address, result: result)
+            @address_comparison = address_comparison
+            @candidate = address_comparison.candidate
+            @matching_strategy = matching_strategy
           end
 
           sig { override.void }
@@ -34,7 +34,7 @@ module AtlasEngine
 
           sig { returns(T::Boolean) }
           def suggestable?
-            ConcernBuilder.should_suggest?(session.address, unmatched_components.keys)
+            ConcernBuilder.should_suggest?(address, unmatched_components.keys)
           end
 
           private
@@ -56,11 +56,11 @@ module AtlasEngine
 
           sig { void }
           def add_concerns_without_suggestions
-            concern = InvalidZipConcernBuilder.for(session.address, [])
+            concern = InvalidZipConcernBuilder.for(address, [])
             result.concerns << concern if concern
 
-            if ConcernBuilder.too_many_unmatched_components?(session.address, unmatched_components.keys)
-              result.concerns << UnknownAddressConcern.new(session.address)
+            if ConcernBuilder.too_many_unmatched_components?(address, unmatched_components.keys)
+              result.concerns << UnknownAddressConcern.new(address)
             end
           end
 
@@ -77,7 +77,7 @@ module AtlasEngine
                 unmatched_component: unmatched_component,
                 unmatched_field: field_name,
                 matched_components: matched_components_to_validate.keys,
-                address: session.address,
+                address: address,
                 suggestion_ids: [suggestion.id].compact,
               ).build
               result.concerns << concern
@@ -90,7 +90,7 @@ module AtlasEngine
             unmatched_fields = { street: unmatched_field_name(:street) }.compact
 
             @suggestion ||= SuggestionBuilder.from_comparisons(
-              session.address.to_h,
+              address.to_h,
               unmatched_components_to_validate,
               candidate,
               unmatched_fields,
@@ -126,7 +126,7 @@ module AtlasEngine
             components = {}
             @matched_and_unmatched_components ||= begin
               components_to_compare.each do |component|
-                components[component] = @address_comparison.for(component).sequence_comparison
+                components[component] = address_comparison.for(component).sequence_comparison
               end
               components
             end
@@ -144,7 +144,7 @@ module AtlasEngine
 
           sig { returns(RelevantComponents) }
           def relevant_components
-            @relevant_components ||= RelevantComponents.new(session, candidate, address_comparison)
+            @relevant_components ||= RelevantComponents.new(address_comparison, @matching_strategy)
           end
 
           sig do
@@ -167,17 +167,17 @@ module AtlasEngine
 
             original_street = T.must(unmatched_components_to_validate[:street]).left_sequence.raw_value
 
-            if session.address.address1.to_s.include?(original_street)
+            if address.address1.to_s.include?(original_street)
               :address1
-            elsif session.address.address2.to_s.include?(original_street)
+            elsif address.address2.to_s.include?(original_street)
               :address2
             end
           end
 
           sig { void }
           def log_unknown_field_name
-            potential_streets = { potential_streets: session.parsings.potential_streets }
-            input_address = session.address.to_h.compact_blank.except(:phone)
+            potential_streets = { potential_streets: address_comparison.parsings.potential_streets }
+            input_address = address.to_h.compact_blank.except(:phone)
             log_details = input_address.merge(potential_streets)
             log_info("[AddressValidation] Unable to identify unmatched field name", log_details)
           end

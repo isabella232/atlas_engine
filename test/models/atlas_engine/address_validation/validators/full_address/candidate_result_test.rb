@@ -15,33 +15,47 @@ module AtlasEngine
           include AddressValidationTestHelper
           include LogAssertionHelper
 
-          setup do
-            @klass = AddressValidation::Validators::FullAddress::CandidateResult
+          def setup
+            @matching_strategy = AddressValidation::MatchingStrategies::EsStreet
           end
 
           test "always adds serialized candidate to result" do
             @address = address
             result = result()
-            @klass.new(candidate: candidate_tuple, session: session(@address), result: result).update_result
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
-            assert_equal ",ON,,,,K2P 1L4,Ottawa,,150 Elgin Street", result.candidate
+            assert_equal ",ON,,,,K2P 1L4,Ottawa,,Elgin Street", result.candidate
           end
 
           test "does not modify result concerns when candidate and address are a match" do
             @address = address
             result = result()
-            @klass.new(candidate: candidate_tuple, session: session(@address), result: result).update_result
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal AddressValidation::Result::SORTED_VALIDATION_SCOPES, result.validation_scope
             assert_empty result.concerns
             assert_empty result.suggestions
           end
 
-          test "does not modify result concerns when candidate and address are have a match in multiple array values" do
+          test "does not modify result concerns when candidate and address have a match in multiple array values" do
             @address = address(city: "Orleans")
             result = result()
-            candidate = candidate_tuple(city: ["Nepean", "Orleans", "Barrhaven"])
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(city: ["Nepean", "Orleans", "Barrhaven"])
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal AddressValidation::Result::SORTED_VALIDATION_SCOPES, result.validation_scope
             assert_empty result.concerns
@@ -51,8 +65,13 @@ module AtlasEngine
           test "selects the closest matching value if the input has an edit distance of 2 from an accepted value" do
             @address = address(city: "Orlayans")
             result = result()
-            candidate = candidate_tuple(city: ["Nepean", "Orleans", "Barrhaven"])
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(city: ["Nepean", "Orleans", "Barrhaven"])
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -72,8 +91,13 @@ module AtlasEngine
           test "selects the first value in the array if the user input has over 2 edit distance from the accepted values" do
             @address = address(city: "OrleaNNNns")
             result = result()
-            candidate = candidate_tuple(city: ["Nepean", "Orleans", "Barrhaven"])
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(city: ["Nepean", "Orleans", "Barrhaven"])
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -93,8 +117,13 @@ module AtlasEngine
           test "selects the closest match within the accepted values" do
             @address = address(city: "Barrheaven")
             result = result()
-            candidate = candidate_tuple(city: ["Nepean", "Orleans", "Barrhaven"])
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(city: ["Nepean", "Orleans", "Barrhaven"])
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -136,11 +165,13 @@ module AtlasEngine
 
             result = result()
             # this simulates a discrepancy which would require us to build a suggestion
-            candidate = candidate_tuple(city: ["Nepean"])
+            address_comparison = address_comparison(city: ["Nepean"])
 
-            session = AddressValidation::Session.new(address: @address).tap { |session| sequences_for(session) }
-
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -161,8 +192,13 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(true)
             @address = address
             result = result()
-            candidate = candidate_tuple(city: ["Nepean"], province_code: "AB")
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(city: ["Nepean"], province_code: "AB")
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.suggestions.size
             suggestion = result.suggestions.first
@@ -174,8 +210,13 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(true)
             @address = address
             result = result()
-            candidate = candidate_tuple(zip: "K2L 1P4", province_code: "AB")
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(zip: "K2L 1P4", province_code: "AB")
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.suggestions.size
             assert_equal 2, result.concerns.size
@@ -194,8 +235,13 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
             @address = address(province_code: "AB") # K2P 1L4 is not valid for Alberta
             result = result()
-            candidate = candidate_tuple(province_code: "ON") # mismatch on province
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(province_code: "ON") # mismatch on province
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.concerns.size
             assert_equal [:country_code, :province_code], result.validation_scope
@@ -209,8 +255,13 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
             @address = address
             result = result()
-            candidate = candidate_tuple(province_code: "AB") # mismatch on province
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(province_code: "AB") # mismatch on province
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal AddressValidation::Result::SORTED_VALIDATION_SCOPES, result.validation_scope
             assert_empty result.concerns
@@ -222,8 +273,13 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
             @address = address
             result = result()
-            candidate = candidate_tuple(city: "Poletown", zip: "H0H 0H0", province_code: "NU")
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(city: "Poletown", zip: "H0H 0H0", province_code: "NU")
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.concerns.size
             assert_equal [:country_code, :province_code, :zip, :city], result.validation_scope
@@ -237,10 +293,13 @@ module AtlasEngine
             ConcernBuilder.expects(:should_suggest?).once.returns(false)
             @address = address
             result = result()
-            candidate = candidate_tuple(city: "Poletown", zip: "H0H 0H0", street: "Main Ave")
-            matching_strategy = AddressValidation::MatchingStrategies::Es
-            session = AddressValidation::Session.new(address: @address, matching_strategy: matching_strategy)
-            @klass.new(candidate: candidate, session: session, result: result).update_result
+            address_comparison = address_comparison(city: "Poletown", zip: "H0H 0H0", address1: "Main Ave")
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: AddressValidation::MatchingStrategies::Es,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.concerns.size
             assert_equal [:country_code, :province_code, :zip, :city], result.validation_scope
@@ -252,36 +311,25 @@ module AtlasEngine
           test "removes the validation scopes of unmatched fields and their contained scopes" do
             @address = address
             result = result()
-            candidate = candidate_tuple(city: ["Nepean"], zip: "K2L 1P4")
-            @klass.new(candidate: candidate, session: session(@address), result: result).update_result
+            address_comparison = address_comparison(city: ["Nepean"], zip: "K2L 1P4")
+
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal [:country_code, :province_code], result.validation_scope
           end
 
           test "does not add result concerns and suggestions for street component when excluded from validation" do
-            address = build_address(
+            @address = build_address(
               address1: "123 Man Street", # typo
               city: "Pan Francisco", # typo
               province_code: "CA",
               country_code: "US",
               zip: "94102",
             )
-            matching_strategy = AddressValidation::MatchingStrategies::EsStreet
-            session = AddressValidation::Session.new(address: address, matching_strategy: matching_strategy)
-            parsings = ValidationTranscriber::AddressParsings.new(address_input: address)
-            session.datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(address.city)
-            session.datastore.street_sequences = parsings.potential_streets.map do |street|
-              AtlasEngine::AddressValidation::Token::Sequence.from_string(street)
-            end
-
-            candidate = AddressValidation::Candidate.new(id: "1", source: {
-              street: "Main Street",
-              city: ["San Francisco"],
-              province_code: "CA",
-              country_code: "US",
-              zip: "94102",
-              phone: nil,
-            })
 
             RelevantComponents.any_instance.stubs(:components_to_compare).returns([
               :city,
@@ -293,13 +341,13 @@ module AtlasEngine
             RelevantComponents.any_instance.stubs(:components_to_validate).returns([:city, :province_code, :zip])
 
             result = result()
+            address_comparison = address_comparison(street: "Main Street", city: ["San Francisco"])
 
-            candidate_tuple = AddressValidation::CandidateTuple.new(
-              candidate: candidate,
-              address_comparison: address_comparison(candidate, session),
-            )
-
-            @klass.new(candidate: candidate_tuple, session: session, result: result).update_result
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.concerns.size
             assert_equal :city_inconsistent, result.concerns.first.code
@@ -308,33 +356,12 @@ module AtlasEngine
           end
 
           test "does not add result concerns and suggestions for city component when excluded from validation" do
-            address = build_address(
+            @address = build_address(
               address1: "123 Man Street", # typo
               city: "Pan Francisco", # typo
               province_code: "CA",
               country_code: "US",
               zip: "94102",
-            )
-            matching_strategy = AddressValidation::MatchingStrategies::EsStreet
-            session = AddressValidation::Session.new(address: address, matching_strategy: matching_strategy)
-            parsings = ValidationTranscriber::AddressParsings.new(address_input: address)
-            session.datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(address.city)
-            session.datastore.street_sequences = parsings.potential_streets.map do |street|
-              AtlasEngine::AddressValidation::Token::Sequence.from_string(street)
-            end
-
-            candidate = AddressValidation::Candidate.new(id: "1", source: {
-              street: "Main Street",
-              city: ["San Francisco"],
-              province_code: "CA",
-              country_code: "US",
-              zip: "94102",
-              phone: nil,
-            })
-
-            candidate_tuple = AddressValidation::CandidateTuple.new(
-              candidate: candidate,
-              address_comparison: address_comparison(candidate, session),
             )
 
             RelevantComponents.any_instance.stubs(:components_to_compare).returns([
@@ -347,8 +374,13 @@ module AtlasEngine
             RelevantComponents.any_instance.stubs(:components_to_validate).returns([:province_code, :zip, :street])
 
             result = result()
+            address_comparison = address_comparison(address1: "123 Main Street", city: ["San Francisco"])
 
-            @klass.new(candidate: candidate_tuple, session: session, result: result).update_result
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_equal 1, result.concerns.size
             assert_equal :street_inconsistent, result.concerns.first.code
@@ -359,59 +391,72 @@ module AtlasEngine
           test "does not flag a street concern when street_sequences are not in one of the address lines" do
             address_hash = {
               address1: "123 Man Street",
+              address2: "",
               city: "San Francisco",
               province_code: "CA",
               country_code: "US",
               zip: "94102",
             }
+
             address = build_address(**address_hash)
-            matching_strategy = AddressValidation::MatchingStrategies::EsStreet
-            session = AddressValidation::Session.new(address: address, matching_strategy: matching_strategy)
-            session.datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(address.city)
-            session.datastore.street_sequences = [
-              AtlasEngine::AddressValidation::Token::Sequence.from_string("bad parsing"),
-            ]
+
+            datastore = AddressValidation::Es::Datastore.new(address: address)
+            datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(address.city)
+            datastore.street_sequences = [AtlasEngine::AddressValidation::Token::Sequence.from_string("bad parsing")]
 
             candidate = AddressValidation::Candidate.new(
               id: "1",
               source: address_hash.merge({ street: "Main Street", phone: nil }),
             )
-            candidate_tuple = AddressValidation::CandidateTuple.new(
-              candidate: candidate,
-              address_comparison: address_comparison(candidate, session),
-            )
 
             RelevantComponents.any_instance.stubs(:components_to_compare).returns([:street])
             RelevantComponents.any_instance.stubs(:components_to_validate).returns([:street])
+
+            logged_address = address.to_h.dup.merge({ potential_streets: ["Man Street"] })
+            logged_address.delete(:phone)
+            logged_address.delete(:address2)
 
             assert_log_append(
               :info,
               "AtlasEngine::AddressValidation::Validators::FullAddress::CandidateResult",
               "[AddressValidation] Unable to identify unmatched field name",
-              address_hash.merge({ potential_streets: ["Man Street"] }),
+              logged_address,
             )
 
             result = result()
+            address_comparison = AddressValidation::Validators::FullAddress::AddressComparison.new(
+              address: address,
+              candidate: candidate,
+              datastore: datastore,
+            )
 
-            @klass.new(candidate: candidate_tuple, session: session, result: result).update_result
+            CandidateResult.new(
+              address_comparison: address_comparison,
+              matching_strategy: @matching_strategy,
+              result: result,
+            ).update_result
 
             assert_empty result.concerns
           end
 
-          def candidate_tuple(source = {})
-            candidate_hash = @address.to_h.transform_keys(address1: :street).merge(source)
-            candidate = AddressValidation::Candidate.new(id: "A", source: candidate_hash)
-            AddressValidation::CandidateTuple.new(
-              candidate: candidate,
-              address_comparison: address_comparison(candidate, session(@address)),
-            )
-          end
+          def address_comparison(source = {})
+            datastore = AddressValidation::Es::Datastore.new(address: @address)
+            datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(@address.city)
+            datastore.street_sequences = datastore.parsings.potential_streets.map do |street|
+              AtlasEngine::AddressValidation::Token::Sequence.from_string(street)
+            end
 
-          def address_comparison(candidate, session)
+            candidate_hash = @address.to_h.merge(source)
+            candidate_hash[:street] = ValidationTranscriber::AddressParsings.new(
+              address_input: Types::AddressValidation::AddressInput.from_hash(candidate_hash),
+            ).potential_streets.first
+
+            candidate = AddressValidation::Candidate.new(id: "A", source: candidate_hash)
+
             AddressValidation::Validators::FullAddress::AddressComparison.new(
-              address: session.address,
+              address: @address,
               candidate: candidate,
-              datastore: session.datastore,
+              datastore: datastore,
             )
           end
 

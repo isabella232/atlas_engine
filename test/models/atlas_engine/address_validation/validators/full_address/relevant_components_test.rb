@@ -24,7 +24,7 @@ module AtlasEngine
 
           setup do
             @address = create_address
-            @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
+            @matching_strategy = AddressValidation::MatchingStrategies::EsStreet
             @candidate = candidate(@address)
             @all_components = [
               :province_code,
@@ -38,18 +38,18 @@ module AtlasEngine
           test "#components_to_compare returns an array of all supported components" do
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components,
-                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
+                RelevantComponents.new(@address_comparison, @matching_strategy).components_to_compare
             end
           end
 
           test "#components_to_validate returns an array without the street component when matching strategy is not EsStreet" do
-            session = session(@address, AddressValidation::MatchingStrategies::Es)
+            matching_strategy = AddressValidation::MatchingStrategies::Es
 
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components,
-                RelevantComponents.new(session, @candidate, @address_comparison).components_to_compare
+                RelevantComponents.new(@address_comparison, matching_strategy).components_to_compare
               assert_equal @all_components - [:street],
-                RelevantComponents.new(session, @candidate, @address_comparison).components_to_validate
+                RelevantComponents.new(@address_comparison, matching_strategy).components_to_validate
             end
           end
 
@@ -59,12 +59,12 @@ module AtlasEngine
             assert_statsd_increment(
               "AddressValidation.skip",
               times: 1,
-              tags: { component: "street", reason: "not_found", country: @session.country_code },
+              tags: { component: "street", reason: "not_found", country: @address.country_code },
             ) do
               assert_equal @all_components,
-                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
+                RelevantComponents.new(@address_comparison, @matching_strategy).components_to_compare
               assert_equal @all_components - [:street],
-                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_validate
+                RelevantComponents.new(@address_comparison, @matching_strategy).components_to_validate
             end
           end
 
@@ -78,22 +78,22 @@ module AtlasEngine
             mock_profile = instance_double(CountryProfile)
             mock_profile.stubs(:validation).returns(validation)
 
-            CountryProfile.expects(:for).with(@session.country_code).returns(mock_profile)
+            CountryProfile.expects(:for).with(@address.country_code).returns(mock_profile)
 
             assert_statsd_increment(
               "AddressValidation.skip",
               times: 1,
-              tags: { component: "street", reason: "excluded", country: @session.country_code },
+              tags: { component: "street", reason: "excluded", country: @address.country_code },
             ) do
               assert_statsd_increment(
                 "AddressValidation.skip",
                 times: 1,
-                tags: { component: "city", reason: "excluded", country: @session.country_code },
+                tags: { component: "city", reason: "excluded", country: @address.country_code },
               ) do
                 assert_equal @all_components,
-                  RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
+                  RelevantComponents.new(@address_comparison, @matching_strategy).components_to_compare
                 assert_equal @all_components - [:street, :city],
-                  RelevantComponents.new(@session, @candidate, @address_comparison).components_to_validate
+                  RelevantComponents.new(@address_comparison, @matching_strategy).components_to_validate
               end
             end
           end
@@ -105,11 +105,11 @@ module AtlasEngine
               country_code: "FR",
               city: "Paris",
             )
-            @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
+            @address_comparison = mock_address_comparison
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code],
-                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
+                RelevantComponents.new(@address_comparison, @matching_strategy).components_to_compare
             end
           end
 
@@ -121,52 +121,38 @@ module AtlasEngine
               province_code: "SCT",
               country_code: "GB",
             )
-            @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
+            @address_comparison = mock_address_comparison
+
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code],
-                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
+                RelevantComponents.new(@address_comparison, @matching_strategy).components_to_compare
             end
           end
 
           test "#components_to_compare returns an array without zip when a country does not use zips in addresses" do
             @address = create_address(address1: "34-6th Crescent", country_code: "ZW", city: "Harare")
-            @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
+            @address_comparison = mock_address_comparison
+
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:province_code, :zip],
-                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
+                RelevantComponents.new(@address_comparison, @matching_strategy).components_to_compare
             end
           end
 
           test "#components_to_compare returns an array without city when a country does not use cities in addresses" do
             @address = create_address(address1: "Apostolic Palace", country_code: "VA", city: "Harare", zip: "00120")
-            @session = session(@address, AddressValidation::MatchingStrategies::EsStreet)
             @candidate = candidate(@address)
+            @address_comparison = mock_address_comparison
+
             assert_no_statsd_calls("AddressValidation.skip") do
               assert_equal @all_components - [:city, :province_code, :zip],
-                RelevantComponents.new(@session, @candidate, @address_comparison).components_to_compare
+                RelevantComponents.new(@address_comparison, @matching_strategy).components_to_compare
             end
           end
 
           private
-
-          def session(address, matching_strategy)
-            AddressValidation::Session.new(
-              address: address,
-              matching_strategy: matching_strategy,
-            ).tap do |session|
-              # setting the street and city sequences leads the Datastore to skip the actual ES _analyze requests.
-              sequences_for(session)
-            end
-          end
-
-          def sequences_for(session)
-            session.datastore.street_sequences = [
-              AtlasEngine::AddressValidation::Token::Sequence.from_string(session.address1),
-            ]
-            session.datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(session.city)
-          end
 
           def candidate(address)
             candidate_hash = address.to_h.transform_keys(address1: :street)
@@ -195,6 +181,8 @@ module AtlasEngine
             typed_mock(AddressComparison).tap do |mock|
               mock.stubs(:street_comparison).returns(street_comparison_mock)
               mock.stubs(:relevant_components).returns(@all_components)
+              mock.stubs(:candidate).returns(@candidate)
+              mock.stubs(:address).returns(@address)
             end
           end
 

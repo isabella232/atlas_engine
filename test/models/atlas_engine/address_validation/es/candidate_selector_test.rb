@@ -62,8 +62,12 @@ module AtlasEngine
           best_candidate = CandidateSelector.new(datastore: @datastore, address: @address).best_candidate
 
           assert_equal candidate.id, best_candidate.candidate.id
-          assert_equal 1, best_candidate.position
-          assert best_candidate.address_comparison.present?
+          assert_equal 1, best_candidate.candidate.position
+
+          assert best_candidate.street_comparison.present?
+          assert best_candidate.city_comparison.present?
+          assert best_candidate.zip_comparison.present?
+          assert best_candidate.province_code_comparison.present?
         end
 
         test "tracks the initial position of the top candidate when candidates are defined" do

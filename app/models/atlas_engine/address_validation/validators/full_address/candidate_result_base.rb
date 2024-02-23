@@ -11,9 +11,9 @@ module AtlasEngine
 
           abstract!
 
-          sig { params(session: Session, result: Result).void }
-          def initialize(session:, result:)
-            @session = session
+          sig { params(address: AbstractAddress, result: Result).void }
+          def initialize(address:, result:)
+            @address = address
             @result = result
           end
 
@@ -22,9 +22,7 @@ module AtlasEngine
 
           private
 
-          attr_reader :session, :result
-
-          delegate :address, to: :session
+          attr_reader :result, :address
 
           sig { void }
           def update_result_scope

@@ -12,14 +12,9 @@ module AtlasEngine
         class NoCandidateResultTest < ActiveSupport::TestCase
           include AddressValidationTestHelper
 
-          setup do
-            @klass = AddressValidation::Validators::FullAddress::NoCandidateResult
-          end
-
           test "always adds an address_unknown concern to the result" do
-            @address = address
             result = result()
-            @klass.new(session: session, result: result).update_result
+            NoCandidateResult.new(address: address, result: result).update_result
 
             assert_equal 1, result.concerns.size
             assert_equal :address_unknown, result.concerns.first.code
@@ -27,9 +22,9 @@ module AtlasEngine
 
           test "adds invalid zip concern without suggestions when ConcernBuilder.should_suggest? is false and /
             zip/province are mutually invalid" do
-            @address = address(province_code: "AB") # K2P 1L4 is not valid for Alberta
+            address = address(province_code: "AB") # K2P 1L4 is not valid for Alberta
             result = result()
-            @klass.new(session: session, result: result).update_result
+            NoCandidateResult.new(address: address, result: result).update_result
 
             assert_equal 2, result.concerns.size
             assert_equal [:country_code, :province_code], result.validation_scope
@@ -48,20 +43,6 @@ module AtlasEngine
               country_code: "CA",
             }
             build_address(**default_address.merge(overrides))
-          end
-
-          def session
-            @session ||= AddressValidation::Session.new(address: @address).tap do |session|
-              # setting the street and city sequences leads the Datastore to skip the actual ES _analyze requests.
-              sequences_for(session)
-            end
-          end
-
-          def sequences_for(session)
-            session.datastore.street_sequences = [
-              AtlasEngine::AddressValidation::Token::Sequence.from_string(@address.address1),
-            ]
-            session.datastore.city_sequence = AtlasEngine::AddressValidation::Token::Sequence.from_string(@address.city)
           end
 
           def result(overrides = {})
