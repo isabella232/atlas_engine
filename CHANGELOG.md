@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Remove `Session` usage from `CandidateResult` and the unnecessary `CandidateTuple` object [#152](https://github.com/Shopify/atlas_engine/pull/152)
 - Refactor concern classes into concern builders, fixing the bug where some concern messages are not translated. [#156](https://github.com/Shopify/atlas_engine/pull/156)
+- Remove `Session` usage in `FullAddress` [#158](https://github.com/Shopify/atlas_engine/pull/158)
 
 ---
 

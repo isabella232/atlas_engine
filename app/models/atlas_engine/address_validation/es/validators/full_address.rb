@@ -9,12 +9,11 @@ module AtlasEngine
           include LogHelper
 
           attr_reader :address, :result
-          attr_accessor :session
 
           sig { params(address: TAddress, result: Result).void }
           def initialize(address:, result: Result.new)
             super
-            @session = T.let(Session.new(address: address, matching_strategy: MatchingStrategies::Es), Session)
+            @matching_strategy = MatchingStrategies::Es
           end
 
           sig { override.returns(Result) }
@@ -38,7 +37,7 @@ module AtlasEngine
             else
               AddressValidation::Validators::FullAddress::CandidateResult.new(
                 address_comparison: T.must(best_candidate),
-                matching_strategy: session.matching_strategy,
+                matching_strategy: @matching_strategy,
                 result: result,
               )
             end
@@ -70,8 +69,8 @@ module AtlasEngine
           sig { params(locale: T.nilable(String)).returns(Concurrent::Promises::Future) }
           def best_candidate_future(locale = nil)
             AddressValidation::Es::CandidateSelector.new(
-              datastore: session.datastore(locale: locale),
-              address: session.address,
+              datastore: Es::Datastore.new(address: address, locale: locale),
+              address: address,
             ).best_candidate_async
           end
 
