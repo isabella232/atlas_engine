@@ -60,7 +60,7 @@ module AtlasEngine
             result.concerns << concern if concern
 
             if ConcernBuilder.too_many_unmatched_components?(address, unmatched_components.keys)
-              result.concerns << UnknownAddressConcern.new(address)
+              result.concerns << UnknownAddressConcernBuilder.new(address).build
             end
           end
 

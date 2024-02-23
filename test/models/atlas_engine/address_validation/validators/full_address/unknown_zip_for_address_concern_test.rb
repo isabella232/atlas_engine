@@ -8,16 +8,16 @@ module AtlasEngine
   module AddressValidation
     module Validators
       module FullAddress
-        class UnknownZipForAddressConcernTest < ActiveSupport::TestCase
+        class UnknownZipForAddressConcernBuilderTest < ActiveSupport::TestCase
           include AddressValidationTestHelper
 
           setup do
-            @klass = AddressValidation::Validators::FullAddress::UnknownZipForAddressConcern
+            @klass = AddressValidation::Validators::FullAddress::UnknownZipForAddressConcernBuilder
             @suggestion_ids = []
           end
 
           test "#attributes concern" do
-            concern = @klass.new(build_address(address1: "123 Some St W", city: "Some Town"), @suggestion_ids)
+            concern = @klass.new(build_address(address1: "123 Some St W", city: "Some Town")).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:zip],

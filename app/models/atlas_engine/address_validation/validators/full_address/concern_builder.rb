@@ -110,7 +110,7 @@ module AtlasEngine
             return concern if concern
 
             if :province_code.in?(matched_components) && :city.in?(matched_components)
-              return UnknownZipForAddressConcern.new(address, suggestion_ids)
+              return UnknownZipForAddressConcernBuilder.new(address).build(suggestion_ids)
             end
 
             build_default_concern
@@ -119,7 +119,7 @@ module AtlasEngine
           sig { returns(AddressValidation::Concern) }
           def build_province_concern
             if ([:zip, :city] - matched_components).empty?
-              UnknownProvinceConcern.new(address, suggestion_ids)
+              UnknownProvinceConcernBuilder.new(address).build(suggestion_ids)
             else
               build_default_concern
             end
@@ -127,7 +127,12 @@ module AtlasEngine
 
           sig { returns(AddressValidation::Concern) }
           def build_default_concern
-            UnmatchedFieldConcern.new(unmatched_component, matched_components, address, suggestion_ids, unmatched_field)
+            UnmatchedFieldConcernBuilder.new(
+              unmatched_component,
+              matched_components,
+              address,
+              unmatched_field,
+            ).build(suggestion_ids)
           end
         end
       end

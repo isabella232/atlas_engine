@@ -22,9 +22,13 @@ module AtlasEngine
               return unless country.has_zip?
 
               if country_expects_zone_in_address?(country) && province.province?
-                InvalidZipForProvinceConcern.new(address, suggestion_ids) unless province.valid_zip?(address.zip)
+                return if province.valid_zip?(address.zip)
+
+                InvalidZipForProvinceConcernBuilder.new(address).build
               else
-                InvalidZipForCountryConcern.new(address, suggestion_ids) unless country.valid_zip?(address.zip)
+                return if country.valid_zip?(address.zip)
+
+                InvalidZipForCountryConcernBuilder.new(address).build(suggestion_ids)
               end
             end
 
