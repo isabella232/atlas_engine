@@ -13,13 +13,6 @@ module AtlasEngine
 
           setup do
             @klass = AddressValidation::Validators::FullAddress::ConcernBuilder
-            @unmatched_field_klass = AddressValidation::Validators::FullAddress::UnmatchedFieldConcern
-            @invalid_zip_for_province_klass = AddressValidation::Validators::FullAddress::InvalidZipForProvinceConcern
-            @invalid_zip_for_country_klass = AddressValidation::Validators::FullAddress::InvalidZipForCountryConcern
-            @unknown_zip_for_address_klass =
-              AddressValidation::Validators::FullAddress::UnknownZipForAddressConcern
-            @unknown_province_klass =
-              AddressValidation::Validators::FullAddress::UnknownProvinceConcern
             @address = build_address(country_code: "US")
             @suggestion_ids = []
           end
@@ -66,7 +59,7 @@ module AtlasEngine
             assert @klass.valid_zip_for_province?(address)
           end
 
-          test ".build returns an UnmatchedFieldConcern by default" do
+          test ".build returns a :field_inconsistent concern by default" do
             builder = @klass.new(
               unmatched_component: :field1,
               matched_components: [:field2, :field3],
@@ -74,22 +67,14 @@ module AtlasEngine
               suggestion_ids: @suggestion_ids,
             )
 
-            assert_instance_of @unmatched_field_klass, builder.build
+            result = builder.build
+
+            assert_instance_of AddressValidation::Concern, result
+            assert_equal :field1_inconsistent, result.code
+            assert_equal @suggestion_ids, result.suggestion_ids
           end
 
-          test ".build returns an UnmatchedFieldConcern when unmatched field is not zip" do
-            address = build_address(country_code: "US", province_code: "CA", zip: "90412", city: "blah")
-            builder = @klass.new(
-              unmatched_component: :city,
-              matched_components: [:province_code],
-              address: address,
-              suggestion_ids: @suggestion_ids,
-            )
-
-            assert_instance_of @unmatched_field_klass, builder.build
-          end
-
-          test ".build returns an UnmatchedFieldConcern when both zip and province_code are unmatched" do
+          test ".build returns a :zip_inconsistent concern when zip is unmatched and valid for province" do
             address = build_address(country_code: "US", province_code: "ON", zip: "90411", city: "blah")
 
             builder = @klass.new(
@@ -99,22 +84,14 @@ module AtlasEngine
               suggestion_ids: @suggestion_ids,
             )
 
-            assert_instance_of @unmatched_field_klass, builder.build
+            result = builder.build
+
+            assert_instance_of AddressValidation::Concern, result
+            assert_equal :zip_inconsistent, result.code
+            assert_equal @suggestion_ids, result.suggestion_ids
           end
 
-          test ".build returns an UnmatchedFieldConcern when unmatched zip prefix is valid for province" do
-            address = build_address(country_code: "US", province_code: "CA", zip: "90412")
-            builder = @klass.new(
-              unmatched_component: :zip,
-              matched_components: [:province_code],
-              address: address,
-              suggestion_ids: @suggestion_ids,
-            )
-
-            assert_instance_of @unmatched_field_klass, builder.build
-          end
-
-          test ".build returns an InvalidZipForProvinceConcern when unmatched zip prefix is invalid for province" do
+          test ".build returns an :invalid_zip_for_province concern when unmatched zip prefix is invalid for province" do
             address = build_address(country_code: "US", province_code: "CA", zip: "80210")
             builder = @klass.new(
               unmatched_component: :zip,
@@ -123,10 +100,14 @@ module AtlasEngine
               suggestion_ids: @suggestion_ids,
             )
 
-            assert_instance_of @invalid_zip_for_province_klass, builder.build
+            result = builder.build
+
+            assert_instance_of AddressValidation::Concern, result
+            assert_equal :zip_invalid_for_province, result.code
+            assert_equal @suggestion_ids, result.suggestion_ids
           end
 
-          test ".build returns an InvalidZipForCountryConcern when unmatched zip prefix is invalid for country" do
+          test ".build returns an :invalid_zip_for_country when unmatched zip prefix is invalid for country" do
             address = build_address(country_code: "DK", zip: "66000", province_code: nil, city: "Vejen")
             builder = @klass.new(
               unmatched_component: :zip,
@@ -135,10 +116,14 @@ module AtlasEngine
               suggestion_ids: @suggestion_ids,
             )
 
-            assert_instance_of @invalid_zip_for_country_klass, builder.build
+            result = builder.build
+
+            assert_instance_of AddressValidation::Concern, result
+            assert_equal :zip_invalid_for_country, result.code
+            assert_equal @suggestion_ids, result.suggestion_ids
           end
 
-          test ".build returns an UnknownProvinceConcern when province_code is unmatched and /
+          test ".build returns an :unknown_province concern when province_code is unmatched and /
               city/zip are matched" do
             address = build_address(country_code: "US", province_code: "CA", zip: "90210")
             builder = @klass.new(
@@ -148,19 +133,11 @@ module AtlasEngine
               suggestion_ids: @suggestion_ids,
             )
 
-            assert_instance_of @unknown_province_klass, builder.build
-          end
+            result = builder.build
 
-          test ".build returns an UnknownForAddressZipConcernBuilder when only zip is unmatched" do
-            address = build_address(country_code: "US", province_code: "CA", zip: "90210")
-            builder = @klass.new(
-              unmatched_component: :zip,
-              matched_components: [:city, :province_code],
-              address: address,
-              suggestion_ids: @suggestion_ids,
-            )
-
-            assert_instance_of @unknown_zip_for_address_klass, builder.build
+            assert_instance_of AddressValidation::Concern, result
+            assert_equal :province_inconsistent, result.code
+            assert_equal @suggestion_ids, result.suggestion_ids
           end
 
           test ".should_suggest? returns false when unmatched components size is greater than threshold" do

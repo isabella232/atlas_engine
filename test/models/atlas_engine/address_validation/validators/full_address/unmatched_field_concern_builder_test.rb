@@ -12,7 +12,7 @@ module AtlasEngine
           include AddressValidationTestHelper
 
           setup do
-            @klass = AddressValidation::Validators::FullAddress::UnmatchedFieldConcern
+            @klass = AddressValidation::Validators::FullAddress::UnmatchedFieldConcernBuilder
             @address = build_address(
               city: "Ottawa",
               zip: "K1A 0A6",
@@ -24,7 +24,7 @@ module AtlasEngine
             @suggestion_ids = []
           end
           test "city concern for matched zip and province" do
-            concern = @klass.new(:city, [:zip, :province_code], @address, @suggestion_ids)
+            concern = @klass.new(:city, [:zip, :province_code], @address).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:city],
@@ -38,7 +38,7 @@ module AtlasEngine
           end
 
           test "zip concern for matched city and province" do
-            concern = @klass.new(:zip, [:city, :province_code], @address, @suggestion_ids)
+            concern = @klass.new(:zip, [:city, :province_code], @address).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:zip],
@@ -52,7 +52,7 @@ module AtlasEngine
           end
 
           test "province concern for matched city and zip" do
-            concern = @klass.new(:province_code, [:city, :zip], @address, @suggestion_ids)
+            concern = @klass.new(:province_code, [:city, :zip], @address).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:province],
@@ -66,7 +66,7 @@ module AtlasEngine
           end
 
           test "city concern for matched zip and unmatched province" do
-            concern = @klass.new(:city, [:zip], @address, @suggestion_ids)
+            concern = @klass.new(:city, [:zip], @address).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:city],
@@ -80,7 +80,7 @@ module AtlasEngine
           end
 
           test "city concern for matched province and unmatched zip" do
-            concern = @klass.new(:city, [:province_code], @address, @suggestion_ids)
+            concern = @klass.new(:city, [:province_code], @address).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:city],
@@ -94,7 +94,7 @@ module AtlasEngine
           end
 
           test "address1 street concern for matched zip and province" do
-            concern = @klass.new(:street, [:zip, :province_code], @address, @suggestion_ids, :address1)
+            concern = @klass.new(:street, [:zip, :province_code], @address, :address1).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:address1],
@@ -108,7 +108,7 @@ module AtlasEngine
           end
 
           test "address2 street concern for matched zip and province" do
-            concern = @klass.new(:street, [:zip, :province_code], @address, @suggestion_ids, :address2)
+            concern = @klass.new(:street, [:zip, :province_code], @address, :address2).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:address2],

@@ -12,12 +12,12 @@ module AtlasEngine
           include AddressValidationTestHelper
 
           setup do
-            @klass = AddressValidation::Validators::FullAddress::UnknownAddressConcern
+            @klass = AddressValidation::Validators::FullAddress::UnknownAddressConcernBuilder
             @suggestion_ids = []
           end
 
           test "#attributes concern" do
-            concern = @klass.new(build_address(country_code: "us"))
+            concern = @klass.new(build_address(country_code: "us")).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:address1],
@@ -25,7 +25,7 @@ module AtlasEngine
               code: :address_unknown,
               type: "warning",
               type_level: 1,
-              suggestion_ids: [],
+              suggestion_ids: @suggestion_ids,
             }
             assert_equal expected_attributes, concern.attributes
           end

@@ -10,7 +10,7 @@ module AtlasEngine
 
           sig { void }
           def update_result
-            result.concerns << UnknownAddressConcern.new(address)
+            result.concerns << UnknownAddressConcernBuilder.new(address).build
 
             concern = InvalidZipConcernBuilder.for(address, [])
             result.concerns << concern if concern

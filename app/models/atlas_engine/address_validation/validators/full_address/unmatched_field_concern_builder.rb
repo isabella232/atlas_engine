@@ -5,9 +5,10 @@ module AtlasEngine
   module AddressValidation
     module Validators
       module FullAddress
-        class UnmatchedFieldConcern < AddressValidation::Concern
+        class UnmatchedFieldConcernBuilder
+          extend T::Sig
           include ConcernFormatter
-          attr_reader :component, :matched_components, :address, :unmatched_field
+          attr_reader :address, :component, :matched_components, :unmatched_field
 
           COMPONENTS_TO_LABELS = {
             zip: "ZIP",
@@ -25,25 +26,33 @@ module AtlasEngine
               unmatched_component: Symbol,
               matched_components: T::Array[Symbol],
               address: AbstractAddress,
-              suggestion_ids: T::Array[String],
               unmatched_field: T.nilable(Symbol),
             ).void
           end
-          def initialize(unmatched_component, matched_components, address, suggestion_ids, unmatched_field = nil)
+          def initialize(unmatched_component, matched_components, address, unmatched_field = nil)
+            @address = address
             @component = unmatched_component
             @matched_components = matched_components
-            @address = address
             @unmatched_field = unmatched_field
+          end
 
-            super(
+          sig do
+            params(
+              suggestion_ids: T::Array[String],
+            ).returns(Concern)
+          end
+          def build(suggestion_ids = [])
+            Concern.new(
               code: code,
               field_names: field_names,
               message: message,
               type: T.must(Concern::TYPES[:warning]),
               type_level: 3,
-              suggestion_ids: suggestion_ids
+              suggestion_ids: suggestion_ids,
             )
           end
+
+          private
 
           sig { returns(String) }
           def message
@@ -60,8 +69,6 @@ module AtlasEngine
             [field_name]
           end
 
-          private
-
           sig { returns(T::Array[String]) }
           def valid_address_component_values
             matched_components.last(2).map do |component|
@@ -74,6 +81,7 @@ module AtlasEngine
             SHORTENED_COMPONENT_NAMES[component] || component
           end
 
+          sig { returns(Symbol) }
           def field_name
             unmatched_field || shortened_component_name
           end

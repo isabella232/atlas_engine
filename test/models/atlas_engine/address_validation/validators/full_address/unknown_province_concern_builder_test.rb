@@ -8,16 +8,20 @@ module AtlasEngine
   module AddressValidation
     module Validators
       module FullAddress
-        class UnknownProvinceConcernTest < ActiveSupport::TestCase
+        class UnknownProvinceConcernBuilderTest < ActiveSupport::TestCase
           include AddressValidationTestHelper
 
           setup do
-            @klass = AddressValidation::Validators::FullAddress::UnknownProvinceConcern
+            @klass = AddressValidation::Validators::FullAddress::UnknownProvinceConcernBuilder
             @suggestion_ids = []
           end
 
           test "#attributes concern - US" do
-            concern = @klass.new(build_address(country_code: "us", city: "Some Town", zip: "11111"), @suggestion_ids)
+            concern = @klass.new(build_address(
+              country_code: "us",
+              city: "Some Town",
+              zip: "11111",
+            )).build(@suggestion_ids)
 
             expected_attributes = {
               field_names: [:province],
@@ -31,11 +35,6 @@ module AtlasEngine
           end
 
           test "#attributes concern - Canada (fr)" do
-            concern = @klass.new(
-              build_address(country_code: "ca", city: "Saint-Néant", zip: "J9A 1A1"),
-              @suggestion_ids,
-            )
-
             expected_attributes = {
               field_names: [:province],
               message: "Saisir une province valide pour Saint-Néant, J9A 1A1",
@@ -45,9 +44,13 @@ module AtlasEngine
               suggestion_ids: @suggestion_ids,
             }
 
-            I18n.with_locale("fr") do
-              assert_equal expected_attributes, concern.attributes
+            concern = I18n.with_locale("fr") do
+              @klass.new(
+                build_address(country_code: "ca", city: "Saint-Néant", zip: "J9A 1A1"),
+              ).build(@suggestion_ids)
             end
+
+            assert_equal(expected_attributes, concern.attributes)
           end
         end
       end
