@@ -57,6 +57,11 @@ module AtlasEngine
               headers: { "Content-Type" => "application/json" },
             )
 
+          datastore = Es::Datastore.new(address: address)
+          datastore.fetch_city_sequence
+          datastore.fetch_street_sequences
+          AtlasEngine::AddressValidation::Es::Datastore.expects(:new).returns(datastore)
+
           validator = AddressValidation::Validator.new(
             address: address,
             matching_strategy: MatchingStrategies::EsStreet,
@@ -69,9 +74,6 @@ module AtlasEngine
           assert_equal expected_result[:suggestions], result[:suggestions]
           assert_equal expected_result[:validation_scope], result[:validation_scope]
           assert_equal expected_result[:locale], result[:locale]
-
-          validator.full_address_validator.session.datastore.fetch_city_sequence
-          validator.full_address_validator.session.datastore.fetch_street_sequences
 
           assert_requested(:post, %r{http\://.*/test_ca/_analyze}, times: 2)
           assert_requested(:post, %r{http\://.*/test_ca/_search}, times: 1)

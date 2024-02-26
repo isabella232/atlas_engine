@@ -9,7 +9,7 @@ module AtlasEngine
           sig { params(address: TAddress, result: Result).void }
           def initialize(address:, result: Result.new)
             super
-            @session = T.let(Session.new(address: address, matching_strategy: MatchingStrategies::EsStreet), Session)
+            @matching_strategy = MatchingStrategies::EsStreet
           end
         end
       end

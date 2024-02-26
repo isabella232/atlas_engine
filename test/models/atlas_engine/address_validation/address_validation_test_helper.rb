@@ -91,21 +91,6 @@ module AtlasEngine
         )
       end
 
-      def session(address)
-        AtlasEngine::AddressValidation::Session.new(address: address).tap do |session|
-          # setting the street and city sequences leads the Datastore to skip the actual ES _analyze requests.
-          sequences_for(session)
-        end
-      end
-
-      def sequences_for(session)
-        session.datastore.street_sequences = [
-          AtlasEngine::AddressValidation::Token::Sequence.from_string(session.address1),
-        ]
-        session.datastore.city_sequence =
-          AtlasEngine::AddressValidation::Token::Sequence.from_string(session.city)
-      end
-
       def parsings_for(address, locale = nil)
         AtlasEngine::ValidationTranscriber::AddressParsings.new(
           address_input: address,
