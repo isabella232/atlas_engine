@@ -128,6 +128,9 @@ module AtlasEngine
             end
             Token::Sequence.new(tokens: tokens, raw_value: city_value)
           end
+        rescue Elasticsearch::Error => e
+          log_elasticsearch_error(error: e, method: "city_sequence")
+          Token::Sequence.new(tokens: [], raw_value: city_value)
         end
 
         sig { returns(T::Array[T::Hash[String, T.untyped]]) }
@@ -135,6 +138,9 @@ module AtlasEngine
           measure_es_validation_request_time(method: "full_address_candidates") do
             repository.search(query_builder.full_address_query)
           end
+        rescue Elasticsearch::Error => e
+          log_elasticsearch_error(error: e, method: "full_address_candidates")
+          []
         end
 
         sig { returns(T::Array[Token::Sequence]) }
@@ -154,6 +160,9 @@ module AtlasEngine
               end
             end
           end
+        rescue Elasticsearch::Error => e
+          log_elasticsearch_error(error: e, method: "street_sequence")
+          [Token::Sequence.new(tokens: [], raw_value: "")]
         end
 
         sig { params(candidates: T::Array[Candidate]).void }
@@ -165,6 +174,8 @@ module AtlasEngine
           end
 
           TermVectors.new(term_vectors_hashes: candidate_term_vectors, candidates: candidates).set_candidate_sequences
+        rescue Elasticsearch::Error => e
+          log_elasticsearch_error(error: e, method: "term_vectors")
         end
 
         sig { params(candidates: T::Array[Candidate]).returns(T::Hash[String, T.untyped]) }
@@ -187,6 +198,18 @@ module AtlasEngine
               "method:#{method}",
             ],
             &block
+          )
+        end
+
+        sig { params(error: Elasticsearch::Error, method: String).void }
+        def log_elasticsearch_error(error:, method:)
+          log_error("Elasticsearch error: #{error.message}")
+          StatsD.increment(
+            "AddressValidation.elasticsearch_error",
+            tags: {
+              country: country_code,
+              method:,
+            },
           )
         end
 
