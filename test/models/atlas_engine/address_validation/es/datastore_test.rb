@@ -55,13 +55,18 @@ module AtlasEngine
           assert_requested(:post, %r{http\://.*/test_us/_analyze}, times: 1)
         end
 
-        test "#fetch_city_sequence returns empty sequence on bad ES response" do
+        test "#fetch_city_sequence returns empty sequence and logs error on bad ES response" do
           stub_request(:post, %r{http\://.*/test_us/_analyze})
             .with(body: { analyzer: "city_analyzer", text: "San Francisco" })
             .to_return(status: 400, body: "", headers: @headers)
 
-          sequence = @datastore.fetch_city_sequence
-          assert_empty sequence
+          assert_statsd_increment(
+            "AddressValidation.elasticsearch_error",
+            tags: ["country:US", "method:city_sequence"],
+          ) do
+            sequence = @datastore.fetch_city_sequence
+            assert_empty sequence
+          end
         end
 
         test "#fetch_city_sequence does not call ES for the same query even when there is no response" do
@@ -318,13 +323,18 @@ module AtlasEngine
           end
         end
 
-        test "#fetch_street_sequences returns empty sequence on error" do
+        test "#fetch_street_sequences returns empty sequence and logs on error" do
           stub_request(:post, %r{http\://.*/test_us/_analyze})
             .with(body: { analyzer: "street_analyzer", text: "Main Street" })
             .to_return(status: 400)
 
-          sequences = @datastore.fetch_street_sequences
-          assert_empty sequences.first
+          assert_statsd_increment(
+            "AddressValidation.elasticsearch_error",
+            tags: ["country:US", "method:street_sequence"],
+          ) do
+            sequences = @datastore.fetch_street_sequences
+            assert_empty sequences.first
+          end
         end
 
         test "#fetch_street_sequences_async returns a pending future that resolves as an array of sequences" do
@@ -453,12 +463,17 @@ module AtlasEngine
           end
         end
 
-        test "#fetch_full_address_candidates returns empty on error" do
+        test "#fetch_full_address_candidates returns empty and logs on error" do
           stub_request(:post, %r{http\://.*/test_us/_search})
             .to_return(status: 400, body: full_address_results.to_json, headers: @headers)
 
-          candidates = @datastore.fetch_full_address_candidates
-          assert_empty candidates
+          assert_statsd_increment(
+            "AddressValidation.elasticsearch_error",
+            tags: ["country:US", "method:full_address_candidates"],
+          ) do
+            candidates = @datastore.fetch_full_address_candidates
+            assert_empty candidates
+          end
         end
 
         test "#fetch_full_address_candidates measures the time to retrieve candidates" do

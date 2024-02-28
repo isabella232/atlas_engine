@@ -495,6 +495,36 @@ module AtlasEngine
       ensure
         cleanup_by_prefix(base_name)
       end
+
+      test "#search raises an error if the index is not found" do
+        base_name = generate_random_base_name
+        @repository = SampleRepository.new(base_name: base_name)
+
+        error = assert_raises(AtlasEngine::Elasticsearch::Error) do
+          @repository.search({})
+        end
+        assert error.message.include?("index_not_found_exception")
+      end
+
+      test "#analyze raises an error if the index is not found" do
+        base_name = generate_random_base_name
+        @repository = SampleRepository.new(base_name: base_name)
+
+        error = assert_raises(AtlasEngine::Elasticsearch::Error) do
+          @repository.analyze({ "text": "some text" })
+        end
+        assert error.message.include?("index_not_found_exception")
+      end
+
+      test "#analyze raises an error if the query hash is malformed" do
+        base_name = generate_random_base_name
+        @repository = SampleRepository.new(base_name: base_name)
+
+        error = assert_raises(AtlasEngine::Elasticsearch::Error) do
+          @repository.analyze({ "txt": "some text" })
+        end
+        assert error.message.include?("unknown field [txt] did you mean [text]?")
+      end
     end
   end
 end
