@@ -373,7 +373,7 @@ GEM
       activesupport (~> 7.0)
       i18n
       phonelib (~> 0.8)
-    yard (0.9.35)
+    yard (0.9.36)
     yard-sorbet (0.8.1)
       sorbet-runtime (>= 0.5)
       yard (>= 0.9)
