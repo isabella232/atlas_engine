@@ -19,7 +19,7 @@ module AtlasEngine
 
               expected_concern =
                 {
-                  field_names: [:country, :zip],
+                  field_names: [:country],
                   message: I18n.t("worldwide.GB.addresses.zip.errors.invalid_for_country"),
                   code: :country_invalid_for_zip,
                   type: "error",

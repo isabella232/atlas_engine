@@ -24,7 +24,7 @@ module AtlasEngine
             sig { returns(Concern) }
             def build_concern
               Concern.new(
-                field_names: [:province, :country],
+                field_names: [:province],
                 code: :province_invalid,
                 type: T.must(Concern::TYPES[:error]),
                 type_level: 3,

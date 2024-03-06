@@ -35,7 +35,7 @@ module AtlasEngine
 
               expected_concern =
                 {
-                  field_names: [:address1, :address2, :country],
+                  field_names: [:address1, :address2],
                   message: "Add a building number if you have one.",
                   code: :missing_building_number,
                   type: "warning",
@@ -71,7 +71,7 @@ module AtlasEngine
 
               expected_concern =
                 {
-                  field_names: [:address1, :address2, :country],
+                  field_names: [:address1, :address2],
                   message: "Add a building number if you have one.",
                   code: :missing_building_number,
                   type: "warning",

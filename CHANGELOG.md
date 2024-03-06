@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 - Log elasticsearch errors and push elasticsearch error metrics to statsd [#171](https://github.com/Shopify/atlas_engine/pull/171)
+- Update validation concern field field_names to contain just the problematic address field [#173](https://github.com/Shopify/atlas_engine/pull/173)
 
 ---
 

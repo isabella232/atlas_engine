@@ -35,7 +35,7 @@ module AtlasEngine
               concern = ValidForCountry.new(field: :zip, address: address).evaluate
 
               expected_concern = {
-                field_names: [:zip, :country],
+                field_names: [:zip],
                 code: :zip_invalid_for_country,
                 message: I18n.t(
                   "worldwide._default.addresses.zip.errors.invalid_for_country",
@@ -60,7 +60,7 @@ module AtlasEngine
                 concern = ValidForCountry.new(field: :zip, address: address).evaluate
 
                 expected_concern = {
-                  field_names: [:zip, :country],
+                  field_names: [:zip],
                   code: :zip_invalid_for_country,
                   message: I18n.t("worldwide._default.addresses.zip.errors.invalid_for_country", country: "日本"),
                   type: "error",

@@ -46,7 +46,7 @@ module AtlasEngine
               concern = BuildingNumberInAddress1.new(field: :address1, address: address).evaluate
 
               expected_concern = {
-                field_names: [:address1, :country],
+                field_names: [:address1],
                 message: "Add a building number if you have one.",
                 code: :missing_building_number,
                 type: "warning",

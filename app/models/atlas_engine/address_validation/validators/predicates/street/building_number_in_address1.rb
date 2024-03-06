@@ -24,7 +24,7 @@ module AtlasEngine
             sig { returns(Concern) }
             def build_concern
               Concern.new(
-                field_names: [:address1, :country],
+                field_names: [:address1],
                 code: :missing_building_number,
                 type: T.must(Concern::TYPES[:warning]),
                 type_level: 1,
