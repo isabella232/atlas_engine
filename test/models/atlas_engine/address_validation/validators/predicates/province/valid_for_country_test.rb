@@ -67,7 +67,7 @@ module AtlasEngine
 
               expected_concern =
                 {
-                  field_names: [:province, :country],
+                  field_names: [:province],
                   message: I18n.t("worldwide.CA.addresses.province.errors.blank"),
                   code: :province_invalid,
                   type: "error",

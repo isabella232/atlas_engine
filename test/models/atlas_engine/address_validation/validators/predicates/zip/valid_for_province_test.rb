@@ -35,7 +35,7 @@ module AtlasEngine
               concern = ValidForProvince.new(field: :zip, address: address).evaluate
 
               expected_concern = {
-                field_names: [:zip, :country, :province],
+                field_names: [:zip],
                 message: I18n.t(
                   "worldwide._default.addresses.zip.errors.invalid_for_province",
                   province: Worldwide.region(code: "CA").zone(code: "ON").full_name,
@@ -61,7 +61,7 @@ module AtlasEngine
                 concern = ValidForProvince.new(field: :zip, address: address).evaluate
 
                 expected_concern = {
-                  field_names: [:zip, :country, :province],
+                  field_names: [:zip],
                   message: I18n.t(
                     "worldwide._default.addresses.zip.errors.invalid_for_province",
                     province: Worldwide.region(code: "KR").zone(code: "KR-11").full_name,

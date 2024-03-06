@@ -29,7 +29,7 @@ module AtlasEngine
             sig { returns(Concern) }
             def build_concern
               Concern.new(
-                field_names: [:zip, :country, :province],
+                field_names: [:zip],
                 code: :zip_invalid_for_province,
                 type: T.must(Concern::TYPES[:error]),
                 type_level: 3,

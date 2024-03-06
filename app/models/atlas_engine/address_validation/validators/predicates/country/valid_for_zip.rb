@@ -28,7 +28,7 @@ module AtlasEngine
             sig { params(suggestion: Suggestion).returns(Concern) }
             def build_concern(suggestion)
               Concern.new(
-                field_names: [:country, :zip],
+                field_names: [:country],
                 code: :country_invalid_for_zip,
                 type: T.must(Concern::TYPES[:error]),
                 type_level: 1,
