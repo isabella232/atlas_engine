@@ -56,7 +56,7 @@ module AtlasEngine
 
           sig { returns(String) }
           def message
-            "Enter a valid #{COMPONENTS_TO_LABELS[component]} for #{valid_address_component_values.join(", ")}"
+            country.field(key: field_name).error(code: :unknown_for_address).to_s
           end
 
           sig { returns(Symbol) }

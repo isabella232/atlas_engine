@@ -28,7 +28,7 @@ module AtlasEngine
 
             expected_attributes = {
               field_names: [:city],
-              message: "Enter a valid city for K1A 0A6, Ontario",
+              message: "City may be incorrect.",
               code: :city_inconsistent,
               type: "warning",
               type_level: 3,
@@ -42,7 +42,7 @@ module AtlasEngine
 
             expected_attributes = {
               field_names: [:zip],
-              message: "Enter a valid ZIP for Ottawa, Ontario",
+              message: "Postal code may be incorrect.",
               code: :zip_inconsistent,
               type: "warning",
               type_level: 3,
@@ -56,7 +56,7 @@ module AtlasEngine
 
             expected_attributes = {
               field_names: [:province],
-              message: "Enter a valid state for Ottawa, K1A 0A6",
+              message: "Region may be incorrect.",
               code: :province_inconsistent,
               type: "warning",
               type_level: 3,
@@ -70,7 +70,7 @@ module AtlasEngine
 
             expected_attributes = {
               field_names: [:city],
-              message: "Enter a valid city for K1A 0A6",
+              message: "City may be incorrect.",
               code: :city_inconsistent,
               type: "warning",
               type_level: 3,
@@ -84,7 +84,7 @@ module AtlasEngine
 
             expected_attributes = {
               field_names: [:city],
-              message: "Enter a valid city for Ontario",
+              message: "City may be incorrect.",
               code: :city_inconsistent,
               type: "warning",
               type_level: 3,
@@ -98,7 +98,7 @@ module AtlasEngine
 
             expected_attributes = {
               field_names: [:address1],
-              message: "Enter a valid street name for K1A 0A6, Ontario",
+              message: "Address line 1 may be incorrect.",
               code: :street_inconsistent,
               type: "warning",
               type_level: 3,
@@ -112,7 +112,7 @@ module AtlasEngine
 
             expected_attributes = {
               field_names: [:address2],
-              message: "Enter a valid street name for K1A 0A6, Ontario",
+              message: "Address line 2 may be incorrect.",
               code: :street_inconsistent,
               type: "warning",
               type_level: 3,
