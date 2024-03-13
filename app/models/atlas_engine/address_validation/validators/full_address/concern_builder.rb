@@ -109,10 +109,6 @@ module AtlasEngine
             concern = InvalidZipConcernBuilder.for(address, suggestion_ids)
             return concern if concern
 
-            if :province_code.in?(matched_components) && :city.in?(matched_components)
-              return UnknownZipForAddressConcernBuilder.new(address).build(suggestion_ids)
-            end
-
             build_default_concern
           end
 
