@@ -27,12 +27,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Nil.
+
+---
+
+[0.7.0] - 2024-03-13
+
 - Leverage localized strings for warning-level concern messages [#159](https://github.com/Shopify/atlas_engine/pull/159)
 - Add address parser and city exclusion for Guernsey [#184](https://github.com/Shopify/atlas_engine/pull/184)
 - Log elasticsearch errors and push elasticsearch error metrics to statsd [#171](https://github.com/Shopify/atlas_engine/pull/171)
 - Update validation concern field field_names to contain just the problematic address field [#173](https://github.com/Shopify/atlas_engine/pull/173)
-
----
 
 [0.6.0] - 2024-02-26
 
