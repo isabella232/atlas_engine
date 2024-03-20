@@ -6,6 +6,10 @@ validation:
   address_parser: AtlasEngine::Gg::ValidationTranscriber::AddressParser
   restrictions:
     - class: AtlasEngine::Gg::AddressValidation::Validators::FullAddress::Restrictions::UnsupportedCity
+ingestion:
+  correctors:
+      open_address:
+        - AtlasEngine::Gg::AddressImporter::Corrections::OpenAddress::CityCorrector
   exclusions:
     city:
       - AtlasEngine::Gg::AddressValidation::Validators::FullAddress::Exclusions::City
