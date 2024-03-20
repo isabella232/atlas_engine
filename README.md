@@ -290,7 +290,35 @@ level address validation, your app must have a populated elasticsearch index per
 to query.
 
 The data we use to power atlas engine validation is free open source data from the [open addresses](https://openaddresses.io/)
-project. The following guide demostrates how to ingest data with the dummy app, but the process is the same with
+project.
+
+### Supported countries
+At the moment, `atlas_engine` supports advanced address validation for the following countries.
+
+| Country/territory | Two-letter code | Locales  | Street | City | Postal Code | Province/State |
+|-------------------|-----------------|----------|--------|------|-------------|----------------|
+| Australia         | AU              |          |        | x    | x           | x              |
+| Austria           | AT              |          |        | x    | x           | x              |
+| Belgium           | BE              | fr,nl,de |        | x    | x           |                |
+| Bermuda           | BM              |          |        | x    | x           | x              |
+| Czechia           | CZ              |          |        | x    | x           |                |
+| Denmark           | DK              |          |        | x    | x           |                |
+| Faroe Islands     | FO              |          |        | x    | x           |                |
+| France            | FR              |          |        | x    | x           |                |
+| Italy             | IT              |          |        |      | x           |                |
+| Liechtenstein     | LI              |          |        | x    | x           | x              |
+| Luxembourg        | LU              | fr,lb    |        | x    | x           |                |
+| Netherlands       | NL              | nl       |        | x    | x           | x              |
+| Poland            | PL              |          |        | x    | x           | x              |
+| Portugal          | PT              |          |        | x    | x           | x              |
+| Slovenia          | SI              |          |        | x    | x           | x              |
+| South Korea       | KR              |          |        | x    | x           | x              |
+| Switzerland       | CH              | de,fr,it |        | x    | x           |                |
+
+### Downloading and indexing instructions
+
+
+The following guide demonstrates how to ingest data with the dummy app, but the process is the same with
 the engine mounted into your own rails app.
 
 1. Go to the [open addresses](https://openaddresses.io/) download center, create an account, support the project, and
