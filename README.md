@@ -290,12 +290,46 @@ level address validation, your app must have a populated elasticsearch index per
 to query.
 
 The data we use to power atlas engine validation is free open source data from the [open addresses](https://openaddresses.io/)
-project. The following guide demostrates how to ingest data with the dummy app, but the process is the same with
+project.
+
+### Supported countries
+At the moment, `atlas_engine` supports advanced address validation for the following countries.
+
+| Country/territory | Two-letter code | Locales  | Street | City | Postal Code | Province/State |
+|-------------------|-----------------|----------|--------|------|-------------|----------------|
+| Australia         | AU              |          |        | x    | x           | x              |
+| Austria           | AT              |          |        | x    | x           | x              |
+| Belgium           | BE              | fr,nl,de |        | x    | x           |                |
+| Bermuda           | BM              |          |        | x    | x           | x              |
+| Czechia           | CZ              |          |        | x    | x           |                |
+| Denmark           | DK              |          |        | x    | x           |                |
+| Faroe Islands     | FO              |          |        | x    | x           |                |
+| France            | FR              |          |        | x    | x           |                |
+| Italy             | IT              |          |        |      | x           |                |
+| Liechtenstein     | LI              |          |        | x    | x           | x              |
+| Luxembourg        | LU              | fr,lb    |        | x    | x           |                |
+| Netherlands       | NL              | nl       |        | x    | x           | x              |
+| Poland            | PL              |          |        | x    | x           | x              |
+| Portugal          | PT              |          |        | x    | x           | x              |
+| Slovenia          | SI              |          |        | x    | x           | x              |
+| South Korea       | KR              |          |        | x    | x           | x              |
+| Switzerland       | CH              | de,fr,it |        | x    | x           |                |
+
+### Downloading and indexing instructions
+
+
+The following guide demonstrates how to ingest data with the dummy app, but the process is the same with
 the engine mounted into your own rails app.
 
 1. Go to the [open addresses](https://openaddresses.io/) download center, create an account, support the project, and
-download a GeoJSON+LD file for the country or region you wish to validate. For this example, we will be using the
-countrywide addresses data for Australia.
+download a GeoJSON+LD file for the country or region you wish to validate.
+
+Restrictions on the file:
+- Must be an `addresses` file, as opposed to a `buildings` or `parcels` file.
+- Must be gzipped (.gz format)
+- Datasets listed under the _Individual Sources_ section work fine. Those under _Data Collections_ must first be unzipped. The `addresses` geojson files within may then be gzipped and imported.
+
+For this example, we will be using the `au/countrywide` --> `addresses - country` data for Australia, in the GeoJSON+LD format.
 
 2. Once the file is downloaded, start your app with `rails s` and navigate to `http://localhost:3000/maintenance_tasks`
 (see [the github repo](https://github.com/Shopify/maintenance_tasks) for more information about maintenance_tasks).
@@ -309,7 +343,7 @@ records in our mysql database and has the following parameters:
 - **country_code: (required)** The ISO country code of the data we are ingesting.
 In this example, the country code of Australia is `AU`.
 
-- **geojson_file_path: (required)** The fully qualified path of the previously downloaded geojson data from open addresses.
+- **geojson_file_path: (required)** The fully qualified path of the previously downloaded geojson data from OpenAddresses. A comma-delimited list of fully-qualified paths is also accepted.
 
 - **locale: (optional)** The language of the data in the open addresses file.
 
