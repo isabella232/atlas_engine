@@ -63,6 +63,15 @@ module AtlasEngine
             ],
             [
               :gg,
+              "Lavender Lodge",
+              "saint sauveur",
+              [
+                { building_name: "Lavender Lodge" },
+                { city: "saint sauveur" },
+              ],
+            ],
+            [
+              :gg,
               "Menerbes, La Grande Rue",
               "St. Saviour",
               [
@@ -92,6 +101,31 @@ module AtlasEngine
                 { building_num: "19", street: "Victoria Road" },
                 { city: "St Peter Port" },
 
+              ],
+            ],
+          ].each do |country_code, address1, address2, expected|
+            check_parsing(country_code, address1, address2, expected)
+          end
+        end
+
+        test "Two Guernsey addresses with accents" do
+          [
+            [
+              :gg,
+              "Lavender Lodge",
+              "Lé Casté",
+              [
+                { building_name: "Lavender Lodge" },
+                { city: "Lé Casté" },
+              ],
+            ],
+            [
+              :gg,
+              "Lavender Lodge",
+              "Le Caste",
+              [
+                { building_name: "Lavender Lodge" },
+                { city: "Le Caste" },
               ],
             ],
           ].each do |country_code, address1, address2, expected|
