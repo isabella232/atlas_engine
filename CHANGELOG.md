@@ -27,11 +27,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+nil.
+
+---
+
+[0.8.0] - 2024-04-02
+
 - Add french city aliases to Guernsey address parser [#205](https://github.com/Shopify/atlas_engine/pull/205)
 - Centralize ruby version [#200](https://github.com/Shopify/atlas_engine/pull/200)
 - Add city corrector for Guernsey and synonyms [#192](https://github.com/Shopify/atlas_engine/pull/192)
-
----
 
 [0.7.0] - 2024-03-13
 

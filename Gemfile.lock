@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    atlas_engine (0.7.0)
+    atlas_engine (0.8.0)
       annex_29
       elastic-transport
       elasticsearch-model
@@ -378,6 +378,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  arm64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
