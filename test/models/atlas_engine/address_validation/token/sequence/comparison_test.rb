@@ -354,15 +354,15 @@ module AtlasEngine
             ).returns(AddressValidation::Token::Sequence::Comparison)
           end
           def comparison_with_positions(left_positions:, right_positions:)
-            token_comparisons = []
-            left_positions.zip(right_positions).each do |(left_val, left_pos), (right_val, right_pos)|
-              token_comparisons << AddressValidation::Token::Comparison.new(
-                left:  token(value: left_val, position: left_pos),
-                right: token(value: right_val, position: right_pos),
-                qualifier: left_val == right_val ? :equal : :comp,
-                edit_distance: left_val == right_val ? 0 : 1,
-              )
-            end
+            token_comparisons =
+              left_positions.zip(right_positions).map do |(left_val, left_pos), (right_val, right_pos)|
+                AddressValidation::Token::Comparison.new(
+                  left:  token(value: left_val, position: left_pos),
+                  right: token(value: right_val, position: right_pos),
+                  qualifier: left_val == right_val ? :equal : :comp,
+                  edit_distance: left_val == right_val ? 0 : 1,
+                )
+              end
 
             sequence_comparison(
               unmatched_tokens: [], # improve this if your tests are sensitive to unmatched tokens
