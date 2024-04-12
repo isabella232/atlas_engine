@@ -221,7 +221,7 @@ GEM
     parser (3.3.0.5)
       ast (~> 2.4.1)
       racc
-    phonelib (0.8.7)
+    phonelib (0.8.8)
     prism (0.24.0)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -366,7 +366,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    worldwide (0.10.3)
+    worldwide (0.11.0)
       activesupport (~> 7.0)
       i18n
       phonelib (~> 0.8)
