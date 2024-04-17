@@ -175,7 +175,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    maintenance_tasks (2.6.0)
+    maintenance_tasks (2.7.0)
       actionpack (>= 6.0)
       activejob (>= 6.0)
       activerecord (>= 6.0)
@@ -213,9 +213,9 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.0)
-    nokogiri (1.16.2-arm64-darwin)
+    nokogiri (1.16.4-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.2-x86_64-linux)
+    nokogiri (1.16.4-x86_64-linux)
       racc (~> 1.4)
     parallel (1.24.0)
     parser (3.3.0.5)
@@ -271,7 +271,7 @@ GEM
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
-    rake (13.1.0)
+    rake (13.2.1)
     rbi (0.1.10)
       prism (>= 0.18.0, < 0.25)
       sorbet-runtime (>= 0.5.9204)
@@ -282,7 +282,7 @@ GEM
     redis-client (0.19.1)
       connection_pool
     regexp_parser (2.9.0)
-    reline (0.5.0)
+    reline (0.5.2)
       io-console (~> 0.5)
     rexml (3.2.6)
     rubocop (1.63.0)
