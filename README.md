@@ -167,17 +167,23 @@ The validation scope excludes zip because the zip was not successfully validated
 ## Rails App Installation
 
 ### Initial setup
-Add the engine to your gemfile
+* Add the engine to your gemfile
 ```
 gem "atlas_engine"
 ```
 
-Run the following commands to install the engine in your rails app
-
+* Run the following commands to install the engine in your rails app
 ```
 bundle lock
-bin/rails generate atlas_engine:install
+rails atlas_engine:install:migrations
+rails db:migrate
 ```
+* In `config/routes` mount AtlasEngine
+  * Adding the line `mount AtlasEngine::Engine => "/atlas_engine"
+`
+* In `app/assets/config/manifest.js`
+  * Adding the line `//= link atlas_engine/application.css`
+* Install [maintenance_tasks](https://github.com/Shopify/maintenance_tasks?tab=readme-ov-file#installation) - a dependency for Atlas Engine that is used to ingest country data.
 
 ### Updating to a newer version of the engine
 
