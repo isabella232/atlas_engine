@@ -12,9 +12,6 @@ module Maintenance
       # ISO3166 two-letter country code.
       attribute :country_code, :string
       validates :country_code, presence: true
-      # Filename to import. When running in staging or production, the worker expects to find
-      # this file in the relevant GCS bucket, configured in `config/storage/{environment}.yml`
-      # It must be placed under `openaddress/` with the same filename.
       attribute :geojson_file_path, :string
       attribute :locale, :string
 
