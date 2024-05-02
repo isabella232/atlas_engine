@@ -14,6 +14,7 @@ PATH
       rails (>= 7.0.7.2)
       rubyzip
       sorbet-runtime
+      sprockets-rails
       state_machines-activerecord
       statsd-instrument
       trilogy
@@ -398,10 +399,9 @@ DEPENDENCIES
   rubocop-shopify
   rubocop-sorbet
   sorbet
-  sprockets-rails
   tapioca
   thor
   webmock
 
 BUNDLED WITH
-   2.4.10
+   2.5.3
