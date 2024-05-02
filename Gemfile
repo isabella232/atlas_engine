@@ -6,9 +6,6 @@ gemspec
 
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# For loading the /graphiql assests
-gem "sprockets-rails"
-
 group :development, :test do
   gem "dotenv-rails", require: "dotenv/rails-now"
 

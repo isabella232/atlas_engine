@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("rails", ">= 7.0.7.2")
   spec.add_dependency("rubyzip")
   spec.add_dependency("sorbet-runtime")
+  spec.add_dependency("sprockets-rails")
   spec.add_dependency("state_machines-activerecord")
   spec.add_dependency("statsd-instrument")
   spec.add_dependency("trilogy")
