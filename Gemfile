@@ -6,10 +6,11 @@ gemspec
 
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+# For loading the /graphiql assests
+gem "sprockets-rails"
+
 group :development, :test do
   gem "dotenv-rails", require: "dotenv/rails-now"
-  # For loading the /graphiql assests
-  gem "sprockets-rails"
 
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: [:mri, :mingw, :x64_mingw]
