@@ -26,10 +26,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Security in case of vulnerabilities.
 
 ## [Unreleased]
-
-nil.
+- nil.
 
 ---
+
+[0.8.1] - 2024-05-10
+
+- Fix bug where province_inconsistent concern is returned without a message [#259](https://github.com/Shopify/atlas_engine/pull/259)
+
 
 [0.8.0] - 2024-04-02
 

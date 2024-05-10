@@ -224,10 +224,12 @@ module AtlasEngine
             province_concern = result.concerns.find { |c| :province_inconsistent == c.code }
             assert_not_nil province_concern
             assert_equal result.suggestions.map(&:id), province_concern.suggestion_ids
+            assert_equal "Province may be incorrect.", province_concern.message
 
             zip_concern = result.concerns.find { |c| :zip_inconsistent == c.code }
             assert_not_nil zip_concern
             assert_equal result.suggestions.map(&:id), zip_concern.suggestion_ids
+            assert_equal "Postal code may be incorrect.", zip_concern.message
           end
 
           test "adds invalid zip concern without suggestions when ConcernBuilder.should_suggest? is false and /

@@ -8,7 +8,7 @@ module AtlasEngine
         class UnmatchedFieldConcernBuilder
           extend T::Sig
           include ConcernFormatter
-          attr_reader :address, :component, :matched_components, :unmatched_field
+          attr_reader :address, :unmatched_component, :matched_components, :unmatched_field
 
           COMPONENTS_TO_LABELS = {
             zip: "ZIP",
@@ -31,9 +31,9 @@ module AtlasEngine
           end
           def initialize(unmatched_component, matched_components, address, unmatched_field = nil)
             @address = address
-            @component = unmatched_component
+            @unmatched_component = unmatched_component
             @matched_components = matched_components
-            @unmatched_field = unmatched_field
+            @unmatched_field = unmatched_field || unmatched_component
           end
 
           sig do
@@ -61,7 +61,7 @@ module AtlasEngine
 
           sig { returns(Symbol) }
           def code
-            "#{shortened_component_name}_inconsistent".to_sym
+            "#{unmatched_component_name}_inconsistent".to_sym
           end
 
           sig { returns(T::Array[Symbol]) }
@@ -69,21 +69,14 @@ module AtlasEngine
             [field_name]
           end
 
-          sig { returns(T::Array[String]) }
-          def valid_address_component_values
-            matched_components.last(2).map do |component|
-              component == :province_code ? province_name : address[component]
-            end
-          end
-
           sig { returns(Symbol) }
-          def shortened_component_name
-            SHORTENED_COMPONENT_NAMES[component] || component
+          def unmatched_component_name
+            SHORTENED_COMPONENT_NAMES[unmatched_component] || unmatched_component
           end
 
           sig { returns(Symbol) }
           def field_name
-            unmatched_field || shortened_component_name
+            SHORTENED_COMPONENT_NAMES[unmatched_field] || unmatched_field
           end
         end
       end
