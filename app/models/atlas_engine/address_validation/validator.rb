@@ -114,6 +114,8 @@ module AtlasEngine
         local_concerns = {}
         cache = Validators::Predicates::Cache.new(pipeline_address)
         @predicate_pipeline.pipeline.each do |config|
+          break if local_concerns[:country].present?
+
           local_concerns[config.field] = [] if local_concerns[config.field].nil?
           next if local_concerns[config.field].present?
 
