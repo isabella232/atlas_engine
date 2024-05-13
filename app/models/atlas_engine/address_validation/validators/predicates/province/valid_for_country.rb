@@ -9,7 +9,6 @@ module AtlasEngine
           class ValidForCountry < Predicate
             sig { override.returns(T.nilable(Concern)) }
             def evaluate
-              return unless @cache.country.country?
               return if address.province_code.blank?
               return if @cache.country.zones.none?(&:province?)
               return if @cache.country.hide_provinces_from_addresses

@@ -8,8 +8,6 @@ module AtlasEngine
         class NoHtmlTags < Predicate
           sig { override.returns(T.nilable(Concern)) }
           def evaluate
-            return unless @cache.country.country?
-
             build_concern if contains_html_tags(address.send(@field))
           end
 

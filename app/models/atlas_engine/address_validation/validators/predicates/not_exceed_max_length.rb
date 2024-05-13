@@ -9,8 +9,6 @@ module AtlasEngine
           MAX_COMPONENT_LENGTH = 255
           sig { override.returns(T.nilable(Concern)) }
           def evaluate
-            return unless @cache.country.country?
-
             build_concern if address.send(@field).to_s.length > MAX_COMPONENT_LENGTH
           end
 

@@ -9,7 +9,6 @@ module AtlasEngine
           class BuildingNumberInAddress1OrAddress2 < Predicate
             sig { override.returns(T.nilable(Concern)) }
             def evaluate
-              return unless @cache.country.country?
               return unless @cache.country.building_number_required
               return unless @cache.country.building_number_may_be_in_address2
               return if contains_number?(T.must(@address.address1)) || contains_number?(@address.address2)
