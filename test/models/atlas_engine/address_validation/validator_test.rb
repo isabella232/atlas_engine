@@ -267,6 +267,22 @@ module AtlasEngine
         assert result[:concerns].present?
         assert_equal(:zip_invalid_for_province, result[:concerns].first[:code])
       end
+
+      test "when invalid country code, does not run remaining predicates" do
+        address = build_address(
+          address1: "1 2 3 4 5 6 7 8 9 8 7 6 5 4 3 2 1 2 3 4 5 6 7 8 9",
+          city: "Vancouver",
+          province_code: "BC",
+          zip: "V6K 4Y8",
+          country_code: "xx",
+        )
+
+        result = Validator.new(address: address, matching_strategy: MatchingStrategies::Local).run
+        result = result.attributes
+
+        assert_equal 1, result[:concerns].size
+        assert_equal(:country_blank, result[:concerns].first[:code])
+      end
     end
   end
 end

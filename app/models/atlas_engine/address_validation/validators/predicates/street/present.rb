@@ -9,8 +9,6 @@ module AtlasEngine
           class Present < Predicate
             sig { override.returns(T.nilable(Concern)) }
             def evaluate
-              return unless @cache.country.country?
-
               build_concern if @address.address1.blank?
             end
 

@@ -8,8 +8,6 @@ module AtlasEngine
         class NoEmojis < Predicate
           sig { override.returns(T.nilable(Concern)) }
           def evaluate
-            return unless @cache.country.country?
-
             build_concern if contains_blocked_codepoints?(address.send(@field))
           end
 

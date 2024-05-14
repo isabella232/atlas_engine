@@ -9,8 +9,6 @@ module AtlasEngine
           class Valid < Predicate
             sig { override.returns(T.nilable(Concern)) }
             def evaluate
-              return if @address.country_code.blank?
-              return unless @cache.country.country?
               return if @address.phone.blank?
 
               phone = Worldwide::Phone.new(number: @address.phone, country_code: @address.country_code)

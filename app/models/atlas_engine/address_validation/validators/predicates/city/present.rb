@@ -9,7 +9,6 @@ module AtlasEngine
           class Present < Predicate
             sig { override.returns(T.nilable(Concern)) }
             def evaluate
-              return unless @cache.country.country?
               return if @cache.country.field(key: :city).autofill(locale: :en).present?
 
               build_concern if @address.city.blank?

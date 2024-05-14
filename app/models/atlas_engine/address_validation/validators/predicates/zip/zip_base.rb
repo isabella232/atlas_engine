@@ -11,7 +11,6 @@ module AtlasEngine
 
             sig { returns(T.nilable(T::Boolean)) }
             def concerning?
-              return false unless @cache.country.country?
               return false unless @cache.country.has_zip?
               return false unless @cache.country.zip_required?
 

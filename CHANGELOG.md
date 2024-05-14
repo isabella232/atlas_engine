@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Security in case of vulnerabilities.
 
 ## [Unreleased]
-- nil.
+- Break from validation pipeline if country code is invalid[#261](https://github.com/Shopify/atlas_engine/pull/261)
 
 ---
 

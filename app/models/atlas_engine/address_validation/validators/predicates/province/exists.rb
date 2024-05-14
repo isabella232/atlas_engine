@@ -9,7 +9,6 @@ module AtlasEngine
           class Exists < Predicate
             sig { override.returns(T.nilable(Concern)) }
             def evaluate
-              return unless @cache.country.country?
               return if address.province_code.present? ||
                 country_has_no_provinces ||
                 @cache.country.province_optional?
